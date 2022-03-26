@@ -1,60 +1,78 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MySql.EntityFrameworkCore.Metadata;
+
+#nullable disable
 
 namespace api.Migrations
 {
-    public partial class DbChangeRelationActivitis : Migration
+    public partial class DBInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "Giustifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Type = table.Column<string>(type: "text", nullable: true),
-                    note = table.Column<string>(type: "text", nullable: true),
-                    code = table.Column<string>(type: "text", nullable: true),
-                    Duration = table.Column<DateTime>(type: "datetime", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ModifyDate = table.Column<DateTime>(type: "datetime", nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Type = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    note = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    code = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Duration = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Giustifications", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "text", nullable: true),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ModifyDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Token = table.Column<string>(type: "text", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FirstName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LastName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Password = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Token = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -66,16 +84,17 @@ namespace api.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Entry = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Exit = table.Column<DateTime>(type: "datetime", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Entry = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Exit = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     IsPresent = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: true),
                     GiustificationId = table.Column<int>(type: "int", nullable: true)
@@ -87,25 +106,25 @@ namespace api.Migrations
                         name: "FK_Activities_Giustifications_GiustificationId",
                         column: x => x.GiustificationId,
                         principalTable: "Giustifications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Activities_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "QRcodes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    token = table.Column<string>(type: "text", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    token = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -117,7 +136,8 @@ namespace api.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "Roles",
@@ -132,17 +152,17 @@ namespace api.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 1, new DateTime(2022, 1, 9, 1, 22, 21, 696, DateTimeKind.Local).AddTicks(2029), new DateTime(2022, 1, 9, 1, 22, 21, 697, DateTimeKind.Local).AddTicks(9631), null, "admin", "admin", null, "$2a$11$KCn5154uFM6i9UHy8ymnzeCZ9nt22IMUjqco3Qya41i9H.sCaNBxa", 1, null, "Administrator" });
+                values: new object[] { 1, new DateTime(2022, 3, 26, 20, 54, 48, 439, DateTimeKind.Local).AddTicks(1293), new DateTime(2022, 3, 26, 20, 54, 48, 439, DateTimeKind.Local).AddTicks(1345), null, "admin", "admin", null, "$2a$11$sD7UBk.VQjWtblSkislsCelBEixFFzTplImx3XmXX/1ZApLmzPSyK", 1, null, "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 2, new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(6920), new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(6972), null, "operator", "operator", null, "$2a$11$HVl73NbfJ17yp1ly33SatOofSZeRqogV8JYP6hYpqcy97GuEpj27e", 2, null, "Operator" });
+                values: new object[] { 2, new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4157), new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4204), null, "operator", "operator", null, "$2a$11$qWBcvbFaYe9iiFL9bn1uPuTikr6wveS6Ch7LnMrh/tMnhAQYbyQWK", 2, null, "Operator" });
 
             migrationBuilder.InsertData(
                 table: "QRcodes",
                 columns: new[] { "Id", "CreationDate", "UpdateDate", "UserId", "token" },
-                values: new object[] { 1, new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(8691), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
+                values: new object[] { 1, new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4475), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_GiustificationId",

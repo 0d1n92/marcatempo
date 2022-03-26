@@ -6,30 +6,32 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Helpers;
 
+#nullable disable
+
 namespace api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220109002222_DbChangeRelationActivitis")]
-    partial class DbChangeRelationActivitis
+    [Migration("20220326195448_DBInit")]
+    partial class DBInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.13");
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("marcatempo_server.Models.Activity", b =>
+            modelBuilder.Entity("api.Response.Activity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Entry")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("Exit")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("GiustificationId")
                         .HasColumnType("int");
@@ -49,52 +51,52 @@ namespace api.Migrations
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.Giustification", b =>
+            modelBuilder.Entity("api.Response.Giustification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("Duration")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("code")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("note")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Giustifications");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.QRcode", b =>
+            modelBuilder.Entity("api.Response.QRcode", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("token")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -107,23 +109,23 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(8691),
+                            CreationDate = new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4475),
                             UserId = 2,
                             token = "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"
                         });
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.Role", b =>
+            modelBuilder.Entity("api.Response.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -144,41 +146,41 @@ namespace api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.User", b =>
+            modelBuilder.Entity("api.Response.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Token")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Username")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -190,34 +192,34 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 1, 9, 1, 22, 21, 696, DateTimeKind.Local).AddTicks(2029),
-                            DateOfBirth = new DateTime(2022, 1, 9, 1, 22, 21, 697, DateTimeKind.Local).AddTicks(9631),
+                            CreationDate = new DateTime(2022, 3, 26, 20, 54, 48, 439, DateTimeKind.Local).AddTicks(1293),
+                            DateOfBirth = new DateTime(2022, 3, 26, 20, 54, 48, 439, DateTimeKind.Local).AddTicks(1345),
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "$2a$11$KCn5154uFM6i9UHy8ymnzeCZ9nt22IMUjqco3Qya41i9H.sCaNBxa",
+                            Password = "$2a$11$sD7UBk.VQjWtblSkislsCelBEixFFzTplImx3XmXX/1ZApLmzPSyK",
                             RoleId = 1,
                             Username = "Administrator"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(6920),
-                            DateOfBirth = new DateTime(2022, 1, 9, 1, 22, 21, 845, DateTimeKind.Local).AddTicks(6972),
+                            CreationDate = new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4157),
+                            DateOfBirth = new DateTime(2022, 3, 26, 20, 54, 48, 583, DateTimeKind.Local).AddTicks(4204),
                             FirstName = "operator",
                             LastName = "operator",
-                            Password = "$2a$11$HVl73NbfJ17yp1ly33SatOofSZeRqogV8JYP6hYpqcy97GuEpj27e",
+                            Password = "$2a$11$qWBcvbFaYe9iiFL9bn1uPuTikr6wveS6Ch7LnMrh/tMnhAQYbyQWK",
                             RoleId = 2,
                             Username = "Operator"
                         });
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.Activity", b =>
+            modelBuilder.Entity("api.Response.Activity", b =>
                 {
-                    b.HasOne("marcatempo_server.Models.Giustification", "Giustification")
+                    b.HasOne("api.Response.Giustification", "Giustification")
                         .WithMany("Activitis")
                         .HasForeignKey("GiustificationId");
 
-                    b.HasOne("marcatempo_server.Models.User", "User")
+                    b.HasOne("api.Response.User", "User")
                         .WithMany("Activities")
                         .HasForeignKey("UserId");
 
@@ -226,20 +228,20 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.QRcode", b =>
+            modelBuilder.Entity("api.Response.QRcode", b =>
                 {
-                    b.HasOne("marcatempo_server.Models.User", "User")
+                    b.HasOne("api.Response.User", "User")
                         .WithOne("QRCode")
-                        .HasForeignKey("marcatempo_server.Models.QRcode", "UserId")
+                        .HasForeignKey("api.Response.QRcode", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.User", b =>
+            modelBuilder.Entity("api.Response.User", b =>
                 {
-                    b.HasOne("marcatempo_server.Models.Role", "Role")
+                    b.HasOne("api.Response.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -248,17 +250,17 @@ namespace api.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.Giustification", b =>
+            modelBuilder.Entity("api.Response.Giustification", b =>
                 {
                     b.Navigation("Activitis");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.Role", b =>
+            modelBuilder.Entity("api.Response.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("marcatempo_server.Models.User", b =>
+            modelBuilder.Entity("api.Response.User", b =>
                 {
                     b.Navigation("Activities");
 

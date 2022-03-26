@@ -14,6 +14,7 @@ using api.Authorization;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using api.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace api
 {
@@ -29,11 +30,18 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<DataContext>(
-               options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
-            ));
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 27));
+            services.AddDbContext<DataContext>(
+           dbContextOptions => dbContextOptions
+               .UseMySql(Configuration.GetConnectionString("DefaultConnection"), serverVersion)
+               // The following three options help with debugging, but should
+               // be changed or removed for production.
+               .LogTo(Console.WriteLine, LogLevel.Information)
+               .EnableSensitiveDataLogging()
+               .EnableDetailedErrors()
+               );
 
-            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
+           services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
             {
                 build.WithOrigins("http://localhost:8080")
                      .AllowAnyMethod()
