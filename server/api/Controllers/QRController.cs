@@ -9,6 +9,7 @@ using api.Helpers;
 using AutoMapper;
 using Microsoft.Extensions.Options;
 using api.Response;
+using api.Interface;
 
 namespace api.Controllers
 {
@@ -18,11 +19,9 @@ namespace api.Controllers
     public class QRController : ControllerBase
     {
         private readonly DataContext _context;
-
         private IQrcodesService _qrService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
-
         public QRController(
             DataContext context,
             IQrcodesService qrService,
@@ -35,8 +34,6 @@ namespace api.Controllers
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
-
         [AllowAnonymous]
         [HttpPost("postmark")]
         public IActionResult FindPostmark(PostmarkerQRcodeRequest model)

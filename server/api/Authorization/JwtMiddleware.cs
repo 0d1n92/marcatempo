@@ -29,7 +29,6 @@ namespace api.Authorization
 
             await _next(context);
         }
-
     }
     public static class MiddlewareExtensions
     {

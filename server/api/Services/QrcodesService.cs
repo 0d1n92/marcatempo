@@ -4,21 +4,15 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using api.Interface;
 
 namespace api.Services
 {
-    public interface IQrcodesService
-    {
-        PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequest model);
-    }
-
-    public class QrService : IQrcodesService
+    public class QrcodesService : IQrcodesService
     {
         private DataContext _context;
         private readonly IMapper _mapper;
-
-        public QrService(
+        public QrcodesService(
               DataContext context,
               IMapper mapper)
         {
@@ -52,7 +46,6 @@ namespace api.Services
                 {
                     throw new KeyNotFoundException("Entry date doesn't exist or the entry is already present ");
                 }
-
             }
             else
             {
@@ -61,14 +54,10 @@ namespace api.Services
                 activity.Entry = DateTime.Now;
                 _context.Activities.Add(activity);
             }
-
             _context.SaveChanges();
-
             var response = _mapper.Map<PostmarkerQRcodeResponse>(activity);
-
             return response;
         }
-
         private Activity GetActivity(int id)
         {
             var activity = _context.Activities.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();

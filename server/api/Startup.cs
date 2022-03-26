@@ -49,7 +49,7 @@ namespace api
             // configure DI for application services
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<UsersService, UsersService>();
-            services.AddScoped<IQrcodesService, QrService>();
+            services.AddScoped<QrcodesService, QrcodesService>();
 
         }
 

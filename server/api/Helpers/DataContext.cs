@@ -9,16 +9,11 @@ namespace api.Helpers
     public class DataContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-
         public DbSet<Role> Roles { get; set; }
-
         public DbSet<QRcode> QRcodes { get; set; }
-
         public DbSet<Activity> Activities { get; set; }
-
         public DbSet<Giustification> Giustifications  { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
             #region RoleSeed
