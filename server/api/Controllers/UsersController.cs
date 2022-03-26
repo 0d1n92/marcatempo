@@ -14,7 +14,7 @@ namespace api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DataContext _context;
-        
+
         private IUsersService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;

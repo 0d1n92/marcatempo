@@ -13,6 +13,7 @@ using api.Services;
 using api.Authorization;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using api.Interface;
 
 namespace api
 {
@@ -27,7 +28,6 @@ namespace api
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-
         {
             services.AddDbContextPool<DataContext>(
                options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
@@ -42,18 +42,12 @@ namespace api
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            // configure strongly typed settings objects
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
-            // configure DI for application services
             services.AddScoped<IJwtUtils, JwtUtils>();
-            services.AddScoped<UsersService, UsersService>();
-            services.AddScoped<QrcodesService, QrcodesService>();
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IQrcodesService, QrcodesService>();
 
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -63,25 +57,17 @@ namespace api
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-            // global cors policy
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-
-
-
-            // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
-
             app.UseEndpoints(x => x.MapControllers());
         }
        
