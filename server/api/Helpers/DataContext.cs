@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using api.Models;
+using api.Response;
 using BCryptNet = BCrypt.Net.BCrypt;
-using System.Globalization;
 using api.Authorization;
-using api.Services;
 
 namespace api.Helpers
 {
     public class DataContext : DbContext
     {
-        private IJwtUtils _jwtUtils;
         public DbSet<User> Users { get; set; }
 
         public DbSet<Role> Roles { get; set; }

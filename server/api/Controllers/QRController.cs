@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using api.Authorization;
 using api.Services;
 using api.Helpers;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Microsoft.Extensions.Options;
-using api.Models.QRcodes;
+using api.Response;
 
 namespace api.Controllers
 {

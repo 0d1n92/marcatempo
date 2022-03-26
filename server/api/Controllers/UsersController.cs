@@ -1,17 +1,10 @@
 ﻿using api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using AutoMapper;
-using api.Models;
-using api.Models.Users;
-using api.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using api.Response;
 using api.Authorization;
-using api.Models.QRcodes;
+using api.Interface;
 
 namespace api.Controllers
 {
@@ -22,13 +15,13 @@ namespace api.Controllers
     {
         private readonly DataContext _context;
         
-        private IUserService _userService;
+        private IUsersService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             DataContext context, 
-            IUserService userService,
+            IUsersService userService,
             IMapper mapper,
             IOptions<AppSettings> appSettings)
         {

@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Models.Activities
+namespace api.Response
 {
     public class PostmarkerQRcodeResponse
     {
-
-
         public DateTime? Entry { get; set; } 
-        public DateTime?  Exit { get; set; }
-       
-
-
-
+        public DateTime? Exit { get; set; }
     }
 }
    

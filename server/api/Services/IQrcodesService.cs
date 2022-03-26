@@ -1,18 +1,14 @@
-﻿using System;
+﻿using api.Helpers;
+using api.Response;
+using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using api.Models.QRcodes;
-using AutoMapper;
-using api.Helpers;
-using api.Authorization;
-using api.Models.Activities;
-using api.Models;
 
 
 namespace api.Services
 {
-   public interface IQrcodesService
+    public interface IQrcodesService
     {
         PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequest model);
     }
@@ -51,12 +47,14 @@ namespace api.Services
 
                     activity = _mapper.Map(findedActivity, activity);
                     _context.Activities.Update(activity);
-                } else
+                }
+                else
                 {
-                     throw new KeyNotFoundException("Entry date doesn't exist or the entry is already present ");
+                    throw new KeyNotFoundException("Entry date doesn't exist or the entry is already present ");
                 }
 
-            } else
+            }
+            else
             {
                 activity.UserId = model.UserId;
                 activity.IsPresent = true;
@@ -73,7 +71,7 @@ namespace api.Services
 
         private Activity GetActivity(int id)
         {
-            var activity= _context.Activities.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();
+            var activity = _context.Activities.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();
             //var activity = _context.Activities.Where(a => a.UserId == id).OrderBy(x => x.Id == id).LastOrDefault();
             if (activity == null) throw new KeyNotFoundException("Activity not found");
             return activity;

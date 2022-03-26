@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace api.Models.QRcodes
+namespace api.Response
 {
     public class UpdateQRCode
     {
