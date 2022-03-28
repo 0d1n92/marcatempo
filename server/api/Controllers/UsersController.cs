@@ -1,7 +1,6 @@
 ﻿using api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using AutoMapper;
 using api.Response;
 using api.Authorization;
 using api.Interface;
@@ -13,23 +12,17 @@ namespace api.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly DataContext _context;
 
-        private IUsersService _userService;
-        private IMapper _mapper;
-        private readonly AppSettings _appSettings;
+        private readonly IUsersService _userService;
+
 
         public UsersController(
-            DataContext context, 
-            IUsersService userService,
-            IMapper mapper,
-            IOptions<AppSettings> appSettings)
+            IUsersService userService
+            )
         {
-            _context = context;
-
+   
             _userService = userService;
-            _mapper = mapper;
-            _appSettings = appSettings.Value;
+     
         }
 
         [AllowAnonymous]
@@ -47,7 +40,7 @@ namespace api.Controllers
             _userService.Register(model);
             return Ok(new { message = "Registration successful" });
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAll()
         {
