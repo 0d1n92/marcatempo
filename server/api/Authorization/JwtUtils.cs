@@ -7,15 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Linq;
+using api.Interface;
 
 namespace api.Authorization
 {
-    public interface IJwtUtils {
-        public string GenerateToken(User user);
-        public string QRGenerateToken(QRcode qrcode);
-        public string QRSeedGenerateToken(int id);
-        public int? ValidateToken(string token);
-    }
+   
     public class JwtUtils : IJwtUtils
     {
         private readonly AppSettings _appSettings;
