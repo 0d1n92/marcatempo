@@ -28,12 +28,12 @@ namespace api
         {
            string connectionString = Configuration.GetConnectionString("DefaultConnection");
            services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-           services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
+           /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
             {
                 build.WithOrigins("http://localhost:8080")
                      .AllowAnyMethod()
                      .AllowAnyHeader();
-            }));
+            }));*/
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marcatempo", Version = "v1" }));
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
@@ -60,10 +60,10 @@ namespace api
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(x => x
+            /*app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader());*/
             app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
             app.UseEndpoints(x => x.MapControllers());
