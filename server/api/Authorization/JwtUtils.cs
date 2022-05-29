@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Linq;
 using api.Interface;
+using api.Model.Entity;
 
 namespace api.Authorization
 {

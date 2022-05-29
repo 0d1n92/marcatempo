@@ -1,11 +1,13 @@
-﻿using api.Authorization;
+﻿
 using api.Helpers;
 using api.Interface;
+using api.Model.Entity;
 using api.Response;
-using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using BCryptNet = BCrypt.Net.BCrypt;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
@@ -13,26 +15,26 @@ namespace api.Services
     {
         private DataContext _context;
         private IJwtUtils _jwtUtils;
-        private readonly IMapper _mapper;
 
         public UsersService(
             DataContext context,
-            IJwtUtils jwtUtils,
-            IMapper mapper)
+            IJwtUtils jwtUtils
+            )
         {
             _context = context;
             _jwtUtils = jwtUtils;
-            _mapper = mapper;
         }
-
-        public AuthenticateResponse Authenticate(AuthenticateRequest model)
+        
+        public async Task<User> Authenticate(AuthenticateRequest model)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Username == model.Username);
-            if (user == null || !BCryptNet.Verify(model.Password, user.Password))
-                throw new AppException("Username or password is incorrect");
-            var response = _mapper.Map<AuthenticateResponse>(user);
-            response.Token = "try_token";
-            return response;
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == model.Username);
+            if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password): false)
+            {
+                user.Token = _jwtUtils.GenerateToken(user);
+                return user;
+            }
+                
+            return new User();
         }
 
         public IEnumerable<User> GetAll()
@@ -45,20 +47,21 @@ namespace api.Services
             return getUser(id);
         }
 
-        public void Register(RegisterRequest model)
+        public async Task<(bool Success, string Message)> Register(RegisterRequest model, QRcode qrcode, User user)
         {
 
             if (_context.Users.Any(x => x.Username == model.Username))
-                throw new AppException("Username '" + model.Username + "' is already taken");
-            var user = _mapper.Map<User>(model);
-            var qrcode = _mapper.Map<QRcode>(new QRcode());
+                return (false, "Username already Taken"); 
+   
             user.Password = BCryptNet.HashPassword(model.Password);
             _context.Users.Add(user);
             _context.SaveChanges();
             qrcode.UserId = user.Id;
             qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
             _context.QRcodes.Add(qrcode);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            return (true, "Registration successful");
         }
 
         public void Update(int id, UpdateRequest model)
@@ -68,7 +71,6 @@ namespace api.Services
                 throw new AppException("Username '" + model.Username + "' is already taken");
             if (!string.IsNullOrEmpty(model.Password))
                 user.Password = BCryptNet.HashPassword(model.Password);
-            _mapper.Map(model, user);
             _context.Users.Update(user);
             _context.SaveChanges();
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using api.Response;
 using BCryptNet = BCrypt.Net.BCrypt;
 using api.Authorization;
+using api.Model.Entity;
 
 namespace api.Helpers
 {
@@ -15,6 +16,7 @@ namespace api.Helpers
         public DbSet<Role> Roles { get; set; }
         public DbSet<QRcode> QRcodes { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<UserMeta> UserMetas { get; set; }
         public DbSet<Giustification> Giustifications  { get; set; }
        
         protected override void OnModelCreating(ModelBuilder modelBuilder) {

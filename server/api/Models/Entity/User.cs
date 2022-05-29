@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 
-namespace api.Response
+namespace api.Model.Entity
 {
     enum EnumRoles { Administrator = 1, Operator = 2 }
     public class User

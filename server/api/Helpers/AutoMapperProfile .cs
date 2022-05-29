@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using api.Response;
+using api.Model.Entity;
 namespace api.Helpers
 {
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, AuthenticateResponse>();
+            CreateMap<User, AuthenticateResponse>().ReverseMap();
             CreateMap<Activity, PostmarkerQRcodeResponse>();
             CreateMap<RegisterRequest, User>();
             CreateMap<UpdateRequest, User>()

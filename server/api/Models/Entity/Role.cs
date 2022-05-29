@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Response
+namespace api.Model.Entity
 {
     public class Role
     {

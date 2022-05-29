@@ -13,7 +13,7 @@ namespace api.Authorization
 {
     
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class Authorize : Attribute, IAuthorizationFilter
+    public class AuthorizeAdmin : Attribute, IAuthorizationFilter
     { 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -24,7 +24,7 @@ namespace api.Authorization
 
             // authorization
             var user = (User)context.HttpContext.Items["User"];
-            if ( user == null)
+            if ( user == null || user.RoleId != (int)EnumRoles.Administrator)
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }

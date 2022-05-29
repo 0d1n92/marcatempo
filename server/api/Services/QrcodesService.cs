@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using api.Interface;
+using api.Model.Entity;
 
 namespace api.Services
 {

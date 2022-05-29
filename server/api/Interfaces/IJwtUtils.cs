@@ -1,4 +1,4 @@
-﻿using api.Response;
+﻿using api.Model.Entity;
 namespace api.Interface
 {
     public interface IJwtUtils
