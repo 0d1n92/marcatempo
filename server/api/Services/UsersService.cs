@@ -64,15 +64,23 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        public void Update(int id, UpdateRequest model)
+        public async Task<(bool Success, string Message)>Update(int id, UpdateRequest model)
         {
             var user = getUser(id);
             if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
-                throw new AppException("Username '" + model.Username + "' is already taken");
+               return (false, "Username '" + model.Username + "' is already taken");
             if (!string.IsNullOrEmpty(model.Password))
+            {
                 user.Password = BCryptNet.HashPassword(model.Password);
+            } else
+            {
+                return (false, "Password is blank");
+            }
             _context.Users.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            
+            return (true, "User updated successfully" );
+
         }
 
         public void Delete(int id)

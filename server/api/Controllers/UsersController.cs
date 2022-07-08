@@ -31,8 +31,6 @@ namespace api.Controllers
 
         }
 
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
         ///<summary>
         /// Sign In 
         ///</summary>
@@ -40,6 +38,28 @@ namespace api.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
+        /// /// <remarks>
+        /// User administrator:
+        ///
+        ///     POST 
+        ///     {
+        ///        "username": "administrator",
+        ///        "password": "qwerty"
+        ///        
+        ///     }
+        /// User Operator:
+        ///
+        ///     POST 
+        ///     {
+        ///        "username": "operator",
+        ///        "password": "qwerty"
+        ///        
+        ///     }
+        ///
+        /// </remarks>
+        /// 
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
         public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest request)
         {
             var user = await  _userService.Authenticate(request);
@@ -48,15 +68,16 @@ namespace api.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        ///<summary>s
+
+        ///<summary>
         /// Register 
         ///</summary>
         /// <param name="request"></param>
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
+        [AllowAnonymous]
+        [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterRequest request)
         {
             var user = _mapper.Map<User>(request);
@@ -66,22 +87,22 @@ namespace api.Controllers
             return Ok(new { message = result.Message });
         }
 
-        [AuthorizeAdmin]
-        [HttpGet]
+
         ///<summary>
         /// Get all users
         ///</summary>
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
+
+        [AuthorizeAdmin]
+        [HttpGet]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
             return Ok(users);
         }
 
-        [AuthorizeAdmin]
-        [HttpGet("{id}")]
         ///<summary>
         /// Get users
         ///</summary>
@@ -89,14 +110,16 @@ namespace api.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
+
+        [AuthorizeAdmin]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
             return Ok(user);
         }
 
-        [Authorize]
-        [HttpPut("{id}")]
+
         ///<summary>
         /// Update User 
         ///</summary>
@@ -105,14 +128,17 @@ namespace api.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
-        public IActionResult Update(int id, UpdateRequest request)
-        {
-            _userService.Update(id, request);
-            return Ok(new { message = "User updated successfully" });
-        }
 
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateRequest request)
+        {
+            var result =  await _userService.Update(id, request);
+            if(!result.Success) return BadRequest(new { message = result.Message });
+            return Ok(new { message = result.Message });
+        }
+
+
 
         ///<summary>
         /// Delete User
@@ -121,6 +147,9 @@ namespace api.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
+     
+        [Authorize]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             _userService.Delete(id);

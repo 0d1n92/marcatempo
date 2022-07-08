@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Builder;
 using System;
 
 using Microsoft.OpenApi.Models;
-
+using System.IO;
+using System.Reflection;
+using System.Linq;
 
 namespace api
 {
@@ -28,13 +30,48 @@ namespace api
         {
            string connectionString = Configuration.GetConnectionString("DefaultConnection");
            services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-           /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
+            /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
+             {
+                 build.WithOrigins("http://localhost:8080")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+             }));*/
+
+            services.AddSwaggerGen(c =>
             {
-                build.WithOrigins("http://localhost:8080")
-                     .AllowAnyMethod()
-                     .AllowAnyHeader();
-            }));*/
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marcatempo", Version = "v1" }));
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marcatempo", Version = "v1" });
+                
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header enter Bearer [space] {token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Scheme = "jwt",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Enumerable.Empty<string>().ToList()
+                }
+              
+            });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath, true);
+            });
+
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
             services.AddControllers();
