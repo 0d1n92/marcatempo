@@ -104,7 +104,7 @@ namespace api.Controllers
         }
 
         ///<summary>
-        /// Get users
+        /// Get user
         ///</summary>
         /// <param name="id"></param>
         /// <response code="200">Success</response>
@@ -121,7 +121,7 @@ namespace api.Controllers
 
 
         ///<summary>
-        /// Update User 
+        /// Update user 
         ///</summary>
         ///<param name="id"></param>
         /// <param name="request"></param>
@@ -141,7 +141,7 @@ namespace api.Controllers
 
 
         ///<summary>
-        /// Delete User
+        /// Delete user
         ///</summary>
         ///<param name="id"></param>
         /// <response code="200">Success</response>
