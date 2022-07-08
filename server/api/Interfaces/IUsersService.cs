@@ -1,15 +1,18 @@
-﻿using api.Response;
+﻿using api.Model.Entity;
+using api.Response;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace api.Interface
 {
     public interface IUsersService
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest model);
+        Task<User> Authenticate(AuthenticateRequest model);
         IEnumerable<User> GetAll();
         User GetById(int id);
-        void Register(RegisterRequest model);
-        void Update(int id, UpdateRequest model);
+        Task<(bool Success, string Message)> Register(RegisterRequest model, QRcode qrcode, User user);
+
+        Task<(bool Success, string Message)> Update (int id, UpdateRequest model);
         void Delete(int id);
     }
 }

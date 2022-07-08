@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
         <qrcode-stream
-          camera="front"
+          camera="auto"
           @decode="onDecode"
           @init="onInit"
         ></qrcode-stream>
@@ -29,6 +29,7 @@ export default {
   },
 
   mounted() {
+    
     console.log(this.$store.state.isExit);
   },
 
