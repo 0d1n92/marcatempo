@@ -44,7 +44,6 @@ namespace api.Controllers;
         [HttpPost("postmark")]
         public async Task<IActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
         {
-
             var action = _mapper.Map<Model.Entity.Action>(request);
             var response = await _qrService.Postmark(request, action);
             return Ok(response);
@@ -58,7 +57,7 @@ namespace api.Controllers;
         /// <response code="400">Bad Request</response> 
         /// <response code="401">Unauthorized</response>
         [AllowAnonymous]
-        [HttpPost("postmark")]
+        [HttpPost("update")]
         public async Task<IActionResult> UpdateQrcode(int request)
         {
             var data = await _qrService.UpdateQrcode(request);
