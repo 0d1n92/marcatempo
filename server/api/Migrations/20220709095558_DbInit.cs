@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace api.Migrations
 {
-    public partial class AddUserMeta : Migration
+    public partial class DbInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -88,7 +88,7 @@ namespace api.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Activities",
+                name: "Actions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -101,14 +101,14 @@ namespace api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.PrimaryKey("PK_Actions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Activities_Giustifications_GiustificationId",
+                        name: "FK_Actions_Giustifications_GiustificationId",
                         column: x => x.GiustificationId,
                         principalTable: "Giustifications",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Activities_Users_UserId",
+                        name: "FK_Actions_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -175,26 +175,26 @@ namespace api.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 1, new DateTime(2022, 5, 29, 15, 27, 40, 780, DateTimeKind.Local).AddTicks(7793), new DateTime(2022, 5, 29, 15, 27, 40, 780, DateTimeKind.Local).AddTicks(7834), null, "admin", "admin", null, "$2a$11$NCahzSzdlvHhx2rcId6P/eq8SlG6QEgzWhjMI1K9wVNY6q29dEs1m", 1, null, "Administrator" });
+                values: new object[] { 1, new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7236), new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7278), null, "admin", "admin", null, "$2a$11$QVDez.LEamcDuilLiNorcOljMK1Q0/rttZLknMYjSCEbYtEV3ZpUi", 1, null, "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 2, new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(5916), new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(5969), null, "operator", "operator", null, "$2a$11$GRbOa/SxsMosX8Ltje9oIuclS2GWuzstTllqKJtz/CwSoMR53mdTK", 2, null, "Operator" });
+                values: new object[] { 2, new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7096), new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7149), null, "operator", "operator", null, "$2a$11$cIHedaB8v2lKJMX1DXkLA.UoeywpQX.Rg.SKie7XGaKBheftMJycy", 2, null, "Operator" });
 
             migrationBuilder.InsertData(
                 table: "QRcodes",
                 columns: new[] { "Id", "CreationDate", "UpdateDate", "UserId", "token" },
-                values: new object[] { 1, new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(6277), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
+                values: new object[] { 1, new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7409), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_GiustificationId",
-                table: "Activities",
+                name: "IX_Actions_GiustificationId",
+                table: "Actions",
                 column: "GiustificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_UserId",
-                table: "Activities",
+                name: "IX_Actions_UserId",
+                table: "Actions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -217,7 +217,7 @@ namespace api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Activities");
+                name: "Actions");
 
             migrationBuilder.DropTable(
                 name: "QRcodes");

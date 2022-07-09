@@ -13,7 +13,7 @@ namespace api.Helpers
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<QRcode> QRcodes { get; set; }
-        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Model.Entity.Action> Actions { get; set; }
         public DbSet<UserMeta> UserMetas { get; set; }
         public DbSet<Giustification> Giustifications  { get; set; }
        

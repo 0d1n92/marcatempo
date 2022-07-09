@@ -8,7 +8,7 @@ namespace api.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, AuthenticateResponse>().ReverseMap();
-            CreateMap<Activity, PostmarkerQRcodeResponse>();
+            CreateMap<Action, PostmarkerQRcodeResponse>();
             CreateMap<RegisterRequestDto, User>();
             CreateMap<UpdateRequestDto, User>()
                 .ForAllMembers(x => x.Condition(

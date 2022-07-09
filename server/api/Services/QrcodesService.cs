@@ -25,7 +25,7 @@ namespace api.Services
             var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
             var user = _context.Users.SingleOrDefault(x => x.Id == model.UserId);
 
-            var activity = _mapper.Map<Activity>(new Activity());
+            var action = _mapper.Map<Model.Entity.Action>(new Model.Entity.Action());
 
             if (qrcode == null || user == null)
             {
@@ -34,14 +34,14 @@ namespace api.Services
 
             if (model.Exit)
             {
-                var findedActivity = GetActivity(model.UserId);
+                var findedAction = GetAction(model.UserId);
 
-                if ((bool)findedActivity.IsPresent && findedActivity.Exit == null)
+                if ((bool)findedAction.IsPresent && findedAction.Exit == null)
                 {
-                    findedActivity.Exit = DateTime.Now;
+                    findedAction.Exit = DateTime.Now;
 
-                    activity = _mapper.Map(findedActivity, activity);
-                    _context.Activities.Update(activity);
+                    action = _mapper.Map(findedAction, action);
+                    _context.Actions.Update(action);
                 }
                 else
                 {
@@ -50,21 +50,21 @@ namespace api.Services
             }
             else
             {
-                activity.UserId = model.UserId;
-                activity.IsPresent = true;
-                activity.Entry = DateTime.Now;
-                _context.Activities.Add(activity);
+                action.UserId = model.UserId;
+                action.IsPresent = true;
+                action.Entry = DateTime.Now;
+                _context.Actions.Add(action);
             }
             _context.SaveChanges();
-            var response = _mapper.Map<PostmarkerQRcodeResponse>(activity);
+            var response = _mapper.Map<PostmarkerQRcodeResponse>(action);
             return response;
         }
-        private Activity GetActivity(int id)
+        private Model.Entity.Action GetAction(int id)
         {
-            var activity = _context.Activities.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();
+            var action = _context.Actions.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();
             //var activity = _context.Activities.Where(a => a.UserId == id).OrderBy(x => x.Id == id).LastOrDefault();
-            if (activity == null) throw new KeyNotFoundException("Activity not found");
-            return activity;
+            if (action == null) throw new KeyNotFoundException("Activity not found");
+            return action;
         }
 
     }

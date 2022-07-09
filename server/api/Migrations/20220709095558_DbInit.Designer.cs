@@ -11,8 +11,8 @@ using api.Helpers;
 namespace api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220529132741_AddUserMeta")]
-    partial class AddUserMeta
+    [Migration("20220709095558_DbInit")]
+    partial class DbInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace api.Migrations
                 .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("api.Model.Entity.Activity", b =>
+            modelBuilder.Entity("api.Model.Entity.Action", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Actions");
                 });
 
             modelBuilder.Entity("api.Model.Entity.Giustification", b =>
@@ -109,7 +109,7 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(6277),
+                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7409),
                             UserId = 2,
                             token = "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"
                         });
@@ -192,22 +192,22 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 5, 29, 15, 27, 40, 780, DateTimeKind.Local).AddTicks(7793),
-                            DateOfBirth = new DateTime(2022, 5, 29, 15, 27, 40, 780, DateTimeKind.Local).AddTicks(7834),
+                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7236),
+                            DateOfBirth = new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7278),
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "$2a$11$NCahzSzdlvHhx2rcId6P/eq8SlG6QEgzWhjMI1K9wVNY6q29dEs1m",
+                            Password = "$2a$11$QVDez.LEamcDuilLiNorcOljMK1Q0/rttZLknMYjSCEbYtEV3ZpUi",
                             RoleId = 1,
                             Username = "Administrator"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(5916),
-                            DateOfBirth = new DateTime(2022, 5, 29, 15, 27, 40, 922, DateTimeKind.Local).AddTicks(5969),
+                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7096),
+                            DateOfBirth = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7149),
                             FirstName = "operator",
                             LastName = "operator",
-                            Password = "$2a$11$GRbOa/SxsMosX8Ltje9oIuclS2GWuzstTllqKJtz/CwSoMR53mdTK",
+                            Password = "$2a$11$cIHedaB8v2lKJMX1DXkLA.UoeywpQX.Rg.SKie7XGaKBheftMJycy",
                             RoleId = 2,
                             Username = "Operator"
                         });
@@ -235,7 +235,7 @@ namespace api.Migrations
                     b.ToTable("UserMetas");
                 });
 
-            modelBuilder.Entity("api.Model.Entity.Activity", b =>
+            modelBuilder.Entity("api.Model.Entity.Action", b =>
                 {
                     b.HasOne("api.Model.Entity.Giustification", "Giustification")
                         .WithMany("Activitis")

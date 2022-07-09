@@ -14,6 +14,6 @@ namespace api.Model.Entity
         public DateTime Duration { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? ModifyDate { get; set; }
-        public ICollection<Activity> Activitis { get; set; }
+        public ICollection<Action> Activitis { get; set; }
     }
 }

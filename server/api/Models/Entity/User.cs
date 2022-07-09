@@ -22,7 +22,7 @@ namespace api.Model.Entity
         public int RoleId { get; set; }
         public Role Role { get; set; }
         public QRcode QRCode { get; set; }
-        public ICollection<Activity> Activities { get; set; }
+        public ICollection<Action> Activities { get; set; }
 
     }
 }

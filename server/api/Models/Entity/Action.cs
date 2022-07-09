@@ -2,7 +2,7 @@
 
 namespace api.Model.Entity
 {
-    public class Activity
+    public class Action
     {
         public int Id { get; set; }
         public DateTime? Entry { get; set; }

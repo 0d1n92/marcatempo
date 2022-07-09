@@ -29,7 +29,6 @@ namespace api.Controllers
             IOptions<AppSettings> appSettings)
         {
             _context = context;
-
             _qrService = qrService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
