@@ -8,7 +8,7 @@ using api.Services;
 using api.Helpers;
 using AutoMapper;
 using Microsoft.Extensions.Options;
-using api.Response;
+using api.DTOs;
 using api.Interface;
 
 namespace api.Controllers
@@ -45,8 +45,24 @@ namespace api.Controllers
         [HttpPost("postmark")]
         public IActionResult FindPostmark(PostmarkerQRcodeRequestDto request)
         {
-            var response = _qrService.Postmarker(request);
+            var response = _qrService.Postmark(request);
             return Ok(response);
         }
+/*
+        ///<summary>
+        /// Update qrcodes
+        ///</summary>
+        /// <param name="request"></param>
+        /// <response code="200">Success</response>
+        /// <response code="400">Bad Request</response> 
+        /// <response code="401">Unauthorized</response>
+        [AllowAnonymous]
+        [HttpPost("postmark")]
+        public async Task<IActionResult<PostmarkQrcodeCreateResponseDto>> UpdateQrcode(int request)
+        {
+            var data = _qrService.UpdateQrcode(request);
+            if (!data.Sucess)
+            return Ok(data.qrcode);
+        } */
     }
 }

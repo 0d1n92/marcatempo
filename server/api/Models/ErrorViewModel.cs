@@ -1,6 +1,6 @@
 using System;
 
-namespace api.Response
+namespace api.DTOs
 {
     public class ErrorViewModel
     {

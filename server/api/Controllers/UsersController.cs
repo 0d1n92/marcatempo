@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using api.Response;
+using api.DTOs;
 using api.Authorization;
 using api.Interface;
 using api.Model.Entity;
@@ -59,10 +59,10 @@ namespace api.Controllers
         /// 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequestDto request)
+        public async Task<ActionResult<AuthenticateResponseDto>> Authenticate(AuthenticateRequestDto request)
         {
             var user = await  _userService.Authenticate(request);
-            var result = _mapper.Map<User, AuthenticateResponse>(user);
+            var result = _mapper.Map<User, AuthenticateResponseDto>(user);
             if (user.Username == null) return NotFound();
             return Ok(result);
         }

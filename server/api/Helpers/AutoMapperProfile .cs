@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using api.Response;
+using api.DTOs;
 using api.Model.Entity;
 namespace api.Helpers
 {
@@ -7,8 +7,8 @@ namespace api.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, AuthenticateResponse>().ReverseMap();
-            CreateMap<Action, PostmarkerQRcodeResponse>();
+            CreateMap<User, AuthenticateResponseDto>().ReverseMap();
+            CreateMap<Action, PostmarkerQRcodeResponseDto>();
             CreateMap<RegisterRequestDto, User>();
             CreateMap<UpdateRequestDto, User>()
                 .ForAllMembers(x => x.Condition(

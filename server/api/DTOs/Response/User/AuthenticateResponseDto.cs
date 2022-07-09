@@ -1,6 +1,6 @@
-﻿namespace api.Response
+﻿namespace api.DTOs
 {
-    public class AuthenticateResponse
+    public class AuthenticateResponseDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

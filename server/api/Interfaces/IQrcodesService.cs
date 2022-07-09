@@ -1,8 +1,12 @@
-﻿using api.Response;
+﻿using api.DTOs;
+using System.Threading.Tasks;
+using api.Model.Entity;
+
 namespace api.Interface
 {
     public interface IQrcodesService
     {
-        PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequestDto model);
+        PostmarkerQRcodeResponseDto Postmark(PostmarkerQRcodeRequestDto model);
+        Task<(bool Success, string Message, QRcode qrcode)> UpdateQrcode(int id);
     }
 }

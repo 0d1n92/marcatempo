@@ -1,4 +1,4 @@
-﻿namespace api.Response
+﻿namespace api.DTOs
 {
     public class UpdateRequestDto
     {

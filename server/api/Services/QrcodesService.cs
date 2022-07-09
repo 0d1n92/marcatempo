@@ -1,26 +1,30 @@
 ﻿using api.Helpers;
-using api.Response;
+using api.DTOs;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using api.Interface;
 using api.Model.Entity;
+using System.Threading.Tasks;
 
-namespace api.Services
-{
+namespace api.Services;
     public class QrcodesService : IQrcodesService
     {
         private DataContext _context;
         private readonly IMapper _mapper;
+        private IJwtUtils _jwtUtils;
         public QrcodesService(
               DataContext context,
-              IMapper mapper)
+              IMapper mapper,
+              IJwtUtils jwtUtils
+            )
         {
             _context = context;
             _mapper = mapper;
+            _jwtUtils = jwtUtils;
         }
-        public PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequestDto model)
+        public PostmarkerQRcodeResponseDto Postmark(PostmarkerQRcodeRequestDto model)
         {
             var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
             var user = _context.Users.SingleOrDefault(x => x.Id == model.UserId);
@@ -56,7 +60,7 @@ namespace api.Services
                 _context.Actions.Add(action);
             }
             _context.SaveChanges();
-            var response = _mapper.Map<PostmarkerQRcodeResponse>(action);
+            var response = _mapper.Map<PostmarkerQRcodeResponseDto>(action);
             return response;
         }
         private Model.Entity.Action GetAction(int id)
@@ -67,5 +71,20 @@ namespace api.Services
             return action;
         }
 
+        public async Task<(bool Success, string Message, QRcode? qrcode)> UpdateQrcode(int id)
+        {
+            try
+            {
+                QRcode qrcode = (QRcode)_context.QRcodes.Where(x => x.UserId == id);
+                qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
+                _context.QRcodes.Update(qrcode);
+                await _context.SaveChangesAsync();
+                return (true, "Qrcode Update", qrcode);
+            } catch (Exception ex)
+            {
+                return (false, ex.Message, new QRcode());
+
+            }
+        }  
     }
-}
+
