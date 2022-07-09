@@ -2,7 +2,7 @@
 
 namespace api.Response
 {
-    public class UpdateQRCode
+    public class UpdateQRCodeDto
     {
 
         public int id { get; set; }

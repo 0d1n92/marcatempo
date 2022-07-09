@@ -1,6 +1,6 @@
 ﻿namespace api.Response
 {
-    public class UpdateRequest
+    public class UpdateRequestDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

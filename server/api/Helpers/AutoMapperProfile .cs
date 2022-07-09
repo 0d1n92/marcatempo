@@ -9,8 +9,8 @@ namespace api.Helpers
         {
             CreateMap<User, AuthenticateResponse>().ReverseMap();
             CreateMap<Activity, PostmarkerQRcodeResponse>();
-            CreateMap<RegisterRequest, User>();
-            CreateMap<UpdateRequest, User>()
+            CreateMap<RegisterRequestDto, User>();
+            CreateMap<UpdateRequestDto, User>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {

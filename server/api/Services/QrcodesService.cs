@@ -20,7 +20,7 @@ namespace api.Services
             _context = context;
             _mapper = mapper;
         }
-        public PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequest model)
+        public PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequestDto model)
         {
             var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
             var user = _context.Users.SingleOrDefault(x => x.Id == model.UserId);

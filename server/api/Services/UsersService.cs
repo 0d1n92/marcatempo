@@ -25,7 +25,7 @@ namespace api.Services
             _jwtUtils = jwtUtils;
         }
         
-        public async Task<User> Authenticate(AuthenticateRequest model)
+        public async Task<User> Authenticate(AuthenticateRequestDto model)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == model.Username);
             if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password): false)
@@ -47,7 +47,7 @@ namespace api.Services
             return getUser(id);
         }
 
-        public async Task<(bool Success, string Message)> Register(RegisterRequest model, QRcode qrcode, User user)
+        public async Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user)
         {
 
             if (_context.Users.Any(x => x.Username == model.Username))
@@ -64,7 +64,7 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        public async Task<(bool Success, string Message)>Update(int id, UpdateRequest model)
+        public async Task<(bool Success, string Message)>Update(int id, UpdateRequestDto model)
         {
             var user = getUser(id);
             if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))

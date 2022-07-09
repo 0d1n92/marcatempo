@@ -2,7 +2,7 @@
 
 namespace api.Response
 {
-    public class PostmarkerQRcodeRequest
+    public class PostmarkerQRcodeRequestDto
     {
         [Required]
         public bool Exit { get; set; } = false;

@@ -3,6 +3,6 @@ namespace api.Interface
 {
     public interface IQrcodesService
     {
-        PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequest model);
+        PostmarkerQRcodeResponse Postmarker(PostmarkerQRcodeRequestDto model);
     }
 }

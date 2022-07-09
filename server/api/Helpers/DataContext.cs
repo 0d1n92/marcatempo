@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using api.Response;
 using BCryptNet = BCrypt.Net.BCrypt;
-using api.Authorization;
 using api.Model.Entity;
 
 namespace api.Helpers

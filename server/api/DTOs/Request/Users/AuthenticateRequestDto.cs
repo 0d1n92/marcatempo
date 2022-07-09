@@ -2,7 +2,7 @@
 
 namespace api.Response
 {
-    public class AuthenticateRequest
+    public class AuthenticateRequestDto
     {
         [Required]
         public string Username { get; set; }

@@ -2,7 +2,7 @@
 
 namespace api.Response
 {
-    public class RegisterRequest
+    public class RegisterRequestDto
     {
         [Required]
         public string FirstName { get; set; }

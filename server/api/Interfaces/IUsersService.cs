@@ -7,12 +7,12 @@ namespace api.Interface
 {
     public interface IUsersService
     {
-        Task<User> Authenticate(AuthenticateRequest model);
+        Task<User> Authenticate(AuthenticateRequestDto model);
         IEnumerable<User> GetAll();
         User GetById(int id);
-        Task<(bool Success, string Message)> Register(RegisterRequest model, QRcode qrcode, User user);
+        Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
 
-        Task<(bool Success, string Message)> Update (int id, UpdateRequest model);
+        Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
         void Delete(int id);
     }
 }

@@ -1,6 +1,5 @@
-﻿using api.Helpers;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using api.Response;
 using api.Authorization;
 using api.Interface;
@@ -60,7 +59,7 @@ namespace api.Controllers
         /// 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest request)
+        public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequestDto request)
         {
             var user = await  _userService.Authenticate(request);
             var result = _mapper.Map<User, AuthenticateResponse>(user);
@@ -78,7 +77,7 @@ namespace api.Controllers
         /// <response code="401">Unauthorized</response>
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterRequest request)
+        public async Task<ActionResult> Register(RegisterRequestDto request)
         {
             var user = _mapper.Map<User>(request);
             var qrcode = _mapper.Map<QRcode>(new QRcode());
@@ -131,7 +130,7 @@ namespace api.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateRequest request)
+        public async Task<IActionResult> Update(int id, UpdateRequestDto request)
         {
             var result =  await _userService.Update(id, request);
             if(!result.Success) return BadRequest(new { message = result.Message });
