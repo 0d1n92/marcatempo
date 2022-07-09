@@ -11,8 +11,7 @@ using Microsoft.Extensions.Options;
 using api.DTOs;
 using api.Interface;
 
-namespace api.Controllers
-{
+namespace api.Controllers;
     [Authorize]
     [ApiController]
     [Route("qrcodes")]
@@ -43,12 +42,14 @@ namespace api.Controllers
         /// <response code="401">Unauthorized</response>
         [AllowAnonymous]
         [HttpPost("postmark")]
-        public IActionResult FindPostmark(PostmarkerQRcodeRequestDto request)
+        public async Task<IActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
         {
-            var response = _qrService.Postmark(request);
+
+            var action = _mapper.Map<Model.Entity.Action>(request);
+            var response = await _qrService.Postmark(request, action);
             return Ok(response);
         }
-/*
+
         ///<summary>
         /// Update qrcodes
         ///</summary>
@@ -58,11 +59,11 @@ namespace api.Controllers
         /// <response code="401">Unauthorized</response>
         [AllowAnonymous]
         [HttpPost("postmark")]
-        public async Task<IActionResult<PostmarkQrcodeCreateResponseDto>> UpdateQrcode(int request)
+        public async Task<IActionResult> UpdateQrcode(int request)
         {
-            var data = _qrService.UpdateQrcode(request);
-            if (!data.Sucess)
-            return Ok(data.qrcode);
-        } */
+            var data = await _qrService.UpdateQrcode(request);
+            if (!data.Success) return BadRequest(new { Message = data.Message });
+            return Ok(data.data);
+        } 
     }
-}
+

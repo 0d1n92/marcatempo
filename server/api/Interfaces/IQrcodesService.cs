@@ -6,7 +6,7 @@ namespace api.Interface
 {
     public interface IQrcodesService
     {
-        PostmarkerQRcodeResponseDto Postmark(PostmarkerQRcodeRequestDto model);
-        Task<(bool Success, string Message, QRcode qrcode)> UpdateQrcode(int id);
+        Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto model, Model.Entity.Action action);
+        Task<(bool Success, string Message, QRcode data)> UpdateQrcode(int id);
     }
 }
