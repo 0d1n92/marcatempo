@@ -40,25 +40,27 @@ public class QRController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
-    ///  /// /// <remarks>
-    ///  Entry Action:
+    /// /// <remarks>
+    /// Entry:
     ///
-    ///  POST {
-    ///     "exit": false,
-    ///     "userId": 1,
-    ///     "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"   
-    ///   }
-    ///     
-    ///  Exit Action:
-    ///
-    ///  POST {
-    ///     "exit": true,
-    ///     "userId": 1,
-    ///     "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"   
-    ///   }
-    ///     
-    ///     
+    ///     POST 
+    ///     { 
+    ///        "exit": false,
+    ///        "userId": 1,
+    ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
+    ///        
+    ///     }   
+    /// Exit:
+    /// 
+    ///     POST 
+    ///     { 
+    ///        "exit": true,
+    ///        "userId": 1,
+    ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
+    ///        
+    ///     }
     /// </remarks>
+ 
     [AllowAnonymous]
     [HttpPost("postmark")]
     public async Task<IActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
