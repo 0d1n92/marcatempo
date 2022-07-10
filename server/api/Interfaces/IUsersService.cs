@@ -13,6 +13,7 @@ namespace api.Interface
         Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
         Task<(bool Success, string Message, List<User> data)> OperatorListAsync();
         Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
+        Task<(bool Success, string Message, User data)> GetUserAsync(string token);
         void Delete(int id);
     }
 }

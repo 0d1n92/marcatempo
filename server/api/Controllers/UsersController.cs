@@ -6,6 +6,7 @@ using api.Interface;
 using api.Model.Entity;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 
 namespace api.Controllers;
 [Authorize]
@@ -165,5 +166,23 @@ public class UsersController : ControllerBase
         var result = await _userService.OperatorListAsync();
         return Ok(result);
 
+    }
+
+    ///<summary>
+    /// Get User info by token
+    ///</summary>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [AllowAnonymous]
+    [HttpGet("info")]
+    public async Task<IActionResult> GetUserAsync( [FromHeader] string authorization)
+    {
+        var token = authorization;
+        var response = await _userService.GetUserAsync(token);
+        if (!response.Success) return BadRequest(new { Mesage = response.Message});
+        var user = _mapper.Map<User, AuthenticateResponseDto>(response.data);
+        return Ok(new {data = user});
     }
 }

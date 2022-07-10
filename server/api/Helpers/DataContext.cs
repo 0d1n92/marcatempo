@@ -35,15 +35,18 @@ namespace api.Helpers
             #region UserSeed
             modelBuilder.Entity<User>().HasData(
              new { Id = 1, RoleId = (int)EnumRoles.Administrator, Username="Administrator", FirstName="admin", LastName = "admin", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now},
-             new { Id = 2, RoleId = (int)EnumRoles.Operator, Username = "Operator", FirstName = "operator", LastName = "operator", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now }
+             new { Id = 2, RoleId = (int)EnumRoles.Operator, Username = "Operator", FirstName = "operator", LastName = "operator", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 3, RoleId = (int)EnumRoles.Operator, Username = "Pippo", FirstName = "Jonh", LastName = "Doe", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now }
              );
             #endregion
             #region Qrcode
 
            
             modelBuilder.Entity<QRcode>().HasData(
-              new { Id = 1, token = "dasdsadasdsadewqrwrfewrewrwerewrewrewrew", CreationDate = DateTime.Now,  UserId = 2}
+              new { Id = 1, token = "dasdsadasdsadewqrwrfewrewrwerewrewrewrew", CreationDate = DateTime.Now,  UserId = 2},
+              new { Id = 2, token = "lglglglgllglglglgllglglglgllglgglgllglglg", CreationDate = DateTime.Now, UserId = 3 }
             );
+
           
             #endregion
 

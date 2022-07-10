@@ -10,9 +10,8 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/scan",
-    name: "ScanQr",
-    component: QrcodeScan,
+    path: '/',
+    redirect:'/login'
   },
   {
     path: "/login",
@@ -20,12 +19,16 @@ const routes = [
     component: Login,
   },
   {
+    path: "/scan",
+    name: "ScanQr",
+    component: QrcodeScan,
+  },
+  {
     path: "/dashboard/:user",
     name: "DashBoard",
     component: DashBoard,
   },
   {
-
     path: "/dashboard/:user/operators",
     name: "operators",
     component: Operators,

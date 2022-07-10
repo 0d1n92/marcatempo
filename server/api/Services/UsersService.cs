@@ -8,6 +8,9 @@ using System.Linq;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System;
 
 namespace api.Services
 {
@@ -72,7 +75,8 @@ namespace api.Services
             if (!string.IsNullOrEmpty(model.Password))
             {
                 user.Password = BCryptNet.HashPassword(model.Password);
-            } else
+            }
+            else
             {
                 return (false, "Password is blank");
             }
@@ -83,10 +87,27 @@ namespace api.Services
 
         }
 
-        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync() {
-         
-            var data = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-            return (true, "Operator info", data);
+        public async Task<(bool Success, string Message, User data)> GetUserAsync(string token)
+        {
+            try
+            {
+                var userId = _jwtUtils.ValidateToken(token);
+                var user =  await _context.Users.Include(x => x.Role).Where(x => x.Id == userId).FirstAsync();
+                return (true, "Utente trovato", user);
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message, new User());
+            }
+
+        }
+
+        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
+        {
+
+           var data = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+           return (true, "Operator info", data);
         }
 
         public void Delete(int id)
