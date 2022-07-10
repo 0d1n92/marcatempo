@@ -1,19 +1,22 @@
 import Axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
-    LoggedUser: {},
+    loggedUser: {},
     marked: {},
     isExit: false,
   },
   mutations: {
     Login(state, payload) {
-      state.LoggedUser = payload;
+      state.loggedUser = payload;
       localStorage.token = payload.token;
+      console.log("arrivo");
     },
 
     Postmark(state, payload) {
@@ -27,13 +30,17 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    AuthLogin({ commit }, payload) {
+    AuthLogin({ commit }, refer) {
+      console.log (refer);
       Axios.post(process.env.VUE_APP_ROOT_API + "/users/authenticate", {
-        username: payload.username,
-        password: payload.password,
+        username: refer.payloadLogin.username,
+        password: refer.payloadLogin.password,
       })
         .then((response) => {
+          console.log("auth");
           commit("Login", response.data);
+          refer.$router.push({name:"DashBoard", params: { user:"Administrator"}})
+          
         })
         .catch(function (error) {
           console.log("errore" + error);

@@ -1,4 +1,6 @@
-﻿namespace api.DTOs
+﻿using api.Model.Entity;
+
+namespace api.DTOs
 {
     public class AuthenticateResponseDto
     {
@@ -6,6 +8,8 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
         public string Token { get; set; }
 
     }

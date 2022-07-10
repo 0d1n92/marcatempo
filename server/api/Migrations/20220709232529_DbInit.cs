@@ -175,17 +175,17 @@ namespace api.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 1, new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7236), new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7278), null, "admin", "admin", null, "$2a$11$QVDez.LEamcDuilLiNorcOljMK1Q0/rttZLknMYjSCEbYtEV3ZpUi", 1, null, "Administrator" });
+                values: new object[] { 1, new DateTime(2022, 7, 10, 1, 25, 29, 31, DateTimeKind.Local).AddTicks(6436), new DateTime(2022, 7, 10, 1, 25, 29, 31, DateTimeKind.Local).AddTicks(6486), null, "admin", "admin", null, "$2a$11$e4AHqGd4M2fOBmVUvb4zBejOi3mD0BGMI.xiNT8GwwpnytXsHsd9e", 1, null, "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
-                values: new object[] { 2, new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7096), new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7149), null, "operator", "operator", null, "$2a$11$cIHedaB8v2lKJMX1DXkLA.UoeywpQX.Rg.SKie7XGaKBheftMJycy", 2, null, "Operator" });
+                values: new object[] { 2, new DateTime(2022, 7, 10, 1, 25, 29, 174, DateTimeKind.Local).AddTicks(9807), new DateTime(2022, 7, 10, 1, 25, 29, 174, DateTimeKind.Local).AddTicks(9850), null, "operator", "operator", null, "$2a$11$TY6W8TbakRViMg9Rm5ev0.poVHV9E8ra0VOOR4ZalCDmROOokiBRi", 2, null, "Operator" });
 
             migrationBuilder.InsertData(
                 table: "QRcodes",
                 columns: new[] { "Id", "CreationDate", "UpdateDate", "UserId", "token" },
-                values: new object[] { 1, new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7409), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
+                values: new object[] { 1, new DateTime(2022, 7, 10, 1, 25, 29, 175, DateTimeKind.Local).AddTicks(156), null, 2, "dasdsadasdsadewqrwrfewrewrwerewrewrewrew" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Actions_GiustificationId",

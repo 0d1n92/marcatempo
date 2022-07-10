@@ -20,9 +20,9 @@ namespace api.Model.Entity
         public DateTime? ModifyDate { get; set; }
         public string Token { get; set; }
         public int RoleId { get; set; }
-        public Role Role { get; set; }
-        public QRcode QRCode { get; set; }
-        public ICollection<Action> Activities { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual QRcode QRCode { get; set; }
+        public virtual ICollection<Action> Activities { get; set; }
 
     }
 }

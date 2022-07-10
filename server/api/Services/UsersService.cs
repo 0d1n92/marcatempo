@@ -27,7 +27,7 @@ namespace api.Services
         
         public async Task<User> Authenticate(AuthenticateRequestDto model)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == model.Username);
+            var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
             if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password): false)
             {
                 user.Token = _jwtUtils.GenerateToken(user);

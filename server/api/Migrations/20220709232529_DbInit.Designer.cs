@@ -11,7 +11,7 @@ using api.Helpers;
 namespace api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220709095558_DbInit")]
+    [Migration("20220709232529_DbInit")]
     partial class DbInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,7 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7409),
+                            CreationDate = new DateTime(2022, 7, 10, 1, 25, 29, 175, DateTimeKind.Local).AddTicks(156),
                             UserId = 2,
                             token = "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"
                         });
@@ -192,22 +192,22 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7236),
-                            DateOfBirth = new DateTime(2022, 7, 9, 11, 55, 58, 236, DateTimeKind.Local).AddTicks(7278),
+                            CreationDate = new DateTime(2022, 7, 10, 1, 25, 29, 31, DateTimeKind.Local).AddTicks(6436),
+                            DateOfBirth = new DateTime(2022, 7, 10, 1, 25, 29, 31, DateTimeKind.Local).AddTicks(6486),
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "$2a$11$QVDez.LEamcDuilLiNorcOljMK1Q0/rttZLknMYjSCEbYtEV3ZpUi",
+                            Password = "$2a$11$e4AHqGd4M2fOBmVUvb4zBejOi3mD0BGMI.xiNT8GwwpnytXsHsd9e",
                             RoleId = 1,
                             Username = "Administrator"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7096),
-                            DateOfBirth = new DateTime(2022, 7, 9, 11, 55, 58, 380, DateTimeKind.Local).AddTicks(7149),
+                            CreationDate = new DateTime(2022, 7, 10, 1, 25, 29, 174, DateTimeKind.Local).AddTicks(9807),
+                            DateOfBirth = new DateTime(2022, 7, 10, 1, 25, 29, 174, DateTimeKind.Local).AddTicks(9850),
                             FirstName = "operator",
                             LastName = "operator",
-                            Password = "$2a$11$cIHedaB8v2lKJMX1DXkLA.UoeywpQX.Rg.SKie7XGaKBheftMJycy",
+                            Password = "$2a$11$TY6W8TbakRViMg9Rm5ev0.poVHV9E8ra0VOOR4ZalCDmROOokiBRi",
                             RoleId = 2,
                             Username = "Operator"
                         });
