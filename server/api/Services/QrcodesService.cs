@@ -28,33 +28,39 @@ public class QrcodesService : IQrcodesService
         {
             var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
             var user = _context.Users.SingleOrDefault(x => x.Id == model.UserId);
-
-            if (model.Exit)
+            if (qrcode != null && user != null)
             {
-                var findedAction = GetAction(model.UserId);
 
-                if ((bool)findedAction.IsPresent && findedAction.Exit == null)
+                if (model.Exit)
                 {
-                    findedAction.Exit = DateTime.Now;
+                    var findedAction = GetAction(model.UserId);
 
-                    _context.Actions.Update(findedAction);
+                    if ((bool)findedAction.IsPresent && findedAction.Exit == null)
+                    {
+                        findedAction.Exit = DateTime.Now;
+
+                        _context.Actions.Update(findedAction);
+                    }
+                    else
+                    {
+                        return (false, "Entry date doesn't exist or the entry is already present ", action);
+
+                    }
                 }
                 else
                 {
-                    return (false, "Entry date doesn't exist or the entry is already present ", action);
-                
+                    action.UserId = model.UserId;
+                    action.IsPresent = true;
+                    action.Entry = DateTime.Now;
+                    _context.Actions.Add(action);
                 }
-            }
-            else
-            {
-                action.UserId = model.UserId;
-                action.IsPresent = true;
-                action.Entry = DateTime.Now;
-                _context.Actions.Add(action);
-            }
 
-            await  _context.SaveChangesAsync();
-            return (true, "Marked", action);
+                await _context.SaveChangesAsync();
+                return (true, "Marked", action);
+            } else
+            {
+                return (false, "User or Qrcode not exist", new Model.Entity.Action());
+            }
         }
         catch (Exception ex)
         {

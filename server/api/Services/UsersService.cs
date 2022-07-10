@@ -84,8 +84,8 @@ namespace api.Services
         }
 
         public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync() {
-
-            var data = await _context.Users.Include( src => src.Activities.Where( a => a.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+         
+            var data = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
             return (true, "Operator info", data);
         }
 
