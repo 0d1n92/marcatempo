@@ -11,7 +11,7 @@ namespace api.Interface
         IEnumerable<User> GetAll();
         User GetById(int id);
         Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
-
+        Task<(bool Success, string Message, List<User> data)> OperatorListAsync();
         Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
         void Delete(int id);
     }

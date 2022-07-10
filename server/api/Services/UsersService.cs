@@ -24,16 +24,16 @@ namespace api.Services
             _context = context;
             _jwtUtils = jwtUtils;
         }
-        
+
         public async Task<User> Authenticate(AuthenticateRequestDto model)
         {
             var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
-            if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password): false)
+            if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
             {
                 user.Token = _jwtUtils.GenerateToken(user);
                 return user;
             }
-                
+
             return new User();
         }
 
@@ -51,8 +51,8 @@ namespace api.Services
         {
 
             if (_context.Users.Any(x => x.Username == model.Username))
-                return (false, "Username already Taken"); 
-   
+                return (false, "Username already Taken");
+
             user.Password = BCryptNet.HashPassword(model.Password);
             _context.Users.Add(user);
             _context.SaveChanges();
@@ -64,11 +64,11 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        public async Task<(bool Success, string Message)>Update(int id, UpdateRequestDto model)
+        public async Task<(bool Success, string Message)> Update(int id, UpdateRequestDto model)
         {
             var user = getUser(id);
             if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
-               return (false, "Username '" + model.Username + "' is already taken");
+                return (false, "Username '" + model.Username + "' is already taken");
             if (!string.IsNullOrEmpty(model.Password))
             {
                 user.Password = BCryptNet.HashPassword(model.Password);
@@ -78,9 +78,15 @@ namespace api.Services
             }
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-            
-            return (true, "User updated successfully" );
 
+            return (true, "User updated successfully");
+
+        }
+
+        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync() {
+
+            var data = await _context.Users.Include( src => src.Activities.Where( a => a.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+            return (true, "Operator info", data);
         }
 
         public void Delete(int id)

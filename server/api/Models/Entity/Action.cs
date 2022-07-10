@@ -9,7 +9,7 @@ namespace api.Model.Entity
         public DateTime? Exit { get; set; }
         public Boolean? IsPresent { get; set; }
         public int? UserId { get; set; }
-        public User User{ get; set; }
+        public User User { get; set; }
         public Giustification Giustification { get; set; }
     }
 }

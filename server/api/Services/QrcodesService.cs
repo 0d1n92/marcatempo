@@ -21,8 +21,9 @@ public class QrcodesService : IQrcodesService
         _context = context;
         _jwtUtils = jwtUtils;
     }
-    public async Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto model, Model.Entity.Action action)
+    public async Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto model)
     {
+        var action = new Model.Entity.Action();
         try
         {
             var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
