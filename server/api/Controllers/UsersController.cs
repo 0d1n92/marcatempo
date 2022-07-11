@@ -146,9 +146,10 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        _userService.Delete(id);
+       var response = await _userService.Delete(id);
+        if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "User deleted successfully" });
     }
 
@@ -159,11 +160,12 @@ public class UsersController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
-    [AllowAnonymous]
+    [AuthorizeAdmin]
     [HttpGet("listoperators")]
     public async Task<IActionResult> OperatorListAsync()
     {
         var result = await _userService.OperatorListAsync();
+        if(!result.Success) return BadRequest(new { message = result.Message});
         return Ok(result);
 
     }
@@ -175,11 +177,10 @@ public class UsersController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
-    [AllowAnonymous]
-    [HttpGet("info")]
-    public async Task<IActionResult> GetUserAsync( [FromHeader] string authorization)
+    [Authorize]
+    [HttpGet("user-info")]
+    public async Task<IActionResult> GetUserAsync( [FromHeader] string token)
     {
-        var token = authorization;
         var response = await _userService.GetUserAsync(token);
         if (!response.Success) return BadRequest(new { Mesage = response.Message});
         var user = _mapper.Map<User, AuthenticateResponseDto>(response.data);

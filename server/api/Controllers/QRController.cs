@@ -41,12 +41,13 @@ public class QRController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
     /// /// <remarks>
+    /// QR Operator operator
     /// Entry:
     ///
     ///     POST 
     ///     { 
     ///        "exit": false,
-    ///        "userId": 1,
+    ///        "userId": 2,
     ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
     ///        
     ///     }   
@@ -55,7 +56,7 @@ public class QRController : ControllerBase
     ///     POST 
     ///     { 
     ///        "exit": true,
-    ///        "userId": 1,
+    ///        "userId": 2,
     ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
     ///        
     ///     }
@@ -78,7 +79,7 @@ public class QRController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost("update")]
     public async Task<IActionResult> UpdateQrcode(int request)
     {

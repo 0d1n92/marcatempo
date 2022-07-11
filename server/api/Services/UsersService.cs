@@ -45,6 +45,13 @@ namespace api.Services
             return _context.Users;
         }
 
+        private User getUser(int id)
+        {
+            var user = _context.Users.Find(id);
+            if (user == null) throw new KeyNotFoundException("User not found");
+            return user;
+        }
+
         public User GetById(int id)
         {
             return getUser(id);
@@ -87,12 +94,45 @@ namespace api.Services
 
         }
 
+        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
+        {
+            try
+            {
+                var users = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+                return (true, "Operator info", users);
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message, new List<User>());
+
+            }
+
+
+        }
+
+        public async Task<(bool Success, string Message)> Delete(int id)
+        {
+            try
+            {
+                var user = getUser(id);
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                return (true, "user deleted");
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
+            }
+        }
+
         public async Task<(bool Success, string Message, User data)> GetUserAsync(string token)
         {
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var user =  await _context.Users.Include(x => x.Role).Where(x => x.Id == userId).FirstAsync();
+                var user = await _context.Users.Include(x => x.Role).Where(x => x.Id == userId).FirstAsync();
                 return (true, "Utente trovato", user);
 
             }
@@ -101,25 +141,6 @@ namespace api.Services
                 return (false, e.Message, new User());
             }
 
-        }
-
-        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
-        {
-
-           var data = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-           return (true, "Operator info", data);
-        }
-
-        public void Delete(int id)
-        {
-            var user = getUser(id);
-            _context.Users.Remove(user);
-        }
-        private User getUser(int id)
-        {
-            var user = _context.Users.Find(id);
-            if (user == null) throw new KeyNotFoundException("User not found");
-            return user;
         }
     }
 
