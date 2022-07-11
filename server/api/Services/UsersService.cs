@@ -94,7 +94,7 @@ namespace api.Services
 
         }
 
-        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
+        public async Task<(bool Success, string Message, List<User> usersAction)> OperatorListAsync()
         {
             try
             {

@@ -7,6 +7,7 @@ using api.Model.Entity;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 
 namespace api.Controllers;
 [Authorize]
@@ -165,8 +166,9 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> OperatorListAsync()
     {
         var result = await _userService.OperatorListAsync();
+        
         if(!result.Success) return BadRequest(new { message = result.Message});
-        return Ok(result);
+        return Ok(new {data = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.usersAction) });
 
     }
 
