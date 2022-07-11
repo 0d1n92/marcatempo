@@ -32,7 +32,7 @@ const routes = [
   },
   {
     path: "/dashboard/:user/operators",
-    name: "operators",
+    name: "Operators",
     component: Operators,
   }
 
@@ -49,10 +49,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   console.log("router", localStorage.getItem('token'));
 
-  if (!localStorage.getItem('token') && to.name != "Login") {
+  if (!localStorage.getItem('token') && to.name != "Login" && to.name !="ScanQr") {
      
     next({ name: "login" })
-  } else if (localStorage.getItem('token') && localStorage.getItem('token').length > 0, to.name != "Login") {
+  } else if (localStorage.getItem('token') && localStorage.getItem('token').length > 0, to.name != "Login" && to.name != "ScanQr") {
       store.dispatch('GetUser')
   }
   next();

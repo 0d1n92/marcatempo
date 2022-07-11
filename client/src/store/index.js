@@ -24,6 +24,11 @@ export default new Vuex.Store({
     SetIsExit(state, payload) {
       state.isExit = payload;
     },
+    Logout(state) {
+      state.loggedUser={};
+      localStorage.clear();
+    }
+
   },
   actions: {
     GetUser({commit}) {

@@ -2,7 +2,7 @@
   <div>
     <aside-navbar>
     </aside-navbar>
-    <v-main class="pl-0">
+    <v-main class="pl-16 pt-16">
       <slot />
     </v-main>
   </div>

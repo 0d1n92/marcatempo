@@ -3,10 +3,14 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
         <qrcode-stream
-          camera="auto"
+          :camera="camera"
           @decode="onDecode"
           @init="onInit"
-        ></qrcode-stream>
+        >
+        <v-btn color="blue-grey" fab @click="switchCamera">
+          <v-icon dark>mdi-camera-switch</v-icon>
+        </v-btn>
+        </qrcode-stream>
         <v-btn
           depressed
           @click="$store.commit('SetIsExit', false)"
@@ -27,6 +31,11 @@ export default {
   components: {
     QrcodeStream,
   },
+  data () {
+  return {
+    camera: 'rear'
+  }
+},
 
   mounted() {
     console.log(this.$store.state.isExit);
@@ -36,6 +45,18 @@ export default {
     onDecode(data) {
       console.log("entro", data);
       this.QrCodePost(data);
+    },
+
+    switchCamera () {
+
+      switch (this.camera) {
+        case 'front':
+          this.camera = 'rear'
+          break
+        case 'rear':
+          this.camera = 'front'
+          break
+      }
     },
 
     QrCodePost(JSONpayload) {
@@ -50,7 +71,14 @@ export default {
       this.$store.dispatch("Postmark", payload);
     },
     onInit(promise) {
-      promise.then(console.log).catch(console.error);
+      promise.catch(error => {
+      const cameraMissingError = error.name === 'OverconstrainedError'
+      const triedFrontCamera = this.camera === 'front'
+
+      if (triedFrontCamera && cameraMissingError) {
+        // no front camera on this device
+      }
+    })
     },
   },
 };
