@@ -84,7 +84,7 @@ export default {
     } else {
       this.asideItemNavigation = [
         {
-          icon: "mdi-table-us",
+          icon: "mdi-table",
           title:"views operator",
           url:"mdi-qrcode-scan"
         }

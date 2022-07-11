@@ -179,8 +179,9 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpGet("user-info")]
-    public async Task<IActionResult> GetUserAsync( [FromHeader] string token)
+    public async Task<IActionResult> GetUserAsync()
     {
+        var token = Request.Headers["Authorization"];
         var response = await _userService.GetUserAsync(token);
         if (!response.Success) return BadRequest(new { Mesage = response.Message});
         var user = _mapper.Map<User, AuthenticateResponseDto>(response.data);

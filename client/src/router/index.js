@@ -4,6 +4,8 @@ import QrcodeScan from "../views/QrcodeScan.vue";
 import Login from "../views/Login.vue";
 import DashBoard from "../views/DashBoard.vue";
 import Operators from "../views/Operators.vue";
+import store from "../store";
+//import store from '@/store';
 
 
 Vue.use(VueRouter);
@@ -45,10 +47,13 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
+  console.log("router", localStorage.getItem('token'));
 
   if (!localStorage.getItem('token') && to.name != "Login") {
-    console.log("to:", to);
+     
     next({ name: "login" })
+  } else if (localStorage.getItem('token') && localStorage.getItem('token').length > 0, to.name != "Login") {
+      store.dispatch('GetUser')
   }
   next();
 });
