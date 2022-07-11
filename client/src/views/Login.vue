@@ -6,10 +6,10 @@
           <v-toolbar-title>Login form</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-form>
+          <v-form ref="form">
             <v-text-field
               v-model="payloadLogin.username"
-              :rules="[rules.required, rules.counter]"
+              :rules="[rules.required]"
               prepend-icon="fa-user"
               name="login"
               label="Login"
@@ -26,15 +26,15 @@
               type="password"
               required
             ></v-text-field>
-          </v-form>
-           <v-alert v-if="error.isError" type="error">
-              {{error.message}}
+            <v-spacer></v-spacer>
+            <div class="d-flex justify-end">
+            <v-btn color="primary" @click="Login">Login</v-btn>
+            </div>
+            <v-alert prominent outlined border="left" v-if="error.isError" class="mt-2" type="error">
+            {{ error.message }}
           </v-alert>
+          </v-form>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="Login">Login</v-btn>
-        </v-card-actions>
       </v-card>
     </v-flex>
   </v-container>
@@ -53,7 +53,7 @@ export default {
       password: "",
     },
     rules: {
-      required: value => !!value || 'Required.',
+      required: (value) => !!value || "Required.",
     },
     error: {
       isError: false,
@@ -63,14 +63,9 @@ export default {
   methods: {
     Login() {
       let scope = this;
-      if(this.payloadLogin.username == "" || this.payloadLogin.password ==="") {
-         scope.error = {
-              isError: true,
-              message: "Wrong user or password",
-          };
-    
+      this.$refs.form.validate();
+      if (this.payloadLogin.username == "" || this.payloadLogin.password === "")
         return;
-      }
       Axios.post(
         process.env.VUE_APP_ROOT_API + "/users/authenticate",
         this.payloadLogin
@@ -83,19 +78,13 @@ export default {
           });
         })
         .catch(function (error) {
-
           scope.error = {
-              isError: true,
-              message: error,
-            };
-
+            isError: true,
+            message: error,
+          };
           if (error.response.status == 404) {
-            scope.error = {
-              isError: true,
-              message: "Wrong user or password",
-            };
+            scope.error = { isError: true, message: "Wrong user or password" };
           }
-           
           console.log("errore" + error);
         });
     },
