@@ -11,10 +11,10 @@ namespace api.Interface
         IEnumerable<User> GetAll();
         User GetById(int id);
         Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
-        Task<(bool Success, string Message, List<User> usersAction)> OperatorActionListAsync();
+        Task<(bool Success, string Message, List<User> data)> OperatorActionListAsync();
         Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
         Task<(bool Success, string Message, User data)> GetUserAsync(string token);
         Task<(bool Success, string Message)> Delete(int id);
-        Task<(bool Success, string Message, List<User> usersAction)> OperatorListAsync();
+        Task<(bool Success, string Message, List<User> data)> OperatorListAsync();
     }
 }

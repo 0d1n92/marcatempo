@@ -93,7 +93,7 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> usersAction)> OperatorListAsync()
+        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
         {
             try
             {
@@ -105,7 +105,7 @@ namespace api.Services
             }
 
         }
-        public async Task<(bool Success, string Message, List<User> usersAction)> OperatorActionListAsync()
+        public async Task<(bool Success, string Message, List<User> data)> OperatorActionListAsync()
         {
             try
             {

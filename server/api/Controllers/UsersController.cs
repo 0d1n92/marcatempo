@@ -168,7 +168,7 @@ public class UsersController : ControllerBase
         var result = await _userService.OperatorActionListAsync();
         
         if(!result.Success) return BadRequest(new { message = result.Message});
-        return Ok(new {data = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.usersAction) });
+        return Ok(new {data = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.data) });
 
     }
 
@@ -186,7 +186,7 @@ public class UsersController : ControllerBase
         var result = await _userService.OperatorActionListAsync();
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new { data = _mapper.Map<IList<User>>(result.usersAction) });
+        return Ok(new { data = _mapper.Map<IList<User>, IList<ResponseOperatorsDto>>(result.data) });
 
     }
     ///<summary>
