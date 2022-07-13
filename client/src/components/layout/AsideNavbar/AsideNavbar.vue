@@ -1,20 +1,9 @@
 <template>
   <div>
     <v-navigation-drawer absolute color="grey pt-9 lighten-3" mini-variant>
-      <v-icon
-        @click="() => (this.show = !this.show)"
-        class="d-block text-center mx-auto mb-9"
-        large
-        >mdi-menu</v-icon
-      >
-      <v-list-item
-        v-for="(item, index) in asideItemNavigation"
-        :key="index"
-        link
-      >
-        <v-list-item-icon @click="$router.push({ name: item.route_name })">
-          <v-icon v-text="item.icon"></v-icon>
-        </v-list-item-icon>
+      <v-icon @click="() => (this.show = !this.show)" class="d-block text-center mx-auto mb-9" large>mdi-menu</v-icon>
+      <v-list-item v-for="(item, index) in asideItemNavigation" :key="index" link>
+          <v-icon v-text="item.icon" :title="item.title" @click="$router.push({ name: item.route_name })"></v-icon>
       </v-list-item>
     </v-navigation-drawer>
     <v-navigation-drawer app width="300" class="ml-15" v-show="show">
@@ -23,13 +12,10 @@
           <v-row no-gutters>
             <v-col>
               <div class="d-flex  justify-space-between">
-                <v-avatar
-                  class="d-block"
-                  color="grey darken-1"
-                  size="65"
-                ></v-avatar>
-                <v-btn @click="logout" icon color="red" title="logout"
-                  ><v-icon>mdi-location-exit</v-icon></v-btn>
+                <v-avatar class="d-block" color="grey darken-1" size="65"></v-avatar>
+                <v-btn @click="logout" icon color="red" title="logout">
+                  <v-icon>mdi-location-exit</v-icon>
+                </v-btn>
               </div>
             </v-col>
             <v-col>
@@ -38,14 +24,14 @@
                   <v-list-item-content>
                     <v-list-item-title class="text-h6">
                       {{
-                        $store.state.loggedUser.firstName +
-                        " " +
-                        $store.state.loggedUser.lastName
+                      $store.state.loggedUser.firstName +
+                      " " +
+                      $store.state.loggedUser.lastName
                       }}
                     </v-list-item-title>
                     <v-list-item-subtitle>{{
                       $store.state.loggedUser.roleName
-                    }}</v-list-item-subtitle>
+                      }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -70,20 +56,29 @@ export default {
   data() {
     return {
       show: false,
-      asideItemNavigation: [],
+      asideItemNavigation: [ 
+        {
+          icon: "mdi-monitor-dashboard",
+          title: "DashBoard",
+          route_name: "DashBoard",
+        },
+
+      ],
     };
   },
   mounted() {
     if (this.$store.state.loggedUser.roleName == "Administrator") {
       this.asideItemNavigation = [
+        ...this.asideItemNavigation,
         {
           icon: "mdi-table-account",
-          title: "views operator",
+          title: "views operator", 
           route_name: "Operators",
         },
       ];
     } else {
       this.asideItemNavigation = [
+        ...this.asideItemNavigation,
         {
           icon: "mdi-qrcode-scan",
           title: "views operator",

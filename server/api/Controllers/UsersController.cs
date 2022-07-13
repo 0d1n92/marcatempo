@@ -155,23 +155,40 @@ public class UsersController : ControllerBase
     }
 
     ///<summary>
-    /// Get Operators List 
+    /// Get List of Action Operator
     ///</summary>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
     [AuthorizeAdmin]
-    [HttpGet("listoperators")]
-    public async Task<IActionResult> OperatorListAsync()
+    [HttpGet("actionoperators")]
+    public async Task<IActionResult> OperatorListActionAsync()
     {
-        var result = await _userService.OperatorListAsync();
+        var result = await _userService.OperatorActionListAsync();
         
         if(!result.Success) return BadRequest(new { message = result.Message});
         return Ok(new {data = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.usersAction) });
 
     }
 
+    ///<summary>
+    /// Get List of Operators
+    ///</summary>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [AuthorizeAdmin]
+    [HttpGet("operators")]
+    public async Task<IActionResult> OperatorListAsync()
+    {
+        var result = await _userService.OperatorActionListAsync();
+
+        if (!result.Success) return BadRequest(new { message = result.Message });
+        return Ok(new { data = _mapper.Map<IList<User>>(result.usersAction) });
+
+    }
     ///<summary>
     /// Get User info by token
     ///</summary>

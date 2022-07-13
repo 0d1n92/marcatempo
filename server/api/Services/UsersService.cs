@@ -93,8 +93,19 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-
         public async Task<(bool Success, string Message, List<User> usersAction)> OperatorListAsync()
+        {
+            try
+            {
+                var operators = await _context.Users.Include(usr => usr.QRCode.token).Where(x => x.Role.Id == (int)EnumRoles.Operator).ToListAsync();
+                return (true, "Operators Finded", operators);
+            } catch (Exception e)
+            {
+                return (false, e.Message,new List<User>()); 
+            }
+
+        }
+        public async Task<(bool Success, string Message, List<User> usersAction)> OperatorActionListAsync()
         {
             try
             {
