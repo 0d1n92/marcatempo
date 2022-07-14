@@ -5,9 +5,9 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]]
 
 ## MARCATEMPO
-Webapp che si propone di aiutare e digitalizzare le piccole aziende artigiane italiane, con un marcatempo a prezzi ridotti o quasi nulli.__
-Questo applicativo aiuta nella gestione del personale formato da pochi elementi.__
-Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.__
+Webapp che si propone di aiutare e digitalizzare le piccole aziende artigiane italiane, con un marcatempo a prezzi ridotti o quasi nulli.<br/>
+Questo applicativo aiuta la gestione del personale formato da pochi elementi. <br/>
+Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.<br/>
 
 ### Realizzato con
 * Asp.net
