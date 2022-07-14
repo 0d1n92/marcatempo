@@ -34,7 +34,7 @@ export default new Vuex.Store({
     GetUser({commit}) {
       Axios.get(process.env.VUE_APP_ROOT_API + "/users/user-info", { headers: { "Authorization": `${localStorage.getItem('token')}` } }).then(
         (response)=> {
-          commit("GetUser", response.data.data);
+          commit("GetUser", response.data.user);
         }
       ).catch(function (error) {
         console.log("errore" + error);
