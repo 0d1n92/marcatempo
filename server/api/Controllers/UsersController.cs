@@ -163,12 +163,12 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpGet("actionoperators")]
-    public async Task<IActionResult> OperatorListActionAsync()
+    public async Task<IActionResult> OperatorActionListAsync()
     {
         var result = await _userService.OperatorActionListAsync();
         
         if(!result.Success) return BadRequest(new { message = result.Message});
-        return Ok(new {data = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.data) });
+        return Ok(new { operators = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.operators) });
 
     }
 
@@ -183,10 +183,10 @@ public class UsersController : ControllerBase
     [HttpGet("operators")]
     public async Task<IActionResult> OperatorListAsync()
     {
-        var result = await _userService.OperatorActionListAsync();
+        var result = await _userService.OperatorListAsync();
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new { data = _mapper.Map<IList<User>, IList<ResponseOperatorsDto>>(result.data) });
+        return Ok(new { operators = _mapper.Map<IList<User>, IList<ResponseOperatorsDto>>(result.operators) });
 
     }
     ///<summary>
@@ -203,7 +203,7 @@ public class UsersController : ControllerBase
         var token = Request.Headers["Authorization"];
         var response = await _userService.GetUserAsync(token);
         if (!response.Success) return BadRequest(new { Mesage = response.Message});
-        var user = _mapper.Map<User, AuthenticateResponseDto>(response.data);
-        return Ok(new {data = user});
+        var user = _mapper.Map<User, AuthenticateResponseDto>(response.user);
+        return Ok(new {user = user});
     }
 }

@@ -93,11 +93,11 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
+        public async Task<(bool Success, string Message, List<User> operators)> OperatorListAsync()
         {
             try
             {
-                var operators = await _context.Users.Include(usr => usr.QRCode.token).Where(x => x.Role.Id == (int)EnumRoles.Operator).ToListAsync();
+                var operators = await _context.Users.Where(x => x.Role.Id == (int)EnumRoles.Operator).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
                 return (true, "Operators Finded", operators);
             } catch (Exception e)
             {
@@ -105,12 +105,12 @@ namespace api.Services
             }
 
         }
-        public async Task<(bool Success, string Message, List<User> data)> OperatorActionListAsync()
+        public async Task<(bool Success, string Message, List<User> operators)> OperatorActionListAsync()
         {
             try
             {
-                var users = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-                return (true, "Operator info", users);
+                var operators = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+                return (true, "Operator info", operators);
 
             }
             catch (Exception e)
@@ -138,7 +138,7 @@ namespace api.Services
             }
         }
 
-        public async Task<(bool Success, string Message, User data)> GetUserAsync(string token)
+        public async Task<(bool Success, string Message, User user)> GetUserAsync(string token)
         {
             try
             {

@@ -70,18 +70,23 @@ export default {
     if (this.$store.state.loggedUser.roleName == "Administrator") {
       this.asideItemNavigation = [
         ...this.asideItemNavigation,
-        {
-          icon: "mdi-table-account",
-          title: "views operator", 
+         {
+          icon: "mdi-account-group",
+          title: "view operators", 
           route_name: "Operators",
         },
+        {
+          icon: "mdi-table-account",
+          title: "views action", 
+          route_name: "actions",
+        }  
       ];
-    } else {
+    } else if (this.$store.state.loggedUser.roleName == "Operators") {
       this.asideItemNavigation = [
         ...this.asideItemNavigation,
         {
           icon: "mdi-qrcode-scan",
-          title: "views operator",
+          title: "scan qrcode",
           route_name: "ScanQr",
         },
       ];
