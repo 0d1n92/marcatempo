@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import QrcodeScan from '../views/QrcodeScan.vue';
 import Login from '../views/Login.vue';
 import DashBoard from '../views/DashBoard.vue';
-import Operators from '../views/Operators.vue';
+import UsersList from '../views/UsersList.vue';
 import store from '../store';
 // import store from '@/store';
 Vue.use(VueRouter);
@@ -29,9 +29,9 @@ const routes = [
     component: DashBoard,
   },
   {
-    path: '/dashboard/:user/operators',
-    name: 'Operators',
-    component: Operators,
+    path: '/dashboard/users',
+    name: 'users',
+    component: UsersList,
   },
 ];
 

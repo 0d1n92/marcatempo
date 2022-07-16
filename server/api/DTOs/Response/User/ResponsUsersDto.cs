@@ -1,6 +1,6 @@
 ﻿namespace api.DTOs
 {
-    public class ResponseOperatorsDto
+    public class ResponsUsersDto
     {
 
         public int Id { get; set; }

@@ -1,15 +1,15 @@
 <template>
   <WireFrameVue>
-    <v-data-table :headers="headers" :items="operators" sort-by="Name" class="elevation-1">
+    <v-data-table :headers="headers" :items="users" sort-by="Name" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Operatori</v-toolbar-title>
+          <v-toolbar-title>Users</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="500px">
+          <v-dialog v-model="dialog" width="80%">
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> Add Operator </v-btn>
             </template>
-            <OperatorForm @save="save" @close="close" :operator="editedItem" :formTitle="formTitle" />
+            <user-profile-form @save="save" @close="close" :user="editedItem" :formTitle="formTitle" />
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
@@ -37,11 +37,11 @@
 <script>
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
-import OperatorForm from '../components/admin/operators/OperatorForm.vue';
+import UserProfileForm from '../components/users/UserProfileForm.vue';
 
 export default {
-  name: 'Operators',
-  components: { WireFrameVue, OperatorForm },
+  name: 'UserList',
+  components: { WireFrameVue, UserProfileForm },
   data: () => ({
     dialog: false,
     dialogDelete: false,
@@ -58,7 +58,7 @@ export default {
       { text: 'Role', value: 'roleName' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
-    operators: [],
+    users: [],
     editedIndex: -1,
     editedItem: {},
     defaultItem: {
@@ -70,11 +70,11 @@ export default {
     },
   }),
   mounted() {
-    Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/operators`, {
+    Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
       headers: { Authorization: `${localStorage.getItem('token')}` },
     })
       .then((response) => {
-        this.operators = response.data.operators;
+        this.users = response.data.users;
       })
       .catch((error) => {
         console.log(`errore + ${error}`);
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New operator' : 'Edit Operator Profile';
+      return this.editedIndex === -1 ? 'Add User' : 'User Profile';
     },
   },
   watch: {
@@ -103,23 +103,23 @@ export default {
   methods: {
     initialize() {
       // eslint-disable-next-line no-unused-expressions
-      this.operators;
+      this.users;
     },
 
     editItem(item) {
-      this.editedIndex = this.operators.indexOf(item);
+      this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.operators.indexOf(item);
+      this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.operators.splice(this.editedIndex, 1);
+      this.users.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -141,9 +141,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.operators[this.editedIndex], this.editedItem);
+        Object.assign(this.users[this.editedIndex], this.editedItem);
       } else {
-        this.operators.push(this.editedItem);
+        this.users.push(this.editedItem);
       }
       this.close();
     },

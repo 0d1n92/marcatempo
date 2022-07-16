@@ -65,8 +65,8 @@ export default {
         ...this.asideItemNavigation,
         {
           icon: 'mdi-account-group',
-          title: 'view operators',
-          route_name: 'Operators',
+          title: 'List of users',
+          route_name: 'users',
         },
         {
           icon: 'mdi-table-account',

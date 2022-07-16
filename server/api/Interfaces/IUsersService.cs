@@ -15,6 +15,6 @@ namespace api.Interface
         Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
         Task<(bool Success, string Message, User user)> GetUserAsync(string token);
         Task<(bool Success, string Message)> Delete(int id);
-        Task<(bool Success, string Message, List<User> operators)> OperatorListAsync();
+        Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token);
     }
 }

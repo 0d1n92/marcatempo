@@ -97,12 +97,13 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> operators)> OperatorListAsync()
+        public async Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token)
         {
+            var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var operators = await _context.Users.Where(x => x.Role.Id == (int)EnumRoles.Operator).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
-                return (true, "Operators Finded", operators);
+                var users = await _context.Users.Where(usr => usr.Id != userId).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
+                return (true, "Users Finded", users);
             } catch (Exception e)
             {
                 return (false, e.Message,new List<User>()); 
