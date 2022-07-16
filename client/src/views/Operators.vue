@@ -9,33 +9,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> Add Operator </v-btn>
             </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.firstName" label="Name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.lastName" label="Surname"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-                <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-              </v-card-actions>
-            </v-card>
+            <OperatorForm @save="save" @close="close" :operator="editedItem" :formTitle="formTitle" />
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
@@ -63,13 +37,15 @@
 <script>
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
+import OperatorForm from '../components/admin/operators/OperatorForm.vue';
 
 export default {
   name: 'Operators',
-  components: { WireFrameVue },
+  components: { WireFrameVue, OperatorForm },
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    qrcode: {},
     headers: [
       {
         text: 'Name',
@@ -84,13 +60,7 @@ export default {
     ],
     operators: [],
     editedIndex: -1,
-    editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
+    editedItem: {},
     defaultItem: {
       name: '',
       calories: 0,

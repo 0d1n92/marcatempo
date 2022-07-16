@@ -67,9 +67,13 @@ namespace api.Services
             _context.Users.Add(user);
             _context.SaveChanges();
             qrcode.UserId = user.Id;
-            qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
-            _context.QRcodes.Add(qrcode);
-            await _context.SaveChangesAsync();
+
+            if (model.RoleId != (int)EnumRoles.Administrator)
+            {
+                qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
+                _context.QRcodes.Add(qrcode);
+                await _context.SaveChangesAsync();
+            }
 
             return (true, "Registration successful");
         }

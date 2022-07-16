@@ -12,7 +12,8 @@ namespace api.DTOs
         public string Username { get; set; }
         [Required]
         public string Email { get; set; }
-        public int RoleId = 2;
+        [Required]
+        public int RoleId  { get; set; }
         [Required]
         public string Password { get; set; }
     }
