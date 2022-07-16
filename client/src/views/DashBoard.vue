@@ -1,18 +1,14 @@
 <template>
-  <WireFrameVue>
-  </WireFrameVue>
-  
+  <WireFrameVue> </WireFrameVue>
 </template>
 
 <script>
-import WireFrameVue from '../components/layout/WireFrame.vue'
+import WireFrameVue from '../components/layout/WireFrame.vue';
+
 export default {
-  name: "DashBoard",
-  components: {WireFrameVue},
-}
+  name: 'DashBoard',
+  components: { WireFrameVue },
+};
 </script>
 
-
-<style>
-
-</style>
+<style></style>
