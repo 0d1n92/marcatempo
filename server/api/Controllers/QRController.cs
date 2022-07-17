@@ -75,15 +75,15 @@ public class QRController : ControllerBase
     ///<summary>
     /// Update qrcodes
     ///</summary>
-    /// <param name="request"></param>
+    /// <param name="userID"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpPost("update")]
-    public async Task<IActionResult> UpdateQrcode(int request)
+    public async Task<IActionResult> UpdateQrcode(int userId)
     {
-        var data = await _qrService.UpdateQrcode(request);
+        var data = await _qrService.UpdateQrcode(userId);
         if (!data.Success) return BadRequest(new { Message = data.Message });
         return Ok(data.data);
     }

@@ -15,16 +15,7 @@
             </v-avatar>
           </v-col>
           <v-col cols="12" sm="6" md="6">
-            <QrcodeVue
-              :value="
-                JSON.stringify({
-                  exit: true,
-                  userId: user.userId,
-                  qRcode: user.qrCode,
-                })
-              "
-              size="200"
-            />
+            <QrcodeCard :user="user" />
           </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="user.firstName" label="Name"></v-text-field>
@@ -46,11 +37,11 @@
   </v-card>
 </template>
 <script>
-import QrcodeVue from 'qrcode.vue';
+import QrcodeCard from './QrcodeCard.vue';
 
 export default {
   name: 'UsersAdminForm',
-  components: { QrcodeVue },
+  components: { QrcodeCard },
   props: {
     formTitle: {
       type: String,
