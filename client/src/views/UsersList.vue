@@ -11,17 +11,12 @@
             </template>
             <user-profile-form @save="save" @close="close" :user="editedItem" :formTitle="formTitle" />
           </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <ConfirmDialog
+            :show="dialogDelete"
+            @agree="closeDelete"
+            title="Delete user"
+            :description="`Are you sure you want to delete user ${editedItem.username}?`"
+          />
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -38,10 +33,11 @@
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import UserProfileForm from '../components/users/UserProfileForm.vue';
+import ConfirmDialog from '../components/layout/Message/ConfirmDialog.vue';
 
 export default {
   name: 'UserList',
-  components: { WireFrameVue, UserProfileForm },
+  components: { WireFrameVue, UserProfileForm, ConfirmDialog },
   data: () => ({
     dialog: false,
     dialogDelete: false,
@@ -105,7 +101,6 @@ export default {
       // eslint-disable-next-line no-unused-expressions
       this.users;
     },
-
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };

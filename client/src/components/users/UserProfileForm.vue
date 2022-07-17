@@ -52,9 +52,14 @@ export default {
   name: 'UsersAdminForm',
   components: { QrcodeVue },
   props: {
-    // eslint-disable-next-line vue/require-prop-type-constructor
-    formTitle: '',
-    user: {},
+    formTitle: {
+      type: String,
+      dafult: '',
+    },
+    user: {
+      type: Object,
+      dafault: {},
+    },
   },
   methods: {
     close() {
