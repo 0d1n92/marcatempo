@@ -13,11 +13,13 @@
               prepend-icon="fa-user"
               name="login"
               label="Login"
+              @keyup.enter="Login"
               type="text"
               required
             ></v-text-field>
             <v-text-field
               id="password"
+              @keyup.enter="Login"
               v-model="payloadLogin.password"
               :rules="[rules.required]"
               prepend-icon="fa-lock"

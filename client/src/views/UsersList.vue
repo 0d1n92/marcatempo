@@ -5,9 +5,20 @@
         <v-toolbar flat>
           <v-toolbar-title>Users</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
           <v-dialog v-model="dialog" width="80%">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> Add Operator </v-btn>
+              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" fab>
+                <v-icon>mdi-account-plus</v-icon>
+              </v-btn>
             </template>
             <user-profile-form @save="save" @close="close" :user="editedItem" :formTitle="formTitle" />
           </v-dialog>
