@@ -1,8 +1,16 @@
 <template>
   <v-card elevation="3" class="pa-2" width="200">
-    <QrcodeVue :value.sync="valueQr" size="180" />
+    <QrcodeVue :value="JSON.stringify({ exit: true, userId: this.user.id, qRcode: this.TokenQr })" size="180" />
     <div class="d-flex">
-      <v-btn :href="url" class="mx-2" title="download qrcode" dark large color="red" download>
+      <v-btn
+        :href="url"
+        class="mx-2"
+        title="download qrcode"
+        dark
+        large
+        color="red"
+        :download="`QrCode_${user.username}`"
+      >
         <v-icon dark> mdi-download </v-icon>
       </v-btn>
       <v-btn @click="UpdateQrcode" class="mx-2" title="update qrcode" dark large color="blue">
@@ -28,19 +36,13 @@ export default {
     return {
       url: '',
       TokenQr: '',
-      valueQr: '',
     };
   },
   mounted() {
     this.TokenQr = this.user.qrCode;
     this.GetLinkQrcode();
-    this.qrCodeToString();
   },
   methods: {
-    qrCodeToString() {
-      this.valueQr = JSON.stringify({ exit: true, userId: this.user.id, qRcode: this.TokenQr });
-      console.log(this.valueQr);
-    },
     GetLinkQrcode() {
       const img = this.$el.querySelector('canvas').toDataURL();
       this.url = img;
@@ -55,7 +57,6 @@ export default {
       )
         .then((response) => {
           this.TokenQr = response.data.token;
-          this.qrCodeToString();
         })
         .catch((error) => {
           console.log(`errore + ${error}`);
