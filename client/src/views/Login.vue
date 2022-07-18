@@ -13,11 +13,13 @@
               prepend-icon="fa-user"
               name="login"
               label="Login"
+              @keyup.enter="Login"
               type="text"
               required
             ></v-text-field>
             <v-text-field
               id="password"
+              @keyup.enter="Login"
               v-model="payloadLogin.password"
               :rules="[rules.required]"
               prepend-icon="fa-lock"
@@ -28,11 +30,11 @@
             ></v-text-field>
             <v-spacer></v-spacer>
             <div class="d-flex justify-end">
-            <v-btn color="primary" @click="Login">Login</v-btn>
+              <v-btn color="primary" @click="Login">Login</v-btn>
             </div>
-            <v-alert prominent outlined border="left" v-if="error.isError" class="mt-2" type="error">
-            {{ error.message }}
-          </v-alert>
+            <v-alert v-if="error.isError" prominent outlined border="left" class="mt-2" type="error">
+              {{ error.message }}
+            </v-alert>
           </v-form>
         </v-card-text>
       </v-card>
@@ -41,55 +43,50 @@
 </template>
 
 <script>
-import Axios from "axios";
+import Axios from 'axios';
+
 export default {
-  name: "Login",
+  name: 'Login',
   props: {
     source: String,
   },
   data: () => ({
     payloadLogin: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
     rules: {
-      required: (value) => !!value || "Required.",
+      required: (value) => !!value || 'Required.',
     },
     error: {
       isError: false,
-      message: "",
+      message: '',
     },
   }),
   methods: {
     Login() {
-      let scope = this;
+      const scope = this;
       this.$refs.form.validate();
-      if (this.payloadLogin.username == "" || this.payloadLogin.password === "")
-        return;
-      Axios.post(
-        process.env.VUE_APP_ROOT_API + "/users/authenticate",
-        this.payloadLogin
-      )
+      if (this.payloadLogin.username === '' || this.payloadLogin.password === '') return;
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
         .then((response) => {
           localStorage.token = response.data.token;
           this.$router.push({
-            name: "DashBoard",
+            name: 'DashBoard',
             params: { user: response.data.username },
           });
         })
-        .catch(function (error) {
+        .catch((error) => {
           scope.error = {
             isError: true,
             message: error,
           };
-          if (error.response.status == 404) {
-            scope.error = { isError: true, message: "Wrong user or password" };
+          if (error.response.status === 404) {
+            scope.error = { isError: true, message: 'Wrong user or password' };
           }
-          console.log("errore" + error);
+          console.log(`errore + ${error}`);
         });
     },
   },
 };
 </script>
-
-<style></style>

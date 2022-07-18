@@ -10,7 +10,7 @@ namespace api.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, AuthenticateResponseDto>().ForMember(ar => ar.RoleName, opt => opt.MapFrom(usr => usr.Role.Name)).ReverseMap();
-            CreateMap<User, ResponseOperatorsDto>().ForMember(x => x.QrCode, opt => opt.MapFrom(usr => usr.QRCode.token));
+            CreateMap<User, ResponsUsersDto>().ForMember(x => x.QrCode, opt => opt.MapFrom(usr => usr.QRCode.token)).ForMember(x => x.RoleName, opt => opt.MapFrom(usr => usr.Role.Name)); 
             CreateMap<User, ResponseListofActionUsersDto>().ForMember(rla => rla.Actions, opt => opt.MapFrom(usr => usr.Activities.Select(act => new ActionDto { Name = usr.FirstName, Surname = usr.LastName, IsPresent = act.IsPresent, Entry = act.Entry, Exit = act.Exit }).ToList())).ReverseMap();
             CreateMap<Model.Entity.Action, PostmarkerQRcodeResponseDto>().ReverseMap();
             CreateMap<RegisterRequestDto, User>();

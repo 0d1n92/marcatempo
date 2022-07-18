@@ -67,9 +67,13 @@ namespace api.Services
             _context.Users.Add(user);
             _context.SaveChanges();
             qrcode.UserId = user.Id;
-            qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
-            _context.QRcodes.Add(qrcode);
-            await _context.SaveChangesAsync();
+
+            if (model.RoleId != (int)EnumRoles.Administrator)
+            {
+                qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
+                _context.QRcodes.Add(qrcode);
+                await _context.SaveChangesAsync();
+            }
 
             return (true, "Registration successful");
         }
@@ -93,24 +97,25 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> data)> OperatorListAsync()
+        public async Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token)
         {
+            var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var operators = await _context.Users.Include(usr => usr.QRCode.token).Where(x => x.Role.Id == (int)EnumRoles.Operator).ToListAsync();
-                return (true, "Operators Finded", operators);
+                var users = await _context.Users.Where(usr => usr.Id != userId).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
+                return (true, "Users Finded", users);
             } catch (Exception e)
             {
                 return (false, e.Message,new List<User>()); 
             }
 
         }
-        public async Task<(bool Success, string Message, List<User> data)> OperatorActionListAsync()
+        public async Task<(bool Success, string Message, List<User> operators)> OperatorActionListAsync()
         {
             try
             {
-                var users = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-                return (true, "Operator info", users);
+                var operators = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
+                return (true, "Operator info", operators);
 
             }
             catch (Exception e)
@@ -138,7 +143,7 @@ namespace api.Services
             }
         }
 
-        public async Task<(bool Success, string Message, User data)> GetUserAsync(string token)
+        public async Task<(bool Success, string Message, User user)> GetUserAsync(string token)
         {
             try
             {

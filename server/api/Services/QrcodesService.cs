@@ -80,7 +80,7 @@ public class QrcodesService : IQrcodesService
     {
         try
         {
-            QRcode qrcode = (QRcode)_context.QRcodes.Where(x => x.UserId == id);
+            QRcode qrcode = (QRcode)_context.QRcodes.Where(x => x.UserId == id).First();
             qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
             _context.QRcodes.Update(qrcode);
             await _context.SaveChangesAsync();

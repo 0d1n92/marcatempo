@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div id="top"></div>
 <!-- PROJECT LOGO -->
 <br />
@@ -7,6 +8,18 @@
 ## MARCATEMPO
 Webapp realizzata per risolvere una necessità delle piccole imprese, ovvero avere un marcatempo a prezzi ridotti o quasi nulli, che permettere alle piccole imprese di gestire il loro personale.
 Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.
+=======
+19 lines (13 sloc)  877 Bytes
+
+
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]]
+
+## MARCATEMPO
+Webapp che si propone di aiutare e digitalizzare le piccole aziende artigiane italiane, con un marcatempo a prezzi ridotti o quasi nulli.<br/>
+Questo applicativo aiuta la gestione del personale formato da pochi elementi. <br/>
+Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.<br/>
+>>>>>>> 2b392022a37d72379e0f774565aaacad2332f8b6
 
 ### Realizzato con
 * Asp.net

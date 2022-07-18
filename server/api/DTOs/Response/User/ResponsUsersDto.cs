@@ -1,6 +1,6 @@
 ﻿namespace api.DTOs
 {
-    public class ResponseOperatorsDto
+    public class ResponsUsersDto
     {
 
         public int Id { get; set; }
@@ -10,8 +10,6 @@
         public string QrCode { get; set; }
         public int RoleId { get; set; }
         public string RoleName { get; set; }
-        public string Token { get; set; }
-
 
     }
 }
