@@ -50,7 +50,7 @@ router.beforeEach((to, from, next) => {
     to.name !== 'Login' &&
     to.name !== 'ScanQr'
   ) {
-    store.dispatch('GetUser');
+    store.dispatch('GetUser').then(next()).catch(console.log('Error : user not found'));
   }
   next();
 });
