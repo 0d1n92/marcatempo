@@ -47,8 +47,8 @@ public class QRController : ControllerBase
     ///     POST 
     ///     { 
     ///        "exit": false,
-    ///        "userId": 2,
-    ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
+    /// 
+    ///        "token": "81a130d2-502f-4cf1-a376-63edeb000e9f" 
     ///        
     ///     }   
     /// Exit:
@@ -56,12 +56,12 @@ public class QRController : ControllerBase
     ///     POST 
     ///     { 
     ///        "exit": true,
-    ///        "userId": 2,
-    ///        "qRtoken": "dasdsadasdsadewqrwrfewrewrwerewrewrewrew"  
+    ///     
+    ///         "token": "81a130d2-502f-4cf1-a376-63edeb000e9f" 
     ///        
     ///     }
     /// </remarks>
- 
+
     [AllowAnonymous]
     [HttpPost("postmark")]
     public async Task<IActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
@@ -75,15 +75,15 @@ public class QRController : ControllerBase
     ///<summary>
     /// Update qrcodes
     ///</summary>
-    /// <param name="userID"></param>
+    /// <param name="token"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpPost("update")]
-    public async Task<IActionResult> UpdateQrcode(int userId)
+    public async Task<IActionResult> UpdateQrcode(Guid token)
     {
-        var data = await _qrService.UpdateQrcode(userId);
+        var data = await _qrService.UpdateQrcode(token);
         if (!data.Success) return BadRequest(new { Message = data.Message });
         return Ok(data.data);
     }

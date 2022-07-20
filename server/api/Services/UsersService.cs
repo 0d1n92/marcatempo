@@ -70,7 +70,7 @@ namespace api.Services
 
             if (model.RoleId != (int)EnumRoles.Administrator)
             {
-                qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
+                qrcode.token = Guid.NewGuid();
                 _context.QRcodes.Add(qrcode);
                 await _context.SaveChangesAsync();
             }
@@ -155,6 +155,21 @@ namespace api.Services
             catch (Exception e)
             {
                 return (false, e.Message, new User());
+            }
+
+        }
+        
+        public async Task<(bool Success, string Message, User user)> GetUserByUsername(string userName)
+        {
+            try
+            {
+
+              var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == userName);
+
+                return (true, "User founded", user);
+            } catch (Exception e)
+            {
+                return(false, e.Message, new User());
             }
 
         }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs
 {
@@ -6,9 +7,8 @@ namespace api.DTOs
     {
         [Required]
         public bool Exit { get; set; } = false;
+
         [Required]
-        public int UserId { get; set; }
-        [Required]
-        public string QRtoken { get; set; }
+        public Guid token { get; set; }
     }
 }

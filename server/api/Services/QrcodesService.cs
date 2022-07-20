@@ -7,81 +7,61 @@ using System.Linq;
 using api.Interface;
 using api.Model.Entity;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 public class QrcodesService : IQrcodesService
 {
     private DataContext _context;
-    private IJwtUtils _jwtUtils;
     public QrcodesService(
-          DataContext context,
-          IJwtUtils jwtUtils
+          DataContext context
         )
     {
         _context = context;
-        _jwtUtils = jwtUtils;
     }
-    public async Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto model)
+    public async Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto request)
     {
         var action = new Model.Entity.Action();
         try
         {
-            var qrcode = _context.QRcodes.SingleOrDefault(x => x.UserId == model.UserId && x.token == model.QRtoken);
-            var user = _context.Users.SingleOrDefault(x => x.Id == model.UserId);
-            if (qrcode != null && user != null)
-            {
-
-                if (model.Exit)
+            var qrcode = await _context.QRcodes.Include(qr => qr.User).Where(qr => qr.token== request.token).FirstAsync();
+         
+                if (request.Exit && qrcode != null)
                 {
-                    var findedAction = GetAction(model.UserId);
+                    var lastUserAction = _context.Actions.Where(a => a.UserId == qrcode.UserId).ToList().OrderBy(x => x.Id).Last(); 
 
-                    if ((bool)findedAction.IsPresent && findedAction.Exit == null)
+                    if ((bool)lastUserAction.IsPresent && lastUserAction.Exit == null)
                     {
-                        findedAction.Exit = DateTime.Now;
+                        lastUserAction.Exit = DateTime.Now;
 
-                        _context.Actions.Update(findedAction);
+                        _context.Actions.Update(lastUserAction);
+
+                        return (true, "Exit", action);
                     }
-                    else
-                    {
-                        return (false, "Entry date doesn't exist or the entry is already present ", action);
-
-                    }
+                    
+                    return (false, "Entry date doesn't exist or the entry is already present ", action);
                 }
-                else
-                {
-                    action.UserId = model.UserId;
-                    action.IsPresent = true;
-                    action.Entry = DateTime.Now;
-                    _context.Actions.Add(action);
-                }
-
+                
+                action.IsPresent = true;
+                action.Entry = DateTime.Now;
+                action.UserId= qrcode.UserId;
+                _context.Actions.Add(action);
+               
                 await _context.SaveChangesAsync();
-                return (true, "Marked", action);
-            } else
-            {
-                return (false, "User or Qrcode not exist", new Model.Entity.Action());
-            }
+                return (true, "Entry", action);
+   
         }
         catch (Exception ex)
         {
             return (false, ex.Message, new Model.Entity.Action());
         }
     }
-
-    private Model.Entity.Action GetAction(int id)
-    {
-        var action = _context.Actions.Where(a => a.UserId == id).ToList().OrderBy(x => x.Id == id).Last();
-    
-        if (action == null) throw new KeyNotFoundException("Activity not found");
-        return action;
-    }
-
-    public async Task<(bool Success, string Message, QRcode? data)> UpdateQrcode(int id)
+    public async Task<(bool Success, string Message, QRcode? data)> UpdateQrcode(Guid token)
     {
         try
         {
-            QRcode qrcode = (QRcode)_context.QRcodes.Where(x => x.UserId == id).First();
-            qrcode.token = _jwtUtils.QRGenerateToken(qrcode);
+            var qrcode =  await _context.QRcodes.SingleOrDefaultAsync(qr => qr.token == token);
+            qrcode.token = new Guid();
             _context.QRcodes.Update(qrcode);
             await _context.SaveChangesAsync();
             return (true, "Qrcode Update", qrcode);

@@ -22,7 +22,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTOs\Response\Giustification\" />
+    <Folder Include="Models\DTOs\Response\Giustification\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

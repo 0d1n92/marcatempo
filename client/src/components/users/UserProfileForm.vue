@@ -26,6 +26,9 @@
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="user.username" label="Username"></v-text-field>
           </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
+          </v-col>
         </v-row>
       </v-container>
     </v-card-text>
@@ -51,6 +54,9 @@ export default {
       type: Object,
       dafault: {},
     },
+  },
+  data() {
+    return { roles: ['Administrator', 'Operator'] };
   },
   methods: {
     close() {
