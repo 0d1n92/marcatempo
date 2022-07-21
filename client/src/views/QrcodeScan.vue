@@ -4,14 +4,18 @@
     <v-row>
       <v-col md="6" offset-md="3">
         <v-expansion-panels>
-          <v-expansion-panel @click="() => (exit = false)" style="background: #4caf50; color: white">
+          <v-expansion-panel
+            @click="() => (exit = false)"
+            style="background: #4caf50; color: white"
+            :disabled="enterAccordion"
+          >
             <v-expansion-panel-header disable-icon-rotate>
               Entry
               <template v-slot:actions>
                 <v-icon> mdi-door-open </v-icon>
               </template>
             </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-content >
               <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
@@ -19,11 +23,15 @@
                 <v-alert type="success">
                   Praesent venenatis metus at tortor pulvinar varius. Aenean commodo ligula eget dolor. Praesent ac
                   massa at ligula laoreet iaculis. Vestibulum ullamcorper mauris at ligula.
-              </v-alert>
+                </v-alert>
               </qrcode-stream>
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel @click="() => (exit = true)" style="background: #ff5252; color: white">
+          <v-expansion-panel
+            @click="onClickAccordionExit"
+            style="background: #ff5252; color: white"
+            :disabled="exitAccordion"
+          >
             <v-expansion-panel-header disable-icon-rotate>
               Exit
               <template v-slot:actions>
@@ -55,12 +63,10 @@ export default {
     return {
       camera: 'rear',
       exit: true,
+      enterAccordion: false,
+      exitAccordion: false,
       response: {},
     };
-  },
-
-  mounted() {
-    console.log(this.$store.state.isExit);
   },
 
   computed: {
@@ -76,10 +82,36 @@ export default {
       return this.isValid === false;
     },
   },
+  watch: {
+    enterAccordion() {
+      this.onWhatchAccordion();
+    },
+    exitAccordion() {
+      this.onWhatchAccordion();
+    },
+  },
 
   methods: {
     onDecode(data) {
       this.PostMarket(data);
+    },
+
+    onClickAccordionExit() {
+      this.exit = true;
+      this.enterAccordion = true;
+      this.exitAccordion = !this.exitAccordion;
+    },
+    onClickAccordionEnter() {
+      this.exit = false;
+      this.exitAccordion = true;
+      this.enterAccordion = !this.enterAccordion;
+    },
+
+    onWhatchAccordion() {
+      if (this.enterAccordion && this.exitAccordion) {
+        this.enterAccordion = false;
+        this.exitAccordion = false;
+      }
     },
 
     PostMarket(payload) {
@@ -135,6 +167,9 @@ export default {
 </script>
 
 <style scoped>
+.no-active {
+  opacity: 0 !important;
+}
 .validation-success,
 .validation-failure,
 .validation-pending {
