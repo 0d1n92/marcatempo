@@ -72,7 +72,7 @@ export default {
         .then((response) => {
           localStorage.token = response.data.token;
           this.$router.push({
-            name: 'DashBoard',
+            name: 'dash-board',
             params: { user: response.data.username },
           });
         })

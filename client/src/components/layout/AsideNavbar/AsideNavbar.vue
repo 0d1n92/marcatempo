@@ -54,7 +54,7 @@ export default {
         {
           icon: 'mdi-monitor-dashboard',
           title: 'DashBoard',
-          route_name: 'DashBoard',
+          route_name: 'dash-board',
         },
       ],
     };
@@ -80,7 +80,7 @@ export default {
         {
           icon: 'mdi-qrcode-scan',
           title: 'scan qrcode',
-          route_name: 'ScanQr',
+          route_name: 'scan',
         },
       ];
     }
@@ -89,7 +89,7 @@ export default {
   methods: {
     logout() {
       this.$store.commit('Logout');
-      this.$router.push({ name: 'Login' });
+      this.$router.push({ name: 'login' });
     },
   },
 };

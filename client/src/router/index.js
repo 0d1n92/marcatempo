@@ -15,17 +15,17 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
   },
   {
     path: '/scan',
-    name: 'ScanQr',
+    name: 'scan',
     component: QrcodeScan,
   },
   {
     path: '/dashboard/:user',
-    name: 'DashBoard',
+    name: 'dash-board',
     component: DashBoard,
   },
   {
@@ -42,13 +42,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (!localStorage.getItem('token') && to.name !== 'Login' && to.name !== 'ScanQr') {
+  if (!localStorage.getItem('token') && to.name !== 'login' && to.name !== 'scan') {
     next({ name: 'login' });
   } else if (
     localStorage.getItem('token') &&
     localStorage.getItem('token').length > 0 &&
-    to.name !== 'Login' &&
-    to.name !== 'ScanQr'
+    to.name !== 'login' &&
+    to.name !== 'scan'
   ) {
     store.dispatch('GetUser').then(next()).catch(console.log('Error : user not found'));
   }
