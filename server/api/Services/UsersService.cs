@@ -8,8 +8,6 @@ using System.Linq;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using System;
 
 namespace api.Services

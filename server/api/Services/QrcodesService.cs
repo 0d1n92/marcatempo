@@ -1,8 +1,6 @@
 ﻿using api.Helpers;
 using api.DTOs;
-using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using api.Interface;
 using api.Model.Entity;
@@ -56,7 +54,7 @@ public class QrcodesService : IQrcodesService
             return (false, ex.Message, new Model.Entity.Action());
         }
     }
-    public async Task<(bool Success, string Message, QRcode? data)> UpdateQrcode(Guid token)
+    public async Task<(bool Success, string Message, QRcode data)> UpdateQrcode(Guid token)
     {
         try
         {
