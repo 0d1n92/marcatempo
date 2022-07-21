@@ -1,27 +1,37 @@
+<!-- eslint-disable no-restricted-syntax -->
 <template>
-  <v-container fluid fill-height>
+  <v-container style="background: #1976d2; color: white" fluid fill-height>
     <v-row>
       <v-col md="6" offset-md="3">
         <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-header> Entrata </v-expansion-panel-header>
+          <v-expansion-panel @click="() => (exit = false)" style="background: #4caf50; color: white">
+            <v-expansion-panel-header disable-icon-rotate>
+              Entry
+              <template v-slot:actions>
+                <v-icon> mdi-door-open </v-icon>
+              </template>
+            </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <qrcode-stream :camera="camera" @decode="onDecode(data, false)" @init="onInit">
+              <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
+                <v-alert type="success">
+                  Praesent venenatis metus at tortor pulvinar varius. Aenean commodo ligula eget dolor. Praesent ac
+                  massa at ligula laoreet iaculis. Vestibulum ullamcorper mauris at ligula.
+              </v-alert>
               </qrcode-stream>
-              <div v-if="validationSuccess" class="validation-success">This is a URL</div>
-
-              <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>
-
-              <div v-if="validationPending" class="validation-pending">Long validation in progress...</div>
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header> Uscita </v-expansion-panel-header>
+          <v-expansion-panel @click="() => (exit = true)" style="background: #ff5252; color: white">
+            <v-expansion-panel-header disable-icon-rotate>
+              Exit
+              <template v-slot:actions>
+                <v-icon> mdi-exit-run</v-icon>
+              </template>
+            </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <qrcode-stream :camera="camera" @decode="onDecode(data, true)" @init="onInit">
+              <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
@@ -35,6 +45,7 @@
 </template>
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
+import Axios from 'axios';
 
 export default {
   components: {
@@ -43,6 +54,8 @@ export default {
   data() {
     return {
       camera: 'rear',
+      exit: true,
+      response: {},
     };
   },
 
@@ -66,7 +79,32 @@ export default {
 
   methods: {
     onDecode(data) {
-      this.QrCodePost(data);
+      this.PostMarket(data);
+    },
+
+    PostMarket(payload) {
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/qrcodes/postmark`, payload)
+        .then((response) => {
+          this.response = response.data;
+        })
+        .catch((error) => {
+          console.log(`errore + ${error}`);
+        });
+    },
+    paintOutline(detectedCodes, ctx) {
+      detectedCodes.forEach((detectedCode) => {
+        const [firstPoint, ...otherPoints] = detectedCode.cornerPoints;
+        // eslint-disable-next-line no-param-reassign
+        ctx.strokeStyle = 'red';
+        ctx.beginPath();
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        otherPoints.forEach((item) => {
+          ctx.lineTo(item.x, item.y);
+        });
+        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.closePath();
+        ctx.stroke();
+      });
     },
 
     switchCamera() {
@@ -77,8 +115,8 @@ export default {
       }
     },
 
-    QrCodePost(JSONpayload) {
-      const payload = JSON.parse(JSONpayload);
+    QrCodePost(token) {
+      const payload = { exit: this.exit, token };
       this.$store.dispatch('Postmark', payload);
     },
 

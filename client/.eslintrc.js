@@ -10,6 +10,7 @@ module.exports = {
   },
 
   rules: {
+    'linebreak-style': ['error', process.env.NODE_ENV === 'prod' ? 'unix' : 'windows'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
@@ -19,6 +20,7 @@ module.exports = {
     'prettier/prettier': [
       'warn',
       {
+        endOfLine: 'auto',
         singleQuote: true,
         trailingComma: 'es5',
         printWidth: 120,
