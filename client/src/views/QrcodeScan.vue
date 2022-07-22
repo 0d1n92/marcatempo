@@ -1,4 +1,3 @@
-<!-- eslint-disable no-restricted-syntax -->
 <template>
   <v-container style="background: #1976d2; color: white" fluid fill-height>
     <v-row>
@@ -17,13 +16,14 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
-                <v-btn color="blue-grey" fab @click="switchCamera">
+                <v-btn absolute color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
-                <v-alert type="success">
-                  Praesent venenatis metus at tortor pulvinar varius. Aenean commodo ligula eget dolor. Praesent ac
-                  massa at ligula laoreet iaculis. Vestibulum ullamcorper mauris at ligula.
-                </v-alert>
+                <div class="validation-pending" v-if="validation">
+                  <v-alert :type="entryAlert.status" :value="entryAlert.show" outlined>
+                    {{ `${entryAlert.message} Hour ${entryAlert.hour}` }}
+                  </v-alert>
+                </div>
               </qrcode-stream>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -40,9 +40,14 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
-                <v-btn color="blue-grey" fab @click="switchCamera">
+                <v-btn absolute color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
+                <div class="validation-pending" v-if="validation">
+                  <v-alert :type="exitAlert.status" :value="exitAlert.show" outlined>
+                    {{ `${exitAlert.message} Hour ${exitAlert.hour}` }}
+                  </v-alert>
+                </div>
               </qrcode-stream>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -61,27 +66,27 @@ export default {
   },
   data() {
     return {
+      validation: false,
       camera: 'rear',
       exit: true,
       enterAccordion: false,
       exitAccordion: false,
+      entryAlert: {
+        show: false,
+        status: 'error',
+        message: 'Generic Error',
+        hour: '',
+      },
+      exitAlert: {
+        show: false,
+        status: 'error',
+        message: 'Generic Error',
+        hour: '',
+      },
       response: {},
     };
   },
 
-  computed: {
-    validationPending() {
-      return this.isValid === undefined && this.camera === 'off';
-    },
-
-    validationSuccess() {
-      return this.isValid === true;
-    },
-
-    validationFailure() {
-      return this.isValid === false;
-    },
-  },
   watch: {
     enterAccordion() {
       this.onWhatchAccordion();
@@ -93,7 +98,8 @@ export default {
 
   methods: {
     onDecode(data) {
-      this.PostMarket(data);
+      this.validation = true;
+      this.onPostMarket({ token: data, exit: this.exit });
     },
 
     onClickAccordionExit() {
@@ -114,13 +120,43 @@ export default {
       }
     },
 
-    PostMarket(payload) {
+    onPostMarket(payload) {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/qrcodes/postmark`, payload)
         .then((response) => {
           this.response = response.data;
+          console.log(response.data);
+          if (this.exit) {
+            this.exitAlert = {
+              show: true,
+              status: 'success',
+              message: response.data.message,
+              hour: response.data.data.exit,
+            };
+          } else {
+            this.entryAlert = {
+              show: true,
+              status: 'success',
+              message: response.data.message,
+              hour: response.data.data.entry,
+            };
+          }
         })
         .catch((error) => {
           console.log(`errore + ${error}`);
+
+          if (this.exit) {
+            this.exitAlert = {
+              show: true,
+              status: 'error',
+              message: error,
+            };
+          } else {
+            this.entryAlert = {
+              show: true,
+              status: 'error',
+              message: error,
+            };
+          }
         });
     },
     paintOutline(detectedCodes, ctx) {
@@ -147,18 +183,13 @@ export default {
       }
     },
 
-    QrCodePost(token) {
-      const payload = { exit: this.exit, token };
-      this.$store.dispatch('Postmark', payload);
-    },
-
     onInit(promise) {
       promise.catch((error) => {
         const cameraMissingError = error.name === 'OverconstrainedError';
         const triedFrontCamera = this.camera === 'front';
 
         if (triedFrontCamera && cameraMissingError) {
-          // no front camera on this device
+          this.camera = 'rear';
         }
       });
     },
