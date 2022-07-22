@@ -17,7 +17,7 @@ public class QrcodesService : IQrcodesService
     {
         _context = context;
     }
-    public async Task<(bool Sucess, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto request)
+    public async Task<(bool Success, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto request)
     {
         var action = new Model.Entity.Action();
         try

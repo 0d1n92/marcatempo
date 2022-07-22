@@ -15,14 +15,13 @@
                 <v-icon> mdi-door-open </v-icon>
               </template>
             </v-expansion-panel-header>
-            <v-expansion-panel-content >
+            <v-expansion-panel-content>
               <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
-                <v-alert type="success">
-                  Praesent venenatis metus at tortor pulvinar varius. Aenean commodo ligula eget dolor. Praesent ac
-                  massa at ligula laoreet iaculis. Vestibulum ullamcorper mauris at ligula.
+                <v-alert :type="messageEntry.type" :value="messageEntry.show">
+                  {{ messageEntry.message }}
                 </v-alert>
               </qrcode-stream>
             </v-expansion-panel-content>
@@ -43,6 +42,9 @@
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
+                <v-alert :type="messageExit.type" :value="messageExit.show">
+                  {{ messageExit.message }}
+                </v-alert>
               </qrcode-stream>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -63,6 +65,16 @@ export default {
     return {
       camera: 'rear',
       exit: true,
+      messageEntry: {
+        show: false,
+        message: '',
+        type: 'success',
+      },
+      messageExit: {
+        show: false,
+        message: '',
+        type: 'success',
+      },
       enterAccordion: false,
       exitAccordion: false,
       response: {},
@@ -93,7 +105,8 @@ export default {
 
   methods: {
     onDecode(data) {
-      this.PostMarket(data);
+      console.log('scatto');
+      this.PostMarket({ token: data, exit: this.exit });
     },
 
     onClickAccordionExit() {
@@ -118,9 +131,37 @@ export default {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/qrcodes/postmark`, payload)
         .then((response) => {
           this.response = response.data;
+          if (payload.exit) {
+            this.messageExit = {
+              ...this.messageExit,
+              show: true,
+              message: response.message,
+            };
+            return true;
+          }
+          this.messageEntry = {
+            ...this.messageExit,
+            show: true,
+            message: response.message,
+          };
+          return true;
         })
         .catch((error) => {
           console.log(`errore + ${error}`);
+          if (payload.exit) {
+            this.messageExit = {
+              type: 'error',
+              show: true,
+              message: error,
+            };
+            return true;
+          }
+          this.messageEntry = {
+            type: 'error',
+            show: true,
+            message: error,
+          };
+          return true;
         });
     },
     paintOutline(detectedCodes, ctx) {
