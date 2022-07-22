@@ -15,7 +15,7 @@
                 <v-icon> mdi-door-open </v-icon>
               </template>
             </v-expansion-panel-header>
-            <v-expansion-panel-content >
+            <v-expansion-panel-content>
               <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
                 <v-btn color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
