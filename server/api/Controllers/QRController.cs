@@ -38,27 +38,27 @@ public class QRController : ControllerBase
     ///</summary>
     /// <param name="request"></param>
     /// <response code="200">Success</response>
-    /// <response code="400">Bad Request</response> 
+    /// <response code="400">Bad Request</response>
     /// <response code="401">Unauthorized</response>
     /// /// <remarks>
     /// QR Operator operator
     /// Entry:
     ///
-    ///     POST 
-    ///     { 
+    ///     POST
+    ///     {
     ///        "exit": false,
-    /// 
-    ///        "token": "81a130d2-502f-4cf1-a376-63edeb000e9f" 
-    ///        
-    ///     }   
+    ///
+    ///        "token": "81a130d2-502f-4cf1-a376-63edeb000e9f"
+    ///
+    ///     }
     /// Exit:
-    /// 
-    ///     POST 
-    ///     { 
+    ///
+    ///     POST
+    ///     {
     ///        "exit": true,
-    ///     
-    ///         "token": "81a130d2-502f-4cf1-a376-63edeb000e9f" 
-    ///        
+    ///
+    ///         "token": "81a130d2-502f-4cf1-a376-63edeb000e9f"
+    ///
     ///     }
     /// </remarks>
 
@@ -67,7 +67,7 @@ public class QRController : ControllerBase
     public async Task<ActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
     {
         var response = await _qrService.Postmark(request);
-        if (!response.Success) return BadRequest(new { message = response.Message });
+        if (!response.Success) return BadRequest(new { Message = response.Message });
         var data = _mapper.Map<Model.Entity.Action, PostmarkerQRcodeResponseDto>(response.data);
         return Ok(new { message = response.Message, data = data });
     }
@@ -77,7 +77,7 @@ public class QRController : ControllerBase
     ///</summary>
     /// <param name="token"></param>
     /// <response code="200">Success</response>
-    /// <response code="400">Bad Request</response> 
+    /// <response code="400">Bad Request</response>
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpPost("update")]

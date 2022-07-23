@@ -2,8 +2,15 @@
   <v-card elevation="3" class="pa-2" width="200">
     <QrcodeVue level="M" :value="user.qrCode" size="180" />
     <div class="d-flex">
-      <v-btn :href="url" class="mx-2" title="download qrcode" dark large color="red"
-        :download="`QrCode_${user.username}`">
+      <v-btn
+        :href="url"
+        class="mx-2"
+        title="download qrcode"
+        dark
+        large
+        color="red"
+        :download="`QrCode_${user.username}`"
+      >
         <v-icon dark> mdi-download </v-icon>
       </v-btn>
       <v-btn @click="UpdateQrcode" class="mx-2" title="update qrcode" dark large color="blue">

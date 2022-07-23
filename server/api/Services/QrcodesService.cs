@@ -32,9 +32,9 @@ public class QrcodesService : IQrcodesService
                     {
                         lastUserAction.Exit = DateTime.Now;
 
-                        _context.Actions.Update(lastUserAction);
+                       var updateAct =  _context.Actions.Update(lastUserAction);
 
-                        return (true, "Exit", action);
+                    return (true, "Exit", updateAct.Entity);
                     }
                     
                     return (false, "Entry date doesn't exist or the entry is already present ", action);
