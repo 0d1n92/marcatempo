@@ -15,13 +15,22 @@
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <qrcode-stream :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
+              <qrcode-stream
+                v-if="this.entryAlert.reloded"
+                :track="paintOutline"
+                :camera="camera"
+                @decode="onDecode"
+                @init="onInit"
+              >
                 <v-btn absolute color="blue-grey" fab @click="switchCamera">
                   <v-icon dark>mdi-camera-switch</v-icon>
                 </v-btn>
                 <div class="validation-pending" v-if="validation">
                   <v-alert :type="entryAlert.status" :value="entryAlert.show" outlined>
                     {{ `${entryAlert.message} Hour ${entryAlert.hour}` }}
+                    <v-btn v-if="entryAlert.status === 'error'" @click="onReload(entryAlert)" color="red">
+                      <v-icon>mdi-cached</v-icon>
+                    </v-btn>
                   </v-alert>
                 </div>
               </qrcode-stream>
@@ -47,6 +56,7 @@
                   <v-alert :type="exitAlert.status" :value="exitAlert.show" outlined>
                     {{ `${exitAlert.message} Hour ${exitAlert.hour}` }}
                   </v-alert>
+                  <v-btn v-if="entryAlert.status === 'error'" @click="onReload(exitAlert)" color="red"></v-btn>
                 </div>
               </qrcode-stream>
             </v-expansion-panel-content>
@@ -72,12 +82,14 @@ export default {
       enterAccordion: false,
       exitAccordion: false,
       entryAlert: {
+        reloded: true,
         show: false,
         status: 'error',
         message: 'Generic Error',
         hour: '',
       },
       exitAlert: {
+        reloaded: true,
         show: false,
         status: 'error',
         message: 'Generic Error',
@@ -127,6 +139,7 @@ export default {
           console.log(response.data);
           if (this.exit) {
             this.exitAlert = {
+              ...this.exitAlert,
               show: true,
               status: 'success',
               message: response.data.message,
@@ -134,6 +147,7 @@ export default {
             };
           } else {
             this.entryAlert = {
+              ...this.entryAlert,
               show: true,
               status: 'success',
               message: response.data.message,
@@ -146,14 +160,14 @@ export default {
 
           if (this.exit) {
             this.exitAlert = {
+              ...this.exitAlert,
               show: true,
-              status: 'error',
               message: error,
             };
           } else {
             this.entryAlert = {
+              ...this.entryAlert,
               show: true,
-              status: 'error',
               message: error,
             };
           }
@@ -182,7 +196,23 @@ export default {
         this.camera = 'front';
       }
     },
-
+    /* eslint-disable no-param-reassign */
+    onReload(section) {
+      section = {
+        ...section,
+        reloaded: false,
+        show: false,
+      };
+      console.log(section);
+      setTimeout(() => {
+        section = {
+          ...section,
+          reloded: true,
+        };
+      }, 2000);
+      return section;
+    },
+    /* eslint-enable no-param-reassign */
     onInit(promise) {
       promise.catch((error) => {
         const cameraMissingError = error.name === 'OverconstrainedError';
