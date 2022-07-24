@@ -17,7 +17,7 @@ public static class IQueryableExtensions
     public static IQueryable<T> Paginate<T>(this IQueryable<T> elements, int? page, int? pageSize)
     {
         if (page.HasValue && pageSize.HasValue)
-            return elements.Skip(page.Value * pageSize.Value).Take(pageSize.Value);
+            return elements.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
         else
             return elements;
     }

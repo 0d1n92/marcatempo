@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
     next({ name: 'login' });
   } else if (
     localStorage.getItem('token') &&
-    localStorage.getItem('token').length > 0 &&
+    localStorage.getItem('token').length < 0 &&
     to.name !== 'login' &&
     to.name !== 'scan'
   ) {
