@@ -9,6 +9,9 @@ using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using api.Extensions;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace api.Services
 {
@@ -95,33 +98,37 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token)
+        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize)
         {
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var users = await _context.Users.Where(usr => usr.Id != userId).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
-                return (true, "Users Finded", users);
-            } catch (Exception e)
+                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).AsQueryable();
+                var count = users.Count();
+                users = users.Paginate(page, pageSize);
+                return (true, "Users Finded", count, await users.ToListAsync());
+            }
+            catch (Exception e)
             {
-                return (false, e.Message,new List<User>()); 
+                return (false, e.Message, 0, new List<User>());
             }
 
         }
-        public async Task<(bool Success, string Message, List<User> operators)> OperatorActionListAsync()
+        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize)
         {
             try
             {
-                var operators = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-                return (true, "Operator info", operators);
+                var operators = _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).AsQueryable();
+                var count = operators.Count();
+                operators = operators.Paginate(page, pageSize);
+                return (true, "Operator info", count, await operators.ToListAsync());
 
             }
             catch (Exception e)
             {
-                return (false, e.Message, new List<User>());
+                return (false, e.Message, 0, new List<User>());
 
             }
-
 
         }
 
@@ -156,21 +163,73 @@ namespace api.Services
             }
 
         }
-        
+
         public async Task<(bool Success, string Message, User user)> GetUserByUsername(string userName)
         {
             try
             {
 
-              var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == userName);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == userName);
 
                 return (true, "User founded", user);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                return(false, e.Message, new User());
+                return (false, e.Message, new User());
             }
 
         }
+
+        public async Task<(bool Success, string Message, string imgBase64)> PostAvatarUser(int? userId, IFormFile file)
+        {
+            try
+            {
+
+                string fileBase64 = "";
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    fileBase64 = Convert.ToBase64String(fileBytes);
+                }
+
+                if (_context.UserMetas.Any(x => x.UserId == userId || x.Value == "meta-user-avatar"))
+                {
+                    var usermeta = _context.UserMetas.Where(x => x.UserId == userId || x.Value == "meta-user-avatar").First();
+                    usermeta.Value = fileBase64;
+                    _context.UserMetas.Update(usermeta);
+                } else
+                {
+                    var avatar = _context.UserMetas.Add(new UserMeta { UserId = userId, metaLabel = "meta-user-avatar", Value = fileBase64 });
+
+                }
+
+                await _context.SaveChangesAsync();
+                return (true, "Avatar Saved", fileBase64);
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message,"");
+            }
+        }
+        public async Task<(bool Success, string Message, string imgBase64)> UpdateAvatar(string token, IFormFile file)
+        {
+            try
+            {
+                var userId = _jwtUtils.ValidateToken(token);
+
+                var result = await PostAvatarUser(userId, file);
+
+                return (true, "Avatar Saved", result.imgBase64);
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message, "");
+            }
+        }
+
     }
 
 }

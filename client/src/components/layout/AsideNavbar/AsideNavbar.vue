@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.loggedUser">
     <v-navigation-drawer absolute color="grey pt-9 lighten-3" mini-variant>
       <v-icon @click="() => (this.show = !this.show)" class="d-block text-center mx-auto mb-9" large>mdi-menu</v-icon>
       <v-list-item v-for="(item, index) in asideItemNavigation" :key="index" link>

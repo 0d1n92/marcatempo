@@ -45,9 +45,9 @@ router.beforeEach((to, from, next) => {
   if (!localStorage.getItem('token') && to.name !== 'login' && to.name !== 'scan') {
     next({ name: 'login' });
   } else if (
-    localStorage.getItem('token')
-    && localStorage.getItem('token').length > 0
-    && to.name !== 'login' &&
+    localStorage.getItem('token') &&
+    localStorage.getItem('token').length < 0 &&
+    to.name !== 'login' &&
     to.name !== 'scan'
   ) {
     store.dispatch('GetUser').then(next()).catch(console.log('Error : user not found'));

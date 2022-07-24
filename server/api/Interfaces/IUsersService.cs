@@ -2,6 +2,7 @@
 using api.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace api.Interface
 {
@@ -11,10 +12,12 @@ namespace api.Interface
         IEnumerable<User> GetAll();
         User GetById(int id);
         Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
-        Task<(bool Success, string Message, List<User> operators)> OperatorActionListAsync();
+        Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize);
         Task<(bool Success, string Message)> Update (int id, UpdateRequestDto model);
         Task<(bool Success, string Message, User user)> GetUserAsync(string token);
         Task<(bool Success, string Message)> Delete(int id);
-        Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token);
+        Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize);
+        Task<(bool Success, string Message, string imgBase64)> PostAvatarUser(int? id, IFormFile file);
+        Task<(bool Success, string Message, string imgBase64)> UpdateAvatar(string token, IFormFile file);
     }
 }

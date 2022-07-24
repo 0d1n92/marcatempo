@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
+using api.Helpers;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace api.Controllers;
 [Authorize]
@@ -163,31 +167,32 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpGet("actionoperators")]
-    public async Task<IActionResult> OperatorActionListAsync()
+    public async Task<ActionResult<PaginatedList<ResponseListofActionUsersDto>>> OperatorActionListAsync(int? page, int? pageSize)
     {
-        var result = await _userService.OperatorActionListAsync();
+        var result = await _userService.OperatorActionListAsync(page, pageSize);
         
         if(!result.Success) return BadRequest(new { message = result.Message});
-        return Ok(new { operators = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.operators) });
-
+        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<IList<ResponseListofActionUsersDto>>(result.Items)));
     }
 
     ///<summary>
     /// Get List of users
     ///</summary>
+    /// <param name="page"></param> 
+    /// <param name="pageSize"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
     [AuthorizeAdmin]
     [HttpGet("users-list")]
-    public async Task<IActionResult> UsersListAsync()
+    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize)
     {
         var token = Request.Headers["Authorization"];
-        var result = await _userService.UsersListAsync(token);
+        var result = await _userService.UsersListAsync(token,page, pageSize);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new { users = _mapper.Map<IList<User>, IList<ResponsUsersDto>>(result.users) });
+        return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<IList<ResponsUsersDto>>(result.Items)));
 
     }
     ///<summary>
@@ -206,5 +211,44 @@ public class UsersController : ControllerBase
         if (!response.Success) return BadRequest(new { Mesage = response.Message});
         var user = _mapper.Map<User, AuthenticateResponseDto>(response.user);
         return Ok(new {user = user});
+    }
+
+    ///<summary>
+    /// Save Avatar users
+    ///</summary>
+    /// <param name="userId"></param> 
+    /// <param name="file"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [AuthorizeAdmin]
+    [HttpPost("save-avatar/{userId}")]
+
+    public async Task<IActionResult> PostAvatarUser(int userId, IFormFile file)
+    {
+
+        var response = await _userService.PostAvatarUser(userId, file);
+        if (!response.Success) return BadRequest(new { Mesage = response.Message });
+        return Ok(new { image= response.imgBase64});
+    }
+
+    ///<summary>
+    /// Save my avatar
+    ///</summary>
+    /// <param name="file"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [Authorize]
+    [HttpPost("save-avatar")]
+
+    public async Task<IActionResult> PostAvatarUser(IFormFile file)
+    {
+        var token = Request.Headers["Authorization"];
+        var response = await _userService.UpdateAvatar(token, file);
+        if (!response.Success) return BadRequest(new { Mesage = response.Message });
+        return Ok(new { image = response.imgBase64 });
     }
 }

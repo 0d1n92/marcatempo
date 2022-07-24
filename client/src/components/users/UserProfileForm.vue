@@ -40,7 +40,7 @@
   </v-card>
 </template>
 <script>
-import QrcodeCard from './QrcodeCard.vue';
+import QrcodeCard from '../qrcode/QrcodeCard.vue';
 
 export default {
   name: 'UsersAdminForm',

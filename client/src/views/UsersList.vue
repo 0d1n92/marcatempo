@@ -1,6 +1,14 @@
 <template>
   <WireFrameVue>
-    <v-data-table :headers="headers" :items="users" sort-by="Name" class="elevation-1">
+    <v-data-table
+      :options.sync="options"
+      :headers="headers"
+      :server-items-length="count"
+      :loading="loading"
+      :items="users"
+      sort-by="Name"
+      class="elevation-1"
+    >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Users</v-toolbar-title>
@@ -52,6 +60,9 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    loading: true,
+    options: {},
+    count: 0,
     qrcode: {},
     headers: [
       {
@@ -76,23 +87,18 @@ export default {
       protein: 0,
     },
   }),
-  mounted() {
-    Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
-      headers: { Authorization: `${localStorage.getItem('token')}` },
-    })
-      .then((response) => {
-        this.users = response.data.users;
-      })
-      .catch((error) => {
-        console.log(`errore + ${error}`);
-      });
-  },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'Add User' : 'User Profile';
     },
   },
   watch: {
+    options: {
+      handler() {
+        this.onGetUsers();
+      },
+      deep: true,
+    },
     dialog(val) {
       // eslint-disable-next-line no-unused-expressions
       val || this.close();
@@ -108,10 +114,29 @@ export default {
   },
 
   methods: {
+    onGetUsers() {
+      const { page, itemsPerPage } = this.options;
+      Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
+        headers: { Authorization: `${localStorage.getItem('token')}` },
+        params: {
+          page,
+          pageSize: itemsPerPage,
+        },
+      })
+        .then((response) => {
+          this.users = response.data.data;
+          this.count = response.data.count;
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.log(`errore + ${error}`);
+        });
+    },
     initialize() {
       // eslint-disable-next-line no-unused-expressions
       this.users;
     },
+
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
