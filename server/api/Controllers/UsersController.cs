@@ -9,6 +9,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using api.Helpers;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace api.Controllers;
 [Authorize]
@@ -208,5 +211,44 @@ public class UsersController : ControllerBase
         if (!response.Success) return BadRequest(new { Mesage = response.Message});
         var user = _mapper.Map<User, AuthenticateResponseDto>(response.user);
         return Ok(new {user = user});
+    }
+
+    ///<summary>
+    /// Save Avatar users
+    ///</summary>
+    /// <param name="userId"></param> 
+    /// <param name="file"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [AuthorizeAdmin]
+    [HttpPost("save-avatar/{userId}")]
+
+    public async Task<IActionResult> PostAvatarUser(int userId, IFormFile file)
+    {
+
+        var response = await _userService.PostAvatarUser(userId, file);
+        if (!response.Success) return BadRequest(new { Mesage = response.Message });
+        return Ok(new { image= response.imgBase64});
+    }
+
+    ///<summary>
+    /// Save my avatar
+    ///</summary>
+    /// <param name="file"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+
+    [Authorize]
+    [HttpPost("save-avatar")]
+
+    public async Task<IActionResult> PostAvatarUser(IFormFile file)
+    {
+        var token = Request.Headers["Authorization"];
+        var response = await _userService.UpdateAvatar(token, file);
+        if (!response.Success) return BadRequest(new { Mesage = response.Message });
+        return Ok(new { image = response.imgBase64 });
     }
 }
