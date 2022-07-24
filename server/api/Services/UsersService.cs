@@ -9,10 +9,11 @@ using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using api.Extensions;
 
 namespace api.Services
 {
-    public class UsersService : IUsersService
+    public class UsersService :  IUsersService
     {
         private DataContext _context;
         private IJwtUtils _jwtUtils;
@@ -95,30 +96,34 @@ namespace api.Services
             return (true, "User updated successfully");
 
         }
-        public async Task<(bool Success, string Message, List<User> users)> UsersListAsync(string token)
+        public async Task<(bool Success, string Message,int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize)
         {
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var users = await _context.Users.Where(usr => usr.Id != userId).Include( usr => usr.Role).Include(usr => usr.QRCode).ToListAsync();
-                return (true, "Users Finded", users);
+                var users = _context.Users.Where(usr => usr.Id != userId).Include( usr => usr.Role).Include(usr => usr.QRCode).AsQueryable();
+                var count = users.Count();
+                users = users.Paginate(page, pageSize);
+                return (true, "Users Finded",count, await users.ToListAsync());
             } catch (Exception e)
             {
-                return (false, e.Message,new List<User>()); 
+                return (false, e.Message,0,new List<User>()); 
             }
 
         }
-        public async Task<(bool Success, string Message, List<User> operators)> OperatorActionListAsync()
+        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize)
         {
             try
             {
-                var operators = await _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).ToListAsync();
-                return (true, "Operator info", operators);
+                var operators =  _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).AsQueryable();
+                var count = operators.Count();
+                operators = operators.Paginate(page, pageSize);
+                return (true, "Operator info", count, await operators.ToListAsync());
 
             }
             catch (Exception e)
             {
-                return (false, e.Message, new List<User>());
+                return (false, e.Message, 0, new List<User>());
 
             }
 

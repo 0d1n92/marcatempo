@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
+using api.Helpers;
 
 namespace api.Controllers;
 [Authorize]
@@ -163,31 +164,32 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpGet("actionoperators")]
-    public async Task<IActionResult> OperatorActionListAsync()
+    public async Task<ActionResult<PaginatedList<ResponseListofActionUsersDto>>> OperatorActionListAsync(int? page, int? pageSize)
     {
-        var result = await _userService.OperatorActionListAsync();
+        var result = await _userService.OperatorActionListAsync(page, pageSize);
         
         if(!result.Success) return BadRequest(new { message = result.Message});
-        return Ok(new { operators = _mapper.Map<IList<User>, IList<ResponseListofActionUsersDto>>(result.operators) });
-
+        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<IList<ResponseListofActionUsersDto>>(result.Items)));
     }
 
     ///<summary>
     /// Get List of users
     ///</summary>
+    /// <param name="page"></param> 
+    /// <param name="pageSize"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
     [AuthorizeAdmin]
     [HttpGet("users-list")]
-    public async Task<IActionResult> UsersListAsync()
+    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize)
     {
         var token = Request.Headers["Authorization"];
-        var result = await _userService.UsersListAsync(token);
+        var result = await _userService.UsersListAsync(token,page, pageSize);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new { users = _mapper.Map<IList<User>, IList<ResponsUsersDto>>(result.users) });
+        return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<IList<ResponsUsersDto>>(result.Items)));
 
     }
     ///<summary>
