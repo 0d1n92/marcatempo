@@ -23,6 +23,7 @@ namespace api.Model.Entity
         public virtual Role Role { get; set; }
         public virtual QRcode QRCode { get; set; }
         public virtual ICollection<Action> Activities { get; set; }
+        public virtual ICollection<UserMeta> UserMetas { get; set; }
 
     }
 }

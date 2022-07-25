@@ -11,6 +11,16 @@ export default new Vuex.Store({
     marked: {},
     isExit: false,
   },
+  getters: {
+    getUser: (state) => {
+      const user = {
+        avatar: state.loggedUser.avatar,
+        fullName: `${state.loggedUser.firstName} ${state.loggedUser.lastName}`,
+        role: state.loggedUser.roleName,
+      };
+      return user;
+    },
+  },
   mutations: {
     GetUser(state, payload) {
       state.loggedUser = payload;

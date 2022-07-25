@@ -153,7 +153,7 @@ namespace api.Services
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var user = await _context.Users.Include(x => x.Role).Where(x => x.Id == userId).FirstAsync();
+                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.metaLabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).FirstAsync();
                 return (true, "Utente trovato", user);
 
             }
