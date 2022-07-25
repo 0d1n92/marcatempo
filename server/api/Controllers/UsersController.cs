@@ -192,7 +192,7 @@ public class UsersController : ControllerBase
         var result = await _userService.UsersListAsync(token,page, pageSize);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<IList<ResponsUsersDto>>(result.Items)));
+        return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<List<ResponsUsersDto>>(result.Items)));
 
     }
     ///<summary>

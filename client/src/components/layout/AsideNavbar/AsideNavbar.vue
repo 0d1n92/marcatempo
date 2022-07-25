@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import enumRoles from '../../../Enums/RoleEnum';
+
 export default {
   name: 'AsideNavabar',
   data() {
@@ -77,7 +79,7 @@ export default {
     },
 
     getMenuByRole() {
-      if (this.user.role === 'Administrator') {
+      if (this.user.role === Object.keys(enumRoles)[0]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
@@ -95,7 +97,7 @@ export default {
             route_name: 'actions',
           },
         ];
-      } else if (this.user.role === 'Operators') {
+      } else if (this.user.role === Object.keys(enumRoles)[1]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',

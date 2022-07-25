@@ -11,7 +11,8 @@
         <v-row>
           <v-col cols="12" sm="6" md="6">
             <v-avatar size="200" color="indigo">
-              <span class="white--text text-h5">OC</span>
+              <img v-if="user.avatar" :src="`data:image/png;base64,${user.avatar}`" />
+              <span v-else class="white--text text-h5">{{ `${user.firstName[0]}${user.lastName[0]}` }}</span>
             </v-avatar>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -41,6 +42,7 @@
 </template>
 <script>
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
+import enumRoles from '../../Enums/RoleEnum';
 
 export default {
   name: 'UsersAdminForm',
@@ -56,7 +58,7 @@ export default {
     },
   },
   data() {
-    return { roles: ['Administrator', 'Operator'] };
+    return { roles: Object.getOwnPropertyNames(enumRoles) };
   },
   methods: {
     close() {
