@@ -58,7 +58,9 @@ export default {
     },
   },
   data() {
-    return { roles: Object.getOwnPropertyNames(enumRoles) };
+    return {
+      roles: Object.getOwnPropertyNames(enumRoles).filter((item) => item !== Object.getOwnPropertyNames(enumRoles)[0]),
+    };
   },
   methods: {
     close() {

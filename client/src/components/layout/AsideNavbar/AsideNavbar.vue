@@ -79,7 +79,7 @@ export default {
     },
 
     getMenuByRole() {
-      if (this.user.role === Object.keys(enumRoles)[0]) {
+      if (this.user.role === Object.keys(enumRoles)[1]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
@@ -97,7 +97,7 @@ export default {
             route_name: 'actions',
           },
         ];
-      } else if (this.user.role === Object.keys(enumRoles)[1]) {
+      } else if (this.user.role === Object.keys(enumRoles)[2]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
