@@ -1,4 +1,5 @@
-﻿using api.Model.Entity;
+﻿
+using System.Collections.Generic;
 
 namespace api.DTOs
 {
@@ -11,6 +12,8 @@ namespace api.DTOs
         public int RoleId { get; set; }
         public string RoleName { get; set; }
         public string Token { get; set; }
+        public string Avatar { get; set; }
+        public List<UserMetaDto> meta { get; set; }
 
     }
 }

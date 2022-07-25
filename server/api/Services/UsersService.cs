@@ -103,7 +103,7 @@ namespace api.Services
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).AsQueryable();
+                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.metaLabel == "meta-user-avatar")).AsQueryable();
                 var count = users.Count();
                 users = users.Paginate(page, pageSize);
                 return (true, "Users Finded", count, await users.ToListAsync());
@@ -153,7 +153,7 @@ namespace api.Services
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var user = await _context.Users.Include(x => x.Role).Where(x => x.Id == userId).FirstAsync();
+                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.metaLabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).FirstAsync();
                 return (true, "Utente trovato", user);
 
             }
