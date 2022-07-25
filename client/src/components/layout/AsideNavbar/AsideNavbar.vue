@@ -6,7 +6,7 @@
         <v-icon v-text="item.icon" :title="item.title" @click="$router.push({ name: item.route_name })"></v-icon>
       </v-list-item>
     </v-navigation-drawer>
- <v-navigation-drawer app width="300" class="ml-15" v-show="show">
+    <v-navigation-drawer app width="300" class="ml-15" v-show="show">
       <v-sheet color="grey lighten-5 pa-5" height="200" width="100%">
         <v-container class="grey lighten-5">
           <v-row no-gutters>
@@ -79,7 +79,11 @@ export default {
     getMenuByRole() {
       if (this.user.role === 'Administrator') {
         this.asideItemNavigation = [
-          ...this.asideItemNavigation,
+          {
+            icon: 'mdi-monitor-dashboard',
+            title: 'DashBoard',
+            route_name: 'dash-board',
+          },
           {
             icon: 'mdi-account-group',
             title: 'List of users',
@@ -93,7 +97,11 @@ export default {
         ];
       } else if (this.user.role === 'Operators') {
         this.asideItemNavigation = [
-          ...this.asideItemNavigation,
+          {
+            icon: 'mdi-monitor-dashboard',
+            title: 'DashBoard',
+            route_name: 'dash-board',
+          },
           {
             icon: 'mdi-qrcode-scan',
             title: 'scan qrcode',
