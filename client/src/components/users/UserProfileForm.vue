@@ -42,7 +42,7 @@
 </template>
 <script>
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
-import enumRoles from '../../enums/RoleEnum';
+import enumRoles from '../../enums/roleEnum';
 
 export default {
   name: 'UsersAdminForm',
