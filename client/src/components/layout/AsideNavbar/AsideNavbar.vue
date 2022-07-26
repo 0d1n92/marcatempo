@@ -1,47 +1,39 @@
 <template>
   <div>
-    <v-navigation-drawer absolute color="grey pt-9 lighten-3" mini-variant>
-      <v-icon @click="() => (this.show = !this.show)" class="d-block text-center mx-auto mb-9" large>mdi-menu</v-icon>
-      <v-list-item v-for="(item, index) in nav" :key="index" link>
-        <v-icon v-text="item.icon" :title="item.title" @click="$router.push({ name: item.route_name })"></v-icon>
-      </v-list-item>
-    </v-navigation-drawer>
-    <v-navigation-drawer app width="300" class="ml-15" v-show="show">
-      <v-sheet color="grey lighten-5 pa-5" height="200" width="100%">
-        <v-container class="grey lighten-5">
-          <v-row no-gutters>
-            <v-col>
-              <div class="d-flex justify-space-between">
-                <v-avatar class="d-block" color="grey darken-1" size="65">
-                  <img :src="`data:image/png;base64,${user.avatar}`" />
-                </v-avatar>
-                <v-btn @click="logout" icon color="red" title="logout">
-                  <v-icon>mdi-location-exit</v-icon>
-                </v-btn>
-              </div>
-            </v-col>
-            <v-col>
-              <v-list>
-                <v-list-item link>
-                  <v-list-item-content>
-                    <v-list-item-title class="text-h6">
-                      {{ user.fullName }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-sheet>
-      <v-list class="pl-14" shaped>
-        <v-list-item v-for="n in 5" :key="n" link>
+    <v-navigation-drawer absolute color="grey lighten-3" expand-on-hover>
+      <v-list class="header-nav pt-9">
+        <v-list-item>
+          <v-list-item-avatar size="90">
+            <v-avatar class="d-block" color="grey darken-1" size="90">
+              <img :src="`data:image/png;base64,${user.avatar}`" />
+            </v-avatar>
+          </v-list-item-avatar>
+          <v-spacer></v-spacer>
+          <v-btn @click="logout" icon color="red" title="logout">
+            <v-icon>mdi-location-exit</v-icon>
+          </v-btn>
+        </v-list-item>
+        <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Item {{ n }}</v-list-item-title>
+            <v-list-item-title class="text-h6">
+              {{ user.fullName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <v-list-item
+        v-for="(item, index) in nav"
+        :key="index"
+        :title="item.title"
+        @click="$router.push({ name: item.route_name })"
+        link
+      >
+        <v-list-item-icon>
+          <v-icon v-text="item.icon"></v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ item.text }}</v-list-item-title>
+      </v-list-item>
     </v-navigation-drawer>
   </div>
 </template>
@@ -53,11 +45,11 @@ export default {
   name: 'AsideNavabar',
   data() {
     return {
-      show: false,
       asideItemNavigation: [
         {
           icon: 'mdi-monitor-dashboard',
           title: 'DashBoard',
+          text: 'My dashboard',
           route_name: 'dash-board',
         },
       ],
@@ -85,16 +77,19 @@ export default {
             icon: 'mdi-monitor-dashboard',
             title: 'DashBoard',
             route_name: 'dash-board',
+            text: 'My dashboard',
           },
           {
             icon: 'mdi-account-group',
             title: 'List of users',
             route_name: 'users',
+            text: 'Users account',
           },
           {
             icon: 'mdi-table-account',
             title: 'views action',
             route_name: 'actions',
+            text: 'Users actions',
           },
         ];
       } else if (this.user.role === Object.keys(enumRoles)[2]) {
@@ -108,6 +103,7 @@ export default {
             icon: 'mdi-qrcode-scan',
             title: 'scan qrcode',
             route_name: 'scan',
+            text: 'Scan qrcode',
           },
         ];
       }
@@ -116,3 +112,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.header-nav {
+  background: #fafafa !important;
+}
+</style>
