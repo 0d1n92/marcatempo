@@ -5,7 +5,9 @@ import Login from '../views/Login.vue';
 import DashBoard from '../views/DashBoard.vue';
 import UsersList from '../views/UsersList.vue';
 import store from '../store';
-// import store from '@/store';
+import middlewarePipeline from './middleware-pipeline';
+import { auth, admin } from './middleware';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -17,24 +19,27 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    meta: { requiresAuth: false },
   },
   {
     path: '/scan',
     name: 'scan',
     component: QrcodeScan,
-    meta: { requiresAuth: false },
   },
   {
     path: '/dashboard/:user',
     name: 'dash-board',
     component: DashBoard,
+    meta: {
+      middleware: [auth],
+    },
   },
   {
-    path: '/dashboard/users',
+    path: '/users',
     name: 'users',
     component: UsersList,
-    meta: { requiresAuth: false },
+    meta: {
+      middleware: [auth, admin],
+    },
   },
 ];
 
@@ -45,12 +50,22 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (!store.state.token && to.name !== 'login' && to.name !== 'scan') {
-    next({ name: 'login' });
-  } else if (store.state.token && store.state.token !== undefined && to.name !== 'login' && to.name !== 'scan') {
-    store.dispatch('GetUser');
+  if (!to.meta.middleware) {
+    return next();
   }
-  next();
+
+  const { middleware } = to.meta;
+  const context = {
+    to,
+    from,
+    next,
+    store,
+  };
+
+  return middleware[0]({
+    ...context,
+    next: middlewarePipeline(context, middleware, 1),
+  });
 });
 
 export default router;

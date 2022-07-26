@@ -42,7 +42,7 @@
 </template>
 <script>
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
-import enumRoles from '../../enums/roleEnum';
+import enumRoles from '../../enums/enumRoles';
 
 export default {
   name: 'UsersAdminForm',
@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-      roles: Object.keys(enumRoles).filter((item) => item !== 0),
+      roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
     };
   },
   methods: {

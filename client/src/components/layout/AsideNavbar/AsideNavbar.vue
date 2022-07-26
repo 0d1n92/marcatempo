@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import enumRoles from '../../../enums/roleEnum';
+import enumRoles from '../../../enums/enumRoles';
 
 export default {
   name: 'AsideNavabar',
