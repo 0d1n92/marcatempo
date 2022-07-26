@@ -59,7 +59,7 @@ public class QrcodesService : IQrcodesService
         try
         {
             var qrcode =  await _context.QRcodes.SingleOrDefaultAsync(qr => qr.token == token);
-            qrcode.token = new Guid();
+            qrcode.token = Guid.NewGuid();
             _context.QRcodes.Update(qrcode);
             await _context.SaveChangesAsync();
             return (true, "Qrcode Update", qrcode);

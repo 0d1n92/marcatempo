@@ -17,11 +17,13 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+    meta: { requiresAuth: false },
   },
   {
     path: '/scan',
     name: 'scan',
     component: QrcodeScan,
+    meta: { requiresAuth: false },
   },
   {
     path: '/dashboard/:user',
@@ -32,6 +34,7 @@ const routes = [
     path: '/dashboard/users',
     name: 'users',
     component: UsersList,
+    meta: { requiresAuth: false },
   },
 ];
 
@@ -42,14 +45,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (!localStorage.getItem('token') && to.name !== 'login' && to.name !== 'scan') {
+  if (!store.state.token && to.name !== 'login' && to.name !== 'scan') {
     next({ name: 'login' });
-  } else if (
-    localStorage.getItem('token') &&
-    localStorage.getItem('token').length > 0 &&
-    to.name !== 'login' &&
-    to.name !== 'scan'
-  ) {
+  } else if (store.state.token && store.state.token !== undefined && to.name !== 'login' && to.name !== 'scan') {
     store.dispatch('GetUser');
   }
   next();

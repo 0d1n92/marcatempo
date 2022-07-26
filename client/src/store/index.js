@@ -10,6 +10,7 @@ export default new Vuex.Store({
     loggedUser: {},
     marked: {},
     isExit: false,
+    token: null,
   },
   getters: {
     getUser: (state) => {
@@ -27,7 +28,6 @@ export default new Vuex.Store({
     },
     Postmark(state, payload) {
       state.marked = payload;
-      console.log('risultato qrcode', state.marked);
     },
 
     SetIsExit(state, payload) {
@@ -35,13 +35,17 @@ export default new Vuex.Store({
     },
     Logout(state) {
       state.loggedUser = {};
-      localStorage.clear();
+      state.token = null;
+    },
+
+    SetJwtToken(state, token) {
+      state.token = token;
     },
   },
   actions: {
-    GetUser({ commit }) {
+    GetUser({ commit, state }) {
       Axios.get(`${process.env.VUE_APP_ROOT_API}/users/user-info`, {
-        headers: { Authorization: `${localStorage.getItem('token')}` },
+        headers: { Authorization: state.token },
       })
         .then((response) => {
           commit('GetUser', response.data.user);

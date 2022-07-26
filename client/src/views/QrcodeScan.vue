@@ -106,11 +106,9 @@ export default {
     },
     onPostMarker(data) {
       const payload = { token: data, exit: this.exit };
-      console.log('chiamo');
       Axios.post(`${process.env.VUE_APP_ROOT_API}/qrcodes/postmark`, payload)
         .then((response) => {
           this.response = response.data;
-          console.log(response.data);
           if (this.exit) {
             this.exitAlert = {
               ...this.exitAlert,

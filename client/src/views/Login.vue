@@ -70,7 +70,7 @@ export default {
       if (this.payloadLogin.username === '' || this.payloadLogin.password === '') return;
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
         .then((response) => {
-          localStorage.token = response.data.token;
+          this.$store.commit('SetJwtToken', response.data.token);
           this.$router.push({
             name: 'dash-board',
             params: { user: response.data.username },

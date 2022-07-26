@@ -117,7 +117,7 @@ export default {
     onGetUsers() {
       const { page, itemsPerPage } = this.options;
       Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
-        headers: { Authorization: `${localStorage.getItem('token')}` },
+        headers: { Authorization: this.$store.state.token },
         params: {
           page,
           pageSize: itemsPerPage,
@@ -156,6 +156,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.onGetUsers();
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;

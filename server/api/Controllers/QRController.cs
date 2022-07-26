@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using api.DTOs;
 using api.Interface;
+using System.Text.Json;
 
 namespace api.Controllers;
 [Authorize]
@@ -75,15 +76,15 @@ public class QRController : ControllerBase
     ///<summary>
     /// Update qrcodes
     ///</summary>
-    /// <param name="token"></param>
+    /// <param name="qrcode"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response>
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpPost("update")]
-    public async Task<ActionResult> UpdateQrcode(Guid token)
+    public async Task<ActionResult> UpdateQrcode( QrcCodeDtoRequest qrcode )
     {
-        var data = await _qrService.UpdateQrcode(token);
+        var data = await _qrService.UpdateQrcode(new Guid(qrcode.token));
         if (!data.Success) return BadRequest(new { Message = data.Message });
         return Ok(data.data);
     }

@@ -116,9 +116,6 @@ export default {
       return 'green';
     },
   },
-  mounted: () => {
-    console.log('arrivo');
-  },
 };
 </script>
 

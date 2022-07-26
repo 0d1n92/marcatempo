@@ -1,6 +1,6 @@
 <template>
   <v-card elevation="3" class="pa-2" width="200">
-    <QrcodeVue level="M" :value="user.qrCode" size="180" />
+    <QrcodeVue level="M" :value="tokenQr" size="180" />
     <div class="d-flex">
       <v-btn
         :href="url"
@@ -35,11 +35,18 @@ export default {
   data() {
     return {
       url: '',
-      TokenQr: '',
+      tokenQr: this.user.qrCode,
     };
   },
+  watch: {
+    tokenQr(newVal) {
+      this.tokenQr = newVal;
+    },
+    user(newVal) {
+      this.tokenQr = newVal.qrCode;
+    },
+  },
   mounted() {
-    this.TokenQr = this.user.qrCode;
     this.GetLinkQrcode();
   },
   methods: {
@@ -49,14 +56,15 @@ export default {
     },
     UpdateQrcode() {
       Axios.post(
-        `${process.env.VUE_APP_ROOT_API}/qrcodes/update?userId=${this.user.id}`,
-        {},
+        `${process.env.VUE_APP_ROOT_API}/qrcodes/update`,
+        { token: this.tokenQr },
         {
-          headers: { Authorization: localStorage.getItem('token') },
+          headers: { Authorization: this.$store.state.token },
+          // eslint-disable-next-line prettier/prettier
         },
       )
         .then((response) => {
-          this.TokenQr = response.data.token;
+          this.tokenQr = response.data.token;
         })
         .catch((error) => {
           console.log(`errore + ${error}`);
