@@ -41,6 +41,9 @@ export default new Vuex.Store({
     SetJwtToken(state, token) {
       state.token = token;
     },
+    UploadAvatar(state, avatar) {
+      state.loggedUser.avatar = avatar;
+    },
   },
   actions: {
     GetUser({ commit, state }) {
@@ -49,6 +52,17 @@ export default new Vuex.Store({
       })
         .then((response) => {
           commit('GetUser', response.data.user);
+        })
+        .catch((error) => {
+          console.log(`errore + ${error}`);
+        });
+    },
+    UploadAvatar({ commit, state }, formData) {
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/save-avatar`, formData, {
+        headers: { Authorization: state.token },
+      })
+        .then((response) => {
+          commit('UploadAvatar', response.data.image);
         })
         .catch((error) => {
           console.log(`errore + ${error}`);
