@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using BCryptNet = BCrypt.Net.BCrypt;
 using api.Model.Entity;
-namespace api.Helpers
-{
+using api.Utilitis.Enum;
+
+namespace api.Helpers;
     public class DataContext : DbContext
     {
 
@@ -39,16 +40,16 @@ namespace api.Helpers
 
             #region UserSeed
             modelBuilder.Entity<User>().HasData(
-             new { Id = 1, RoleId = (int)EnumRoles.Administrator, Username = "Administrator", FirstName = "admin", LastName = "admin", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 2, RoleId = (int)EnumRoles.Operator, Username = "Operator", FirstName = "operator", LastName = "operator", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 3, RoleId = (int)EnumRoles.Operator, Username = "Pippo", FirstName = "Jonh", LastName = "Doe", Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 4, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 5, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 6, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 7, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 8, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 9, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
-             new { Id = 10, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now }
+             new { Id = 1, RoleId = (int)EnumRoles.Administrator, Username = "Administrator", FirstName = "admin", LastName = "admin", Password = BCryptNet.HashPassword("qwerty"), Email= "admin@mail.com",CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 2, RoleId = (int)EnumRoles.Operator, Username = "Operator", FirstName = "operator", LastName = "operator", Password = BCryptNet.HashPassword("qwerty"), Email = "operator@mail.com", CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 3, RoleId = (int)EnumRoles.Operator, Username = "Pippo", FirstName = "Jonh", LastName = "Doe", Password = BCryptNet.HashPassword("qwerty"),Email="pippo@mail.com", CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 4, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email = Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 5, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email = Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 6, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email =  Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 7, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email =  Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 8, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email =  Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 9, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email =  Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
+             new { Id = 10, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email =  Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now }
              );
             #endregion
             #region Qrcode
@@ -74,4 +75,3 @@ namespace api.Helpers
 
 
     }
-}

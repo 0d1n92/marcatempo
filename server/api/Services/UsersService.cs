@@ -12,6 +12,7 @@ using System;
 using api.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using api.Utilitis.Enum;
 
 namespace api.Services
 {
@@ -29,16 +30,20 @@ namespace api.Services
             _jwtUtils = jwtUtils;
         }
 
-        public async Task<User> Authenticate(AuthenticateRequestDto model)
+        public async Task<(bool Success, string Token)> Authenticate(AuthenticateRequestDto model)
         {
-            var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
-            if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
+            try
             {
-                user.Token = _jwtUtils.GenerateToken(user);
-                return user;
+                var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
+                if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
+                {
+                    return (true, _jwtUtils.GenerateToken(user));
+                }
+                 return (false, "User not found");
+            } catch(Exception ex)
+            {
+                return (false,ex.Message);
             }
-
-            return new User();
         }
 
         public IEnumerable<User> GetAll()
@@ -48,7 +53,7 @@ namespace api.Services
 
         private User getUser(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = _context.Users.Include(x => x.Role).Where( x => x.Id == id).First();
             if (user == null) throw new KeyNotFoundException("User not found");
             return user;
         }
@@ -79,24 +84,55 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        public async Task<(bool Success, string Message)> Update(int id, UpdateRequestDto model)
+        /*  public async Task<(bool Success, string Message)> Update(int id, UpdateRequestDto model)
+          {
+              var user = getUser(id);
+              if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
+                  return (false, "Username '" + model.Username + "' is already taken");
+              if (!string.IsNullOrEmpty(model.Password))
+              {
+                  user.Password = BCryptNet.HashPassword(model.Password);
+              }
+              else
+              {
+                  return (false, "Password is blank");
+              }
+              _context.Users.Update(user);
+              await _context.SaveChangesAsync();
+
+              return (true, "User updated successfully");
+
+          }*/
+
+        public async Task<(bool Success, string Message)> Update (int id, UpdateRequestUserDto model)
         {
-            var user = getUser(id);
-            if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
-                return (false, "Username '" + model.Username + "' is already taken");
-            if (!string.IsNullOrEmpty(model.Password))
+            try
             {
-                user.Password = BCryptNet.HashPassword(model.Password);
-            }
-            else
+                var user = getUser(id);
+                if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
+                    return (false, "Username '" + model.Username + "' is already taken");
+                if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
+                    return (false, "Username '" + model.Email + "' is already taken");
+                if (user.Role.Name != model.Role && !String.IsNullOrEmpty(model.Role))
+                    user.RoleId = _context.Roles.Where(r => r.Name == model.Role).First().Id;
+                foreach( var prop in model.GetType().GetProperties())
+                {
+                    if (prop.Name.ToString() != "Role" && prop.GetValue(model, null) != null )
+                    {
+
+                        user.GetType().GetProperty(prop.Name).SetValue(user, prop.GetValue(model, null));
+                    }
+
+                    
+                }
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return (true, "User updated successfully");
+
+            } catch (Exception ex)
             {
-                return (false, "Password is blank");
+                return (true, ex.Message);
             }
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-
-            return (true, "User updated successfully");
-
         }
         public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize)
         {

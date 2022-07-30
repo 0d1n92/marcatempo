@@ -6,12 +6,10 @@ using api.Interface;
 using api.Model.Entity;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using api.Helpers;
-using System.Net.Http;
 using Microsoft.AspNetCore.Http;
-using System.Linq;
+
 
 namespace api.Controllers;
 [Authorize]
@@ -63,12 +61,12 @@ public class UsersController : ControllerBase
     /// 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult<AuthenticateResponseDto>> Authenticate(AuthenticateRequestDto request)
+    public async Task<ActionResult> Authenticate(AuthenticateRequestDto request)
     {
-        var user = await _userService.Authenticate(request);
-        var result = _mapper.Map<User, AuthenticateResponseDto>(user);
-        if (user.Username == null) return NotFound();
-        return Ok(result);
+        var result = await _userService.Authenticate(request);
+      
+        if (!result.Success) return NotFound( new { Message = result.Token });
+        return Ok(new { token = result.Token });
     }
 
 
@@ -134,8 +132,9 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UpdateRequestDto request)
+    public async Task<IActionResult> Update(int id, UpdateRequestUserDto request)
     {
+        
         var result = await _userService.Update(id, request);
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new { message = result.Message });

@@ -20,7 +20,7 @@ namespace api.Helpers
                 .ToList())).ReverseMap();
             CreateMap<Model.Entity.Action, PostmarkerQRcodeResponseDto>().ConstructUsing(act => new PostmarkerQRcodeResponseDto { Entry = act.Entry, Exit = act.Exit}).ReverseMap();
             CreateMap<RegisterRequestDto, User>();
-            CreateMap<UpdateRequestDto, User>()
+            CreateMap<UpdateRequestUserDto, User>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {
