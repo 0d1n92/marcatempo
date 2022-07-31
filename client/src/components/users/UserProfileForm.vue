@@ -12,12 +12,8 @@
           <v-col cols="12" sm="6" md="6">
             <v-hover v-slot="{ hover }">
               <v-avatar size="200" color="indigo">
-                <img v-if="user.avatar" :src="`data:image/png;base64,${avatar}`" />
-                <span v-else class="white--text text-h5">{{
-                  user.firstName[0] !== undefined && user.lastName[0] != undefined
-                    ? `${user.firstName[0]}${user.lastName[0]}`
-                    : ''
-                }}</span>
+                <img v-if="user.avatar" :src="avatar" />
+                <span v-else class="white--text text-h5">{{ UserInitials }}</span>
                 <v-expand-transition>
                   <div
                     v-if="hover"
@@ -91,22 +87,47 @@ export default {
     return {
       roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
       rules: {
-        required: (value) => !!value || 'Required.',
+        required: (value) => {
+          this.error = !!value;
+          console.log('richiseta', !!value);
+          return !!value || 'Required.';
+        },
       },
-      avatar: this.user.avatar,
+      error: true,
+      avatar: `data:image/png;base64,${this.user.avatar}`,
+      file: null,
+      UserInitials: `${this.user.firstName[0]}${this.user.lastName[0]}`,
     };
   },
+  watch: {
+    user(newVal) {
+      this.UserInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
+    },
+  },
   methods: {
+    uploadAvatar() {
+      const reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      const self = this;
+      reader.onload = function () {
+        console.log(reader.result);
+        self.avatar = reader.result;
+      };
+    },
     close() {
       this.$emit('close');
     },
     save() {
-      this.$emit('save');
+      console.log(this.error);
+      if (!this.error) {
+        return;
+      }
+      this.$emit('save', { file: this.file, base64: this.avatar });
     },
   },
 };
 </script>
-<style>
+<style scoped>
 .v-card--reveal {
   align-items: center;
   bottom: 0;

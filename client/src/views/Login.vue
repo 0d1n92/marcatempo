@@ -65,7 +65,7 @@ export default {
   }),
   methods: {
     Login() {
-      const scope = this;
+      const self = this;
       this.$refs.form.validate();
       if (this.payloadLogin.username === '' || this.payloadLogin.password === '') return;
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
@@ -77,12 +77,12 @@ export default {
           });
         })
         .catch((error) => {
-          scope.error = {
+          self.error = {
             isError: true,
             message: error,
           };
           if (error.response.status === 404) {
-            scope.error = { isError: true, message: 'Wrong user or password' };
+            self.error = { isError: true, message: 'Wrong user or password' };
           }
           console.log(`errore + ${error}`);
         });
