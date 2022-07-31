@@ -1,18 +1,14 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="open" max-width="290">
+    <v-dialog v-model="open" max-width="700">
       <v-card>
         <v-card-title class="text-h5"> {{ title }}</v-card-title>
-
         <v-card-text>
           {{ description }}
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
-
-          <v-btn color="green darken-1" text @click="open = false"> Disagree </v-btn>
-
+          <v-btn color="green darken-1" text @click="disagree"> Disagree </v-btn>
           <v-btn color="green darken-1" text @click="agree"> Agree </v-btn>
         </v-card-actions>
       </v-card>
@@ -51,6 +47,10 @@ export default {
     agree() {
       this.open = false;
       this.$emit('agree');
+    },
+    disagree() {
+      this.open = false;
+      this.$emit('disagree');
     },
   },
 };

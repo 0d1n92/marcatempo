@@ -74,10 +74,9 @@ namespace api
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJwtUtils, JwtUtils>();
-            services.AddControllers().AddNewtonsoftJson();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IQrcodesService, QrcodesService>();
         }

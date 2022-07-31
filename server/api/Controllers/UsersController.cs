@@ -64,8 +64,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> Authenticate(AuthenticateRequestDto request)
     {
         var result = await _userService.Authenticate(request);
-      
-        if (!result.Success) return NotFound( new { Message = result.Token });
+
+        if (!result.Success) return NotFound(new { Message = result.Token });
         return Ok(new { token = result.Token });
     }
 
@@ -88,22 +88,6 @@ public class UsersController : ControllerBase
         return Ok(new { message = result.Message });
     }
 
-
-    ///<summary>
-    /// Get all users
-    ///</summary>
-    /// <response code="200">Success</response>
-    /// <response code="400">Bad Request</response> 
-    /// <response code="401">Unauthorized</response>
-
-    [AuthorizeAdmin]
-    [HttpGet]
-    public IActionResult GetAll()
-    {
-        var users = _userService.GetAll();
-        return Ok(users);
-    }
-
     ///<summary>
     /// Get user
     ///</summary>
@@ -124,7 +108,7 @@ public class UsersController : ControllerBase
     ///<summary>
     /// Update user 
     ///</summary>
-    ///<param name="id"></param>
+    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
@@ -132,10 +116,10 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UpdateRequestUserDto request)
+    public async Task<IActionResult> Update([FromForm] UpdateRequestUserDto request, int id)
     {
         
-        var result = await _userService.Update(id, request);
+        var result = await _userService.Update(id,request);
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new { message = result.Message });
     }

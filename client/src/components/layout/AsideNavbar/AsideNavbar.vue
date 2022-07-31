@@ -25,7 +25,7 @@
                     prepend-icon=""
                     full-width
                     height="100%"
-                    v-model='file'
+                    v-model="file"
                     @change="uploadAvatar"
                   >
                   </v-file-input>

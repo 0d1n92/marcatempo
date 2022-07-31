@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace api.Migrations
 {
-    public partial class Dbinit : Migration
+    public partial class DbInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,8 +41,7 @@ namespace api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -58,21 +57,19 @@ namespace api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Username = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FirstName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LastName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Password = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Token = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -174,19 +171,19 @@ namespace api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Token", "Username" },
+                columns: new[] { "Id", "CreationDate", "DateOfBirth", "Email", "FirstName", "LastName", "ModifyDate", "Password", "RoleId", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 7, 20, 23, 3, 53, 117, DateTimeKind.Local).AddTicks(1687), new DateTime(2022, 7, 20, 23, 3, 53, 117, DateTimeKind.Local).AddTicks(1751), null, "admin", "admin", null, "$2a$11$Vq5U9P2BVI24IyGfdLpbWeULwZ/t2RejCPuMEvJYc5PINZ25THZF.", 1, null, "Administrator" },
-                    { 2, new DateTime(2022, 7, 20, 23, 3, 53, 265, DateTimeKind.Local).AddTicks(7100), new DateTime(2022, 7, 20, 23, 3, 53, 265, DateTimeKind.Local).AddTicks(7132), null, "operator", "operator", null, "$2a$11$S5/s/4kigUp7hmnf6fLlTuAhoV0aj9ZK3Au6avjEt/F4px0ac0WCm", 2, null, "Operator" },
-                    { 3, new DateTime(2022, 7, 20, 23, 3, 53, 416, DateTimeKind.Local).AddTicks(9927), new DateTime(2022, 7, 20, 23, 3, 53, 417, DateTimeKind.Local).AddTicks(2), null, "Jonh", "Doe", null, "$2a$11$KWAX85M0NVuntHi/N/2rfe6rW6JoAY/aZgXVV6/Z06JfF7EWrccju", 2, null, "Pippo" },
-                    { 4, new DateTime(2022, 7, 20, 23, 3, 53, 565, DateTimeKind.Local).AddTicks(5460), new DateTime(2022, 7, 20, 23, 3, 53, 565, DateTimeKind.Local).AddTicks(5491), null, "Hunter", "Schmidt", null, "$2a$11$0L/dgczJvXEQroRYYNrGIO8EYXLYDfuoLL2Irm4YKkSe9Bcq9eIty", 2, null, "arielle" },
-                    { 5, new DateTime(2022, 7, 20, 23, 3, 53, 717, DateTimeKind.Local).AddTicks(8320), new DateTime(2022, 7, 20, 23, 3, 53, 717, DateTimeKind.Local).AddTicks(8352), null, "Helene", "Hills", null, "$2a$11$RQmX726DCCUVPUTkmCJ1GuFaASBY5ICV2agbyn761teY6geQQaX5O", 2, null, "ruben" },
-                    { 6, new DateTime(2022, 7, 20, 23, 3, 53, 866, DateTimeKind.Local).AddTicks(4601), new DateTime(2022, 7, 20, 23, 3, 53, 866, DateTimeKind.Local).AddTicks(4629), null, "Unique", "Oberbrunner", null, "$2a$11$GuE7N9mrLYoTRRvj47Yoiexg3.Y9iJQEvpMchFvpZq5sxTC3HlZNG", 2, null, "audrey.konopelski" },
-                    { 7, new DateTime(2022, 7, 20, 23, 3, 54, 15, DateTimeKind.Local).AddTicks(9638), new DateTime(2022, 7, 20, 23, 3, 54, 15, DateTimeKind.Local).AddTicks(9666), null, "Wiley", "Roob", null, "$2a$11$jKCS0CShf5QpjISrZ0QS9.ifnlGqG63a86XuhFvRY6Vc4B6JdnyCy", 2, null, "elta" },
-                    { 8, new DateTime(2022, 7, 20, 23, 3, 54, 164, DateTimeKind.Local).AddTicks(5676), new DateTime(2022, 7, 20, 23, 3, 54, 164, DateTimeKind.Local).AddTicks(5704), null, "Elisha", "Stokes", null, "$2a$11$4MPrETWyC09jy8DlmTkseuIuaR1wIqPjxUVB.2FVjb18qomA9vg.e", 2, null, "deborah" },
-                    { 9, new DateTime(2022, 7, 20, 23, 3, 54, 313, DateTimeKind.Local).AddTicks(2339), new DateTime(2022, 7, 20, 23, 3, 54, 313, DateTimeKind.Local).AddTicks(2368), null, "Jamel", "Ziemann", null, "$2a$11$IMeg3lyORLRggsdR6xrTEuvhbzLsSRcghnGLGq.08buyS08SFZuh.", 2, null, "wava_reinger" },
-                    { 10, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(5577), new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(5605), null, "Naomi", "Welch", null, "$2a$11$M.vwVLKPQI0wc3itBBq9luiQkEq3YT7JW4lnjpDyLznrcLOZar24u", 2, null, "charlotte_stiedemann" }
+                    { 1, new DateTime(2022, 7, 31, 1, 15, 13, 902, DateTimeKind.Local).AddTicks(8235), new DateTime(2022, 7, 31, 1, 15, 13, 902, DateTimeKind.Local).AddTicks(8280), "admin@mail.com", "admin", "admin", null, "$2a$11$T37BPZdYjcRe2QyRXM27h.F.3JXTNUV43vcrvBUBuR2oKBzGefzY2", 1, "Administrator" },
+                    { 2, new DateTime(2022, 7, 31, 1, 15, 14, 50, DateTimeKind.Local).AddTicks(9688), new DateTime(2022, 7, 31, 1, 15, 14, 50, DateTimeKind.Local).AddTicks(9761), "operator@mail.com", "operator", "operator", null, "$2a$11$j00A22I1jZGgSnHer.k.BOMPzGUsByj35cDX7v7HsGjWLssJPXnwi", 2, "Operator" },
+                    { 3, new DateTime(2022, 7, 31, 1, 15, 14, 199, DateTimeKind.Local).AddTicks(6678), new DateTime(2022, 7, 31, 1, 15, 14, 199, DateTimeKind.Local).AddTicks(6770), "pippo@mail.com", "Jonh", "Doe", null, "$2a$11$avPxGVtMx66uU8siqLHrK.08BfzaMsUvP1.sa4wmpF8PAZsafEXlm", 2, "Pippo" },
+                    { 4, new DateTime(2022, 7, 31, 1, 15, 14, 347, DateTimeKind.Local).AddTicks(9860), new DateTime(2022, 7, 31, 1, 15, 14, 347, DateTimeKind.Local).AddTicks(9879), "destinee_rowe@morarkeeling.uk", "Maia", "Hermiston", null, "$2a$11$8prUH2./1w5osWcfDeSLZOBVrE9qGUAsYQkrAGH8.YgfbfArJs58S", 2, "valentin" },
+                    { 5, new DateTime(2022, 7, 31, 1, 15, 14, 496, DateTimeKind.Local).AddTicks(779), new DateTime(2022, 7, 31, 1, 15, 14, 496, DateTimeKind.Local).AddTicks(798), "stefan_roberts@pfannerstill.biz", "Jett", "Maggio", null, "$2a$11$XPNOezyjnL4i/FyXLNzpL.8/vFqsY0FUd.nYwR8HvRxxGgwUH1QeK", 2, "dejah_thiel" },
+                    { 6, new DateTime(2022, 7, 31, 1, 15, 14, 647, DateTimeKind.Local).AddTicks(3942), new DateTime(2022, 7, 31, 1, 15, 14, 647, DateTimeKind.Local).AddTicks(3960), "joany@parisian.co.uk", "Johan", "Klocko", null, "$2a$11$eKZIoytVYKa9Tl66q0hdV.CTKN16PXsaV9X6PkxEyEBb5/9CKUc.e", 2, "louisa" },
+                    { 7, new DateTime(2022, 7, 31, 1, 15, 14, 795, DateTimeKind.Local).AddTicks(2161), new DateTime(2022, 7, 31, 1, 15, 14, 795, DateTimeKind.Local).AddTicks(2181), "stanford@vonroob.co.uk", "Aditya", "Connelly", null, "$2a$11$bJgyZp/Gsvn1KLoyeIyEtea3O.DtDUhCCtfY96lj5urSv7NHh4eg.", 2, "haylee" },
+                    { 8, new DateTime(2022, 7, 31, 1, 15, 14, 943, DateTimeKind.Local).AddTicks(7140), new DateTime(2022, 7, 31, 1, 15, 14, 943, DateTimeKind.Local).AddTicks(7161), "allie.dickens@schustermedhurst.biz", "Lempi", "Hyatt", null, "$2a$11$3Bu.3C0Zu7guHoCRwcRipuAOlU0Hc4AbYGUlNKW.2WRRKvVu57vqy", 2, "zola.beatty" },
+                    { 9, new DateTime(2022, 7, 31, 1, 15, 15, 92, DateTimeKind.Local).AddTicks(5292), new DateTime(2022, 7, 31, 1, 15, 15, 92, DateTimeKind.Local).AddTicks(5312), "leanne@connelly.biz", "Cara", "O'Connell", null, "$2a$11$z3ZvxLLcZOZch7a8BfBd4e5grnARkV5lcht/pBXqJRhOwm6zw4c1a", 2, "gail_halvorson" },
+                    { 10, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(6904), new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(6922), "kayden@grant.co.uk", "Guillermo", "Legros", null, "$2a$11$tCDtilQV8KoK5nhHX3gopeR9slE4ctkC8Lg8VN4bABDbxzEg8.YqG", 2, "gaylord_kilback" }
                 });
 
             migrationBuilder.InsertData(
@@ -194,15 +191,15 @@ namespace api.Migrations
                 columns: new[] { "Id", "CreationDate", "UpdateDate", "UserId", "token" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6151), null, 2, "81a130d2-502f-4cf1-a376-63edeb000e9f" },
-                    { 2, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6155), null, 3, "67c5064b-7160-4d05-a62e-1799f0d13270" },
-                    { 3, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6187), null, 4, "7775286b-4123-4e89-ba8e-f59dec0deb2a" },
-                    { 4, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6199), null, 5, "dde23727-5cae-4cf0-8adf-3ee8238d33b1" },
-                    { 5, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6201), null, 6, "426b8696-84d2-45d2-91b7-eb4eccece2fc" },
-                    { 6, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6203), null, 7, "02dc24d8-5f53-4e4a-b1c7-5636b864e6c2" },
-                    { 7, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6205), null, 8, "0c49a450-b2ba-4024-ac97-3482de9618b8" },
-                    { 8, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6207), null, 9, "63b0a13c-6366-45ec-8586-119a384de033" },
-                    { 9, new DateTime(2022, 7, 20, 23, 3, 54, 465, DateTimeKind.Local).AddTicks(6208), null, 10, "961c4a82-9a03-4211-8b9a-60d986f66398" }
+                    { 1, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7422), null, 2, "81a130d2-502f-4cf1-a376-63edeb000e9f" },
+                    { 2, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7427), null, 3, "67c5064b-7160-4d05-a62e-1799f0d13270" },
+                    { 3, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7451), null, 4, "860b05e5-a462-4660-a438-18ab536c2bee" },
+                    { 4, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7453), null, 5, "15794b8a-be18-4c51-8c6a-4eb2d066da01" },
+                    { 5, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7455), null, 6, "11e2ba74-2038-4044-b121-63248df0d048" },
+                    { 6, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7457), null, 7, "f04e7c53-d221-4523-be89-8da0efd774c3" },
+                    { 7, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7459), null, 8, "d8fcec27-a178-4164-bbc5-398232b207c1" },
+                    { 8, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7460), null, 9, "3c790b7c-e480-4150-b9ac-7968b1f9dc88" },
+                    { 9, new DateTime(2022, 7, 31, 1, 15, 15, 240, DateTimeKind.Local).AddTicks(7467), null, 10, "a18f0984-1cde-4ba5-9366-3aa14c8ed3ca" }
                 });
 
             migrationBuilder.CreateIndex(

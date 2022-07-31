@@ -46,11 +46,6 @@ namespace api.Services
             }
         }
 
-        public IEnumerable<User> GetAll()
-        {
-            return _context.Users;
-        }
-
         private User getUser(int id)
         {
             var user = _context.Users.Include(x => x.Role).Where( x => x.Id == id).First();
@@ -84,26 +79,6 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        /*  public async Task<(bool Success, string Message)> Update(int id, UpdateRequestDto model)
-          {
-              var user = getUser(id);
-              if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
-                  return (false, "Username '" + model.Username + "' is already taken");
-              if (!string.IsNullOrEmpty(model.Password))
-              {
-                  user.Password = BCryptNet.HashPassword(model.Password);
-              }
-              else
-              {
-                  return (false, "Password is blank");
-              }
-              _context.Users.Update(user);
-              await _context.SaveChangesAsync();
-
-              return (true, "User updated successfully");
-
-          }*/
-
         public async Task<(bool Success, string Message)> Update (int id, UpdateRequestUserDto model)
         {
             try
@@ -112,18 +87,18 @@ namespace api.Services
                 if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
                     return (false, "Username '" + model.Username + "' is already taken");
                 if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
-                    return (false, "Username '" + model.Email + "' is already taken");
-                if (user.Role.Name != model.Role && !String.IsNullOrEmpty(model.Role))
-                    user.RoleId = _context.Roles.Where(r => r.Name == model.Role).First().Id;
-                foreach( var prop in model.GetType().GetProperties())
-                {
-                    if (prop.Name.ToString() != "Role" && prop.GetValue(model, null) != null )
-                    {
+                    return (false, "Email '" + model.Email + "' is already taken");
+                if (user.Role.Name != model.Role && model.Role != null)
+                    user.RoleId = (int)model.Role;
+                if (model.Avatar != null)
+                    await PostAvatarUser(user.Id, model.Avatar);
 
+                    foreach ( var prop in model.GetType().GetProperties())
+                {
+                    if (prop.Name.ToString() != "Role" && prop.Name.ToString() != "Avatar" && prop.GetValue(model, null) != null)
+                    {
                         user.GetType().GetProperty(prop.Name).SetValue(user, prop.GetValue(model, null));
                     }
-
-                    
                 }
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();

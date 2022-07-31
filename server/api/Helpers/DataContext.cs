@@ -33,8 +33,8 @@ namespace api.Helpers;
 
             #region RoleSeed
             modelBuilder.Entity<Role>().HasData(
-                new Role { Id = (int)EnumRoles.Administrator, Name = "Administrator", Description = "All Permission" },
-                new Role { Id = (int)EnumRoles.Operator, Name = "Operator", Description = "Only marking and show" }
+                new Role { Id = (int)EnumRoles.Administrator, Name = EnumRoles.Administrator, Description = "All Permission" },
+                new Role { Id = (int)EnumRoles.Operator, Name = EnumRoles.Operator, Description = "Only marking and show" }
                 );
             #endregion
 
