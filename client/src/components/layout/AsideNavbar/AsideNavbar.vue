@@ -100,7 +100,6 @@ export default {
     uploadAvatar() {
       const formData = new FormData();
       formData.append('file', this.file);
-      console.log(formData);
       this.$store.dispatch('UploadAvatar', formData);
     },
 

@@ -172,12 +172,35 @@ export default {
     },
 
     save() {
-      if (this.editedIndex > -1) {
+      /*    if (this.editedIndex > -1) {
         Object.assign(this.users[this.editedIndex], this.editedItem);
       } else {
         this.users.push(this.editedItem);
-      }
-      this.close();
+      } */
+      Object.assign(this.users[this.editedIndex], this.editedItem);
+      const formData = new FormData();
+      formData.append('Avatar', this.editedItem.avatar);
+      const data = {
+        FirstName: this.editedItem.firstName,
+        LastName: this.editedItem.lastName,
+        UserName: this.editedItem.username,
+        Role: this.editedItem.roleName,
+        Email: this.editedItem.email,
+      };
+
+      Object.entries(data).forEach(([key, val]) => {
+        formData.append(key, val);
+      });
+      console.log(this.editItem);
+      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
+        headers: { Authorization: this.$store.state.token },
+        // eslint-disable-next-line prettier/prettier
+      }).then(() => {
+        this.close();
+      })
+        .catch((error) => {
+          console.log(`errore + ${error}`);
+        });
     },
   },
 };
