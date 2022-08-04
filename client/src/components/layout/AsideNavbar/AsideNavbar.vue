@@ -3,14 +3,16 @@
     <v-list class="header-nav pt-9">
       <v-list-item>
         <v-list-item-avatar v-if="mini" style="margin-left: -7px !important">
-          <v-avatar class="d-block" color="grey darken-1" size="40">
-            <img :src="`data:image/png;base64,${user.avatar}`" />
+          <v-avatar class="d-flex justify-center" color="indigo" size="40">
+            <img v-if="user.avatar" :src="`data:image/png;base64,${user.avatar}`" />
+            <span v-else class="white--text text-h6">{{ user.initials }}</span>
           </v-avatar>
         </v-list-item-avatar>
         <v-hover v-slot="{ hover }">
           <v-list-item-avatar v-if="!mini" size="90">
-            <v-avatar class="d-block" color="grey darken-1" size="90">
-              <img :src="`data:image/png;base64,${user.avatar}`" />
+            <v-avatar class="d-flex justify-center" color="indigo" size="90">
+              <img v-if="user.avatar" :src="`data:image/png;base64,${user.avatar}`" />
+              <span v-else class="white--text text-h5">{{ user.initials }}</span>
               <v-expand-transition>
                 <div
                   v-if="hover"

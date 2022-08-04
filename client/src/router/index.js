@@ -50,6 +50,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  store.state.error = false;
   if (!to.meta.middleware) {
     return next();
   }

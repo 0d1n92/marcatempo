@@ -12,8 +12,12 @@
           <v-col cols="12" sm="6" md="6">
             <v-hover v-slot="{ hover }">
               <v-avatar size="200" color="indigo">
-                <img v-if="user.avatar" :src="avatar" />
-                <span v-else class="white--text text-h5">{{ UserInitials }}</span>
+                <img v-if="avatar" :src="avatar" />
+                <span
+                  v-else-if="user && user.firstName && user.lastName && user.firstName[0] && user.lastName[0]"
+                  class="white--text text-h5"
+                  >{{ UserInitials }}</span
+                >
                 <v-expand-transition>
                   <div
                     v-if="hover"
@@ -24,7 +28,6 @@
                     <v-icon size="40" class="absolute" color="white">mdi-file-upload-outline</v-icon>
                     <v-file-input
                       class="input_avatar"
-                      :rules="rules"
                       accept="image/png, image/jpeg, image/bmp"
                       prepend-icon=""
                       full-width
@@ -89,19 +92,21 @@ export default {
       rules: {
         required: (value) => {
           this.error = !!value;
-          console.log('richiseta', !!value);
           return !!value || 'Required.';
         },
       },
       error: true,
-      avatar: `data:image/png;base64,${this.user.avatar}`,
+      avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
       UserInitials: `${this.user.firstName[0]}${this.user.lastName[0]}`,
     };
   },
   watch: {
     user(newVal) {
-      this.UserInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
+      if (newVal && newVal.lastName && newVal.firstName && newVal.firstName[0] && newVal.firstName[0]) {
+        this.UserInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
+      }
+      this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
   },
   methods: {
@@ -109,8 +114,7 @@ export default {
       const reader = new FileReader();
       reader.readAsDataURL(this.file);
       const self = this;
-      reader.onload = function () {
-        console.log(reader.result);
+      reader.onload = () => {
         self.avatar = reader.result;
       };
     },

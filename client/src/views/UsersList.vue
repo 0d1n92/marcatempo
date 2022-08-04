@@ -129,7 +129,7 @@ export default {
           this.loading = false;
         })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          this.$store.commit('SetError', `${error}, impossible to get users`);
         });
     },
     initialize() {
@@ -199,7 +199,7 @@ export default {
         this.close();
       })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          this.$store.commit('SetError', `${error}, impossible to update user`);
         });
     },
   },

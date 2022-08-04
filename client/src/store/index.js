@@ -11,11 +11,14 @@ export default new Vuex.Store({
     marked: {},
     isExit: false,
     token: null,
+    error: false,
+    messageError: 'Generic Error',
   },
   getters: {
     getUser: (state) => {
       const user = {
         avatar: state.loggedUser.avatar,
+        initials: `${state.loggedUser.firstName[0]}${state.loggedUser.lastName[0]}`,
         fullName: `${state.loggedUser.firstName} ${state.loggedUser.lastName}`,
         role: state.loggedUser.roleName,
       };
@@ -26,6 +29,12 @@ export default new Vuex.Store({
     GetUser(state, payload) {
       state.loggedUser = payload;
     },
+
+    SetError(state, payload) {
+      state.error = true;
+      state.messageError = payload;
+    },
+
     Postmark(state, payload) {
       state.marked = payload;
     },
@@ -54,7 +63,7 @@ export default new Vuex.Store({
           commit('GetUser', response.data.user);
         })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          commit('SetError', `${error}, impossible to give information about the user`);
         });
     },
     UploadAvatar({ commit, state }, formData) {
@@ -65,7 +74,7 @@ export default new Vuex.Store({
           commit('UploadAvatar', response.data.image);
         })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          commit('SetError', `${error}, impossible to save avatar`);
         });
     },
     Postmark({ commit }, payload) {

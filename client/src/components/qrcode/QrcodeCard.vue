@@ -78,7 +78,7 @@ export default {
           this.tokenQr = response.data.token;
         })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          this.$store.commit('SetError', `${error}, impossible to update qrcode`);
         });
     },
     closeDialog() {
