@@ -41,7 +41,7 @@
           </v-dialog>
           <ConfirmDialog
             :show="dialogDelete"
-            @agree="closeDelete"
+            @agree="deleteItemConfirm"
             title="Delete user"
             :description="`Are you sure you want to delete user ${editedItem.username}?`"
           />
@@ -178,6 +178,15 @@ export default {
     },
 
     deleteItemConfirm() {
+      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.$store.state.commit('SetError', `${error}, impossible to delete user`);
+        });
       this.users.splice(this.editedIndex, 1);
       this.closeDelete();
     },

@@ -25,7 +25,8 @@ namespace api.Helpers;
                    entity.HasIndex(x => x.Email).IsUnique();
                    entity.HasIndex(x => x.Username).IsUnique();
                    entity.HasOne(d => d.Role).WithMany(d => d.Users).HasForeignKey("RoleId");
-                   entity.HasOne(d => d.QRCode).WithOne(ad => ad.User).HasForeignKey<QRcode>(d => d.UserId);
+                   entity.HasOne(d => d.QRCode).WithOne(ad => ad.User).HasForeignKey<QRcode>(d => d.UserId).OnDelete(DeleteBehavior.Cascade); 
+                   entity.HasMany(usr => usr.UserMetas).WithOne(meta => meta.User).HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade);
                }
            );
 
