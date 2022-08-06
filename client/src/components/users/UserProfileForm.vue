@@ -45,16 +45,24 @@
             <QrcodeCard :user="user" />
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="[rules.required]" v-model="user.firstName" label="Name"></v-text-field>
+            <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.firstName" label="Name"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="[rules.required]" v-model="user.lastName" label="Surname"></v-text-field>
+            <v-text-field
+              :rules="rules ? [rules.required] : ['']"
+              v-model="user.lastName"
+              label="Surname"
+            ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="[rules.required]" v-model="user.username" label="Username"></v-text-field>
+            <v-text-field
+              :rules="rules ? [rules.required] : ['']"
+              v-model="user.username"
+              label="Username"
+            ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="[rules.required]" v-model="user.email" label="Email"></v-text-field>
+            <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.email" label="Email"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
@@ -86,19 +94,25 @@ export default {
       dafault: {},
     },
   },
+  mounted() {
+    this.rules = {
+      required: (value) => {
+        this.error = !!value;
+        return !!value || 'Required.';
+      },
+    };
+  },
   data() {
     return {
       roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
       rules: {
-        required: (value) => {
-          this.error = !!value;
-          return !!value || 'Required.';
-        },
+        required: '',
       },
       error: true,
       avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
-      UserInitials: `${this.user.firstName[0]}${this.user.lastName[0]}`,
+      UserInitials:
+        this.user.firstName && this.user.firstName.lenght > 0 ? `${this.user.firstName[0]}${this.user.lastName[0]}` : 0,
     };
   },
   watch: {
@@ -109,6 +123,7 @@ export default {
       this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
   },
+
   methods: {
     uploadAvatar() {
       const reader = new FileReader();
@@ -122,7 +137,6 @@ export default {
       this.$emit('close');
     },
     save() {
-      console.log(this.error);
       if (!this.error) {
         return;
       }

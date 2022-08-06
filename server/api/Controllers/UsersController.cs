@@ -169,10 +169,10 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpGet("users-list")]
-    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize)
+    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize, string name)
     {
         var token = Request.Headers["Authorization"];
-        var result = await _userService.UsersListAsync(token,page, pageSize);
+        var result = await _userService.UsersListAsync(token,page, pageSize, name);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<List<ResponsUsersDto>>(result.Items)));

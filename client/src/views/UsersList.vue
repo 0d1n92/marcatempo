@@ -7,11 +7,20 @@
       :loading="loading"
       :items="users"
       sort-by="Name"
+      :search="search"
       class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Users</v-toolbar-title>
+          <v-toolbar-title class="mr-16">Users</v-toolbar-title>
+          <v-text-field
+            v-model="search"
+            @input="onSearch"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
@@ -24,7 +33,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" width="80%">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" fab>
+              <v-btn color="primary" @click="dialog = true" dark class="mb-2" v-bind="attrs" v-on="on" fab>
                 <v-icon>mdi-account-plus</v-icon>
               </v-btn>
             </template>
@@ -39,8 +48,16 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+        <v-hover v-slot="{ hover }">
+          <v-btn icon :color="hover ? 'blue' : 'grey darken-1'" @click="editItem(item)" title="Edit">
+            <v-icon small> mdi-pencil </v-icon>
+          </v-btn>
+        </v-hover>
+        <v-hover v-slot="{ hover }">
+          <v-btn icon :color="hover ? 'red' : 'grey darken-1'" @click="deleteItem(item)" title="Remove">
+            <v-icon small> {{ hover ? 'mdi-delete-empty' : 'mdi-delete' }} </v-icon>
+          </v-btn>
+        </v-hover>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -58,6 +75,7 @@ export default {
   name: 'UserList',
   components: { WireFrameVue, UserProfileForm, ConfirmDialog },
   data: () => ({
+    search: '',
     dialog: false,
     dialogDelete: false,
     loading: true,
@@ -114,6 +132,15 @@ export default {
   },
 
   methods: {
+    onSearch() {
+      console.log('change');
+      console.log(this.search.length);
+      if (this.search.length > 3) {
+        this.onGetUsers();
+      } else if (this.search.length === 0) {
+        this.onGetUsers();
+      }
+    },
     onGetUsers() {
       const { page, itemsPerPage } = this.options;
       Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
@@ -121,6 +148,7 @@ export default {
         params: {
           page,
           pageSize: itemsPerPage,
+          name: this.search,
         },
       })
         .then((response) => {
@@ -172,11 +200,6 @@ export default {
     },
 
     save(avatar) {
-      /*    if (this.editedIndex > -1) {
-        Object.assign(this.users[this.editedIndex], this.editedItem);
-      } else {
-        this.users.push(this.editedItem);
-      } */
       this.editedItem.avatar = avatar.base64;
       Object.assign(this.users[this.editedIndex], this.editedItem);
       const formData = new FormData();
@@ -194,10 +217,10 @@ export default {
       });
       Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
         headers: { Authorization: this.$store.state.token },
-        // eslint-disable-next-line prettier/prettier
-      }).then(() => {
-        this.close();
       })
+        .then(() => {
+          this.close();
+        })
         .catch((error) => {
           this.$store.commit('SetError', `${error}, impossible to update user`);
         });

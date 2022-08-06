@@ -109,12 +109,15 @@ namespace api.Services
                 return (true, ex.Message);
             }
         }
-        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize)
+        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name)
         {
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
                 var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.metaLabel == "meta-user-avatar")).AsQueryable();
+                if (!String.IsNullOrEmpty(name)){
+                     users = users.Where(usr => usr.FirstName.Contains(name) || usr.LastName.Contains(name));
+                }
                 var count = users.Count();
                 users = users.Paginate(page, pageSize);
                 return (true, "Users Finded", count, await users.ToListAsync());
