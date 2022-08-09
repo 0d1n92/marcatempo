@@ -195,22 +195,6 @@ namespace api.Services
 
         }
 
-        public async Task<(bool Success, string Message)> Delete(int id)
-        {
-            try
-            {
-                var user = getUser(id);
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-                return (true, "user deleted");
-
-            }
-            catch (Exception e)
-            {
-                return (false, e.Message);
-            }
-        }
-
         public async Task<(bool Success, string Message, User user)> GetUserAsync(string token)
         {
             try
@@ -231,9 +215,7 @@ namespace api.Services
         {
             try
             {
-
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == userName);
-
                 return (true, "User founded", user);
             }
             catch (Exception e)
@@ -290,6 +272,54 @@ namespace api.Services
             catch (Exception e)
             {
                 return (false, e.Message, "");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> Delete(int id)
+        {
+            try
+            {
+                var user = getUser(id);
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                return (true, "user deleted");
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
+            }
+        }
+        public async Task<(bool Success, string Message)> DeleteAvatar(int userId)
+        {
+            try
+            {
+                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.metaLabel == "meta-user-avatar");
+                _context.UserMetas.Remove(meta);
+                await _context.SaveChangesAsync();
+                return (true, "avatar deleted");
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
+            }
+        }
+
+        public async Task<(bool Success, string Message)> DeleteMyAvatar(string token)
+        {
+            try
+            {
+                var userId = _jwtUtils.ValidateToken(token);
+                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.metaLabel == "meta-user-avatar");
+                _context.UserMetas.Remove(meta);
+                await _context.SaveChangesAsync();
+                return (true, "avatar deleted");
+
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
             }
         }
 
