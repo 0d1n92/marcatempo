@@ -87,6 +87,23 @@ public class UsersController : ControllerBase
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new { message = result.Message });
     }
+    ///<summary>
+    /// Create
+    ///</summary>
+    /// <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    [AuthorizeAdmin]
+    [HttpPost("create")]
+    public async Task<ActionResult> Create([FromForm] CreateRequestUserDto request)
+    {  
+        var user = _mapper.Map<User>(request);
+        var qrcode = _mapper.Map<QRcode>(new QRcode());
+        var result = await _userService.CreateUser(request, qrcode, user);
+        if (!result.Success) return BadRequest(new { message = result.Message });
+        return Ok(new { message = result.Message });
+    }
 
     ///<summary>
     /// Get user

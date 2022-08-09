@@ -18,5 +18,6 @@ namespace api.Interface
         Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name);
         Task<(bool Success, string Message, string imgBase64)> PostAvatarUser(int? id, IFormFile file);
         Task<(bool Success, string Message, string imgBase64)> UpdateAvatar(string token, IFormFile file);
+        Task<(bool Success, string Message)> CreateUser(CreateRequestUserDto model, QRcode qrcode, User user);
     }
 }

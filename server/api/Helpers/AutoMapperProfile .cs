@@ -2,6 +2,8 @@
 using api.DTOs;
 using api.Model.Entity;
 using System.Linq;
+using api.Utilitis.Enum;
+using System;
 
 namespace api.Helpers
 {
@@ -9,6 +11,10 @@ namespace api.Helpers
     {
         public AutoMapperProfile()
         {
+            CreateMap<EnumRoles, Role>().ConstructUsing((src, dest) => new Role { Id = (int)src }); 
+            CreateMap<User, CreateRequestUserDto>()
+               .ForMember(cr => cr.Role, opt => opt.MapFrom(usr => usr.Role.Name))
+               .ForMember(cr => cr.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap(); 
             CreateMap<User, AuthenticateResponseDto>()
                 .ForMember(ar => ar.RoleName, opt => opt.MapFrom(usr => usr.Role.Name))
                 .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap();

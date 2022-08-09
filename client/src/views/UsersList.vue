@@ -33,7 +33,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" width="80%">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" @click="dialog = true" dark class="mb-2" v-bind="attrs" v-on="on" fab>
+              <v-btn color="primary" @click="onClickAddUser" dark class="mb-2" v-bind="attrs" v-on="on" fab>
                 <v-icon>mdi-account-plus</v-icon>
               </v-btn>
             </template>
@@ -79,6 +79,7 @@ export default {
     dialog: false,
     dialogDelete: false,
     loading: true,
+    update: true,
     options: {},
     count: 0,
     qrcode: {},
@@ -143,6 +144,7 @@ export default {
     },
     onGetUsers() {
       const { page, itemsPerPage } = this.options;
+      // eslint-disable-next-line no-unused-expressions
       Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
         headers: { Authorization: this.$store.state.token },
         params: {
@@ -166,6 +168,7 @@ export default {
     },
 
     editItem(item) {
+      this.update = true;
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
       this.dialog = true;
@@ -207,10 +210,45 @@ export default {
         this.editedIndex = -1;
       });
     },
-
+    onClickAddUser() {
+      this.dialog = true;
+      this.update = false;
+    },
     save(avatar) {
+      const formData = this.createFormData(avatar);
+      if (this.update) {
+        this.callBackUpdate(formData);
+        return;
+      }
+      this.callBackCreate(formData);
+    },
+    callBackCreate(formData) {
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, impossible to create user`);
+        });
+    },
+    callBackUpdate(formData) {
+      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, impossible to update user`);
+        });
+    },
+    createFormData(avatar) {
       this.editedItem.avatar = avatar.base64;
-      Object.assign(this.users[this.editedIndex], this.editedItem);
+      if (this.update) {
+        Object.assign(this.users[this.editedIndex], this.editedItem);
+      }
       const formData = new FormData();
       formData.append('Avatar', avatar.file);
       const data = {
@@ -224,15 +262,8 @@ export default {
       Object.entries(data).forEach(([key, val]) => {
         formData.append(key, val);
       });
-      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then(() => {
-          this.close();
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to update user`);
-        });
+
+      return formData;
     },
   },
 };

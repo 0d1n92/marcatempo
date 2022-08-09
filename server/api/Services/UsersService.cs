@@ -62,24 +62,58 @@ namespace api.Services
         {
 
             if (_context.Users.Any(x => x.Username == model.Username))
-                return (false, "Username already Taken");
+                return (false, "Username already taken");
 
             user.Password = BCryptNet.HashPassword(model.Password);
             _context.Users.Add(user);
-            _context.SaveChanges();
-            qrcode.UserId = user.Id;
+           
 
             if (model.RoleId != (int)EnumRoles.Administrator)
             {
+                qrcode.UserId = user.Id;
                 qrcode.token = Guid.NewGuid();
-                _context.QRcodes.Add(qrcode);
-                await _context.SaveChangesAsync();
+                _context.QRcodes.Add(qrcode);    
             }
+                await _context.SaveChangesAsync();
 
             return (true, "Registration successful");
         }
 
-        public async Task<(bool Success, string Message)> Update (int id, UpdateRequestUserDto model)
+        public async Task<(bool Success, string Message)> CreateUser(CreateRequestUserDto model, QRcode qrcode, User user)
+        {
+            try
+            {
+                if (_context.Users.Any(x => x.Username == model.Username))
+                    return (false, "Username already taken");
+                if (_context.Users.Any(x => x.Email == model.Email))
+                    return (false, "Email already taken");
+
+                var role = _context.Roles.Single(x => x.Id == user.Role.Id);
+                user.Role = role;
+                _context.Users.Add(user);
+               await _context.SaveChangesAsync();
+
+                if (model.Role != EnumRoles.Administrator)
+                {
+                    qrcode.UserId = user.Id;
+                    qrcode.token = Guid.NewGuid();
+                    _context.QRcodes.Add(qrcode);
+                    await _context.SaveChangesAsync();
+                }
+
+                if ( model.Avatar != null)
+                    await PostAvatarUser(user.Id, model.Avatar);
+
+                return (true, "User added");
+
+            } catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+
+        }
+
+            public async Task<(bool Success, string Message)> Update (int id, UpdateRequestUserDto model)
         {
             try
             {
