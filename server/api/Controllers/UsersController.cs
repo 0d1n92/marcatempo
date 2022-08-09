@@ -180,16 +180,19 @@ public class UsersController : ControllerBase
     ///</summary>
     /// <param name="page"></param> 
     /// <param name="pageSize"></param>
+    /// <param name="name"></param> 
+    /// <param name="sortby"></param> 
+    /// <param name="desc"></param>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
     [AuthorizeAdmin]
     [HttpGet("users-list")]
-    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize, string name)
+    public async Task<ActionResult<PaginatedList<ResponsUsersDto>>> UsersListAsync(int? page, int? pageSize, string name, string sortby, bool desc)
     {
         var token = Request.Headers["Authorization"];
-        var result = await _userService.UsersListAsync(token,page, pageSize, name);
+        var result = await _userService.UsersListAsync(token,page, pageSize, name, sortby, desc);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new PaginatedList<ResponsUsersDto> (result.Count, _mapper.Map<List<ResponsUsersDto>>(result.Items)));

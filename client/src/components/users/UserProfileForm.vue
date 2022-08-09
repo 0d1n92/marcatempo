@@ -101,6 +101,7 @@ export default {
         return !!value || 'Required.';
       },
     };
+    this.UserInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
   },
   data() {
     return {
@@ -112,7 +113,9 @@ export default {
       avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
       UserInitials:
-        this.user.firstName && this.user.firstName.lenght > 0 ? `${this.user.firstName[0]}${this.user.lastName[0]}` : 0,
+        this.user.firstName && this.user.firstName.lenght > 0
+          ? `${this.user.firstName[0]}${this.user.lastName[0]}`
+          : '',
     };
   },
   watch: {

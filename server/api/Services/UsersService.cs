@@ -143,7 +143,7 @@ namespace api.Services
                 return (true, ex.Message);
             }
         }
-        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name)
+        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name, string sortby, bool desc)
         {
             var userId = _jwtUtils.ValidateToken(token);
             try
@@ -153,6 +153,21 @@ namespace api.Services
                      users = users.Where(usr => usr.FirstName.Contains(name) || usr.LastName.Contains(name));
                 }
                 var count = users.Count();
+                switch (sortby)
+                {
+                    case "firstName":
+                        users = users.OrderBy(x => x.FirstName, desc);
+                        break;
+                    case "roleName":
+                        users = users.OrderBy(x => x.Role.Id, desc);
+                        break;
+                    case "lastName":
+                        users = users.OrderBy(x => x.LastName, desc);
+                        break ;
+                    default:
+                        break;
+                }
+               
                 users = users.Paginate(page, pageSize);
                 return (true, "Users Finded", count, await users.ToListAsync());
             }

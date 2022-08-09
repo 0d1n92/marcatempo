@@ -87,7 +87,6 @@ export default {
       {
         text: 'Name',
         align: 'start',
-        sortable: false,
         value: 'firstName',
       },
       { text: 'Surname', value: 'lastName' },
@@ -134,8 +133,6 @@ export default {
 
   methods: {
     onSearch() {
-      console.log('change');
-      console.log(this.search.length);
       if (this.search.length > 3) {
         this.onGetUsers();
       } else if (this.search.length === 0) {
@@ -143,7 +140,8 @@ export default {
       }
     },
     onGetUsers() {
-      const { page, itemsPerPage } = this.options;
+      // eslint-disable-next-line object-curly-newline
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
       // eslint-disable-next-line no-unused-expressions
       Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
         headers: { Authorization: this.$store.state.token },
@@ -151,6 +149,8 @@ export default {
           page,
           pageSize: itemsPerPage,
           name: this.search,
+          sortBy: sortBy[0],
+          desc: sortDesc[0],
         },
       })
         .then((response) => {
