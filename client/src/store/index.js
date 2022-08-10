@@ -37,7 +37,9 @@ export default new Vuex.Store({
       state.error = true;
       state.messageError = payload;
     },
-
+    DeleteAvatar(state) {
+      state.loggedUser.avatar = null;
+    },
     Postmark(state, payload) {
       state.marked = payload;
     },
@@ -78,6 +80,17 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           commit('SetError', `${error}, impossible to save avatar`);
+        });
+    },
+    DeleteAvatar({ commit, state }) {
+      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/avatar`, {
+        headers: { Authorization: state.token },
+      })
+        .then((response) => {
+          commit('DeleteAvatar', response.data.image);
+        })
+        .catch((error) => {
+          commit('SetError', `${error}, impossible to delete avatar`);
         });
     },
     Postmark({ commit }, payload) {

@@ -24,6 +24,7 @@
               :hover="hover"
               :base64="avatar"
               @uploadAvatar="uploadAvatar"
+              @deleteAvatar="deleteAvatar"
             ></user-avatar-hover>
           </v-list-item-avatar>
         </v-hover>
@@ -96,8 +97,11 @@ export default {
     },
     uploadAvatar(file) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', file.file);
       this.$store.dispatch('UploadAvatar', formData);
+    },
+    deleteAvatar() {
+      this.$store.dispatch('DeleteAvatar');
     },
     getMenuByRole() {
       if (this.user.role === Object.keys(enumRoles)[1]) {

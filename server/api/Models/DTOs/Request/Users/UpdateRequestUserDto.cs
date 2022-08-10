@@ -12,7 +12,7 @@ namespace api.DTOs
         public string? Username { get; set; }
         public EnumRoles? Role { get; set; }
         public string Email { get; set; }
-
+        public bool deleteAvatar { get; set; }
         public IFormFile? Avatar { get; set; }
     }
 }

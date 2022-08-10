@@ -44,7 +44,7 @@
                   <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
                 </v-toolbar>
               </v-card-title>
-              <user-profile-form @save="save" @close="close" :user="editedItem" />
+              <user-profile-form :disableQrcode="btnDisable" @save="save" @close="close" :user="editedItem" />
             </v-card>
           </v-dialog>
           <ConfirmDialog
@@ -86,6 +86,7 @@ export default {
     search: '',
     dialog: false,
     dialogDelete: false,
+    btnDisable: false,
     loading: true,
     update: true,
     options: {},
@@ -212,6 +213,7 @@ export default {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
+      this.btnDisable = false;
     },
 
     closeDelete() {
@@ -223,6 +225,7 @@ export default {
     },
     onClickAddUser() {
       this.dialog = true;
+      this.btnDisable = true;
       this.update = false;
     },
     save(avatar) {
@@ -256,6 +259,7 @@ export default {
         });
     },
     createFormData(avatar) {
+      debugger;
       this.editedItem.avatar = avatar.base64;
       if (this.update) {
         Object.assign(this.users[this.editedIndex], this.editedItem);
@@ -268,6 +272,7 @@ export default {
         UserName: this.editedItem.username,
         Role: this.editedItem.roleName,
         Email: this.editedItem.email,
+        deleteAvatar: avatar.deleteAvatar,
       };
 
       Object.entries(data).forEach(([key, val]) => {

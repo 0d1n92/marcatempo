@@ -16,30 +16,26 @@
           </v-hover>
         </v-col>
         <v-col cols="12" sm="6" md="6">
-          <QrcodeCard :user="user" />
+          <QrcodeCard :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.firstName" label="Name"></v-text-field>
+          <v-text-field :rules="rules" v-model="user.firstName" label="Name"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.lastName" label="Surname"></v-text-field>
+          <v-text-field :rules="rules" v-model="user.lastName" label="Surname"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :rules="rules ? [rules.required] : ['']"
-            v-model="user.username"
-            label="Username"
-          ></v-text-field>
+          <v-text-field :rules="rules" v-model="user.username" label="Username"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.email" label="Email"></v-text-field>
+          <v-text-field :rules="emailRules" v-model="user.email" label="Email"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
         </v-col>
       </v-row>
       <v-row>
-        <v-col sm="3" offset-sm="9">
+        <v-col sm="3" offset-sm="9" class="text-right">
           <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
           <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
         </v-col>
@@ -60,22 +56,21 @@ export default {
       type: Object,
       dafault: {},
     },
+    disableQrcode: {
+      type: Boolean,
+      default: false,
+    },
   },
   mounted() {
-    this.rules = {
-      required: (value) => {
-        this.error = !!value;
-        return !!value || 'Required.';
-      },
-    };
+    this.rules = [(v) => !!v || 'Is required', (v) => (v && v.length <= 10) || 'Must be less than 3 characters'];
     this.userInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
   },
   data() {
     return {
       roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
-      rules: {
-        required: '',
-      },
+      rules: [],
+      cancelAvatar: false,
+      emailRules: [(v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'],
       error: true,
       avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
@@ -108,16 +103,17 @@ export default {
     },
     deleteAvatar() {
       this.avatar = null;
-      this.$emit('deleteAvatar');
+      this.cancelAvatar = true;
     },
     close() {
       this.$emit('close');
     },
     save() {
-      if (!this.error) {
+      if (!this.error || !this.$refs.form.validate()) {
         return;
       }
-      this.$emit('save', { file: this.file, base64: this.avatar });
+      this.$emit('save', { file: this.file, base64: this.avatar, deleteAvatar: this.cancelAvatar });
+      this.cancelAvatar = false;
     },
   },
 };

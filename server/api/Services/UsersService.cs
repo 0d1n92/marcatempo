@@ -126,10 +126,12 @@ namespace api.Services
                     user.RoleId = (int)model.Role;
                 if (model.Avatar != null)
                     await PostAvatarUser(user.Id, model.Avatar);
+                if (model.deleteAvatar)
+                    await DeleteAvatar(user.Id);
 
-                    foreach ( var prop in model.GetType().GetProperties())
+                foreach ( var prop in model.GetType().GetProperties())
                 {
-                    if (prop.Name.ToString() != "Role" && prop.Name.ToString() != "Avatar" && prop.GetValue(model, null) != null)
+                    if (prop.Name.ToString() != "deleteAvatar" && prop.Name.ToString() != "Role" && prop.Name.ToString() != "Avatar" && prop.GetValue(model, null) != null)
                     {
                         user.GetType().GetProperty(prop.Name).SetValue(user, prop.GetValue(model, null));
                     }

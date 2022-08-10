@@ -1,6 +1,6 @@
 <template>
   <v-avatar class="d-flex justify-center" color="indigo" :size="size">
-    <img v-if="base64" :src="base64" />
+    <img v-if="base64" :src="base64 ? base64 : ''" />
     <span v-else class="white--text text-h5">{{ initials }}</span>
     <v-expand-transition>
       <div v-if="hover" title="Upload avatar" style="width: 100%; height: 100%; position: absolute">
@@ -41,9 +41,8 @@ export default {
       default: '40',
     },
     base64: {
-      type: String,
+      type: [String, null],
       default: '',
-      required: true,
     },
     initials: {
       type: String,
@@ -67,7 +66,7 @@ export default {
   },
   methods: {
     uploadAvatar() {
-      this.$emit('uploadAvatar', this.file);
+      this.$emit('uploadAvatar', { file: this.file, deleteAvatar: false });
     },
     deleteAvatar() {
       this.$emit('deleteAvatar');
@@ -77,17 +76,13 @@ export default {
 </script>
 
 <style scoped>
-.icon-bottom {
-  margin-top: 10%;
-}
-.icon-top {
-  margin-top: 10%;
-}
 .v-card--reveal {
   align-items: center;
+  display: flex;
   bottom: 0;
   justify-content: center;
   position: relative !important;
+  cursor: pointer !important;
   opacity: 0.5;
   width: 100%;
   height: 50% !important;

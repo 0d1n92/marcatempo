@@ -209,7 +209,7 @@ public class UsersController : ControllerBase
     [Authorize]
     [HttpPost("save-avatar")]
 
-    public async Task<IActionResult> PostAvatarUser(IFormFile file)
+    public async Task<IActionResult> UpdateAvatarUser(IFormFile file)
     {
         var token = Request.Headers["Authorization"];
         var response = await _userService.UpdateAvatar(token, file);

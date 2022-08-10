@@ -8,13 +8,22 @@
           class="mx-2"
           title="download qrcode"
           dark
+          :disabled="disabled"
           large
           color="red"
           :download="`QrCode_${user.username}`"
         >
           <v-icon dark> mdi-download </v-icon>
         </v-btn>
-        <v-btn @click="showDialog = true" class="mx-2" title="update qrcode" dark large color="blue">
+        <v-btn
+          :disabled="disabled"
+          @click="showDialog = true"
+          class="mx-2"
+          title="update qrcode"
+          dark
+          large
+          color="blue"
+        >
           <v-icon dark> mdi-cached </v-icon>
         </v-btn>
       </div>
@@ -40,6 +49,10 @@ export default {
     user: {
       type: Object,
       default: () => ({}),
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
