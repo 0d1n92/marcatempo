@@ -37,7 +37,15 @@
                 <v-icon>mdi-account-plus</v-icon>
               </v-btn>
             </template>
-            <user-profile-form @save="save" @close="close" :user="editedItem" :formTitle="formTitle" />
+            <v-card>
+              <v-card-title class="pa-0">
+                <v-toolbar dark color="primary">
+                  <v-icon>mdi-account</v-icon>
+                  <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+                </v-toolbar>
+              </v-card-title>
+              <user-profile-form @save="save" @close="close" :user="editedItem" />
+            </v-card>
           </v-dialog>
           <ConfirmDialog
             :show="dialogDelete"
@@ -68,12 +76,12 @@
 <script>
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
-import UserProfileForm from '../components/users/UserProfileForm.vue';
 import ConfirmDialog from '../components/layout/Message/ConfirmDialog.vue';
+import UserProfileForm from '../components/users/UserProfileForm.vue';
 
 export default {
   name: 'UserList',
-  components: { WireFrameVue, UserProfileForm, ConfirmDialog },
+  components: { WireFrameVue, ConfirmDialog, UserProfileForm },
   data: () => ({
     search: '',
     dialog: false,
@@ -98,11 +106,14 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      qrCode: '',
+      roleId: 2,
+      roleName: 'Operator',
+      avatar: null,
     },
   }),
   computed: {

@@ -1,62 +1,51 @@
 <template>
-  <v-card>
-    <v-card-title class="pa-0">
-      <v-toolbar dark color="primary">
-        <v-icon>mdi-account</v-icon>
-        <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
-      </v-toolbar>
-    </v-card-title>
-    <v-card-text>
-      <v-container>
-        <v-row>
-          <v-col cols="12" sm="6" md="6">
-            <v-hover v-slot="{ hover }">
-              <user-avatar-hover
-                :base64="avatar"
-                :hover="hover"
-                :initials="UserInitials"
-                size="200"
-                iconSize="40"
-                @uploadAvatar="uploadAvatar"
-                @deleteAvatar="deleteAvatar"
-              ></user-avatar-hover>
-            </v-hover>
-          </v-col>
-          <v-col cols="12" sm="6" md="6">
-            <QrcodeCard :user="user" />
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.firstName" label="Name"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              :rules="rules ? [rules.required] : ['']"
-              v-model="user.lastName"
-              label="Surname"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              :rules="rules ? [rules.required] : ['']"
-              v-model="user.username"
-              label="Username"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.email" label="Email"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-      <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-form ref="form" v-model="valid" lazy-validation style="position: relative">
+    <v-container>
+      <v-row>
+        <v-col cols="12" sm="6" md="6">
+          <v-hover v-slot="{ hover }">
+            <user-avatar-hover
+              :base64="avatar"
+              :hover="hover"
+              :initials="userInitials"
+              size="200"
+              iconSize="40"
+              @uploadAvatar="uploadAvatar"
+              @deleteAvatar="deleteAvatar"
+            ></user-avatar-hover>
+          </v-hover>
+        </v-col>
+        <v-col cols="12" sm="6" md="6">
+          <QrcodeCard :user="user" />
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.firstName" label="Name"></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.lastName" label="Surname"></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            :rules="rules ? [rules.required] : ['']"
+            v-model="user.username"
+            label="Username"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field :rules="rules ? [rules.required] : ['']" v-model="user.email" label="Email"></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col sm="3" offset-sm="9">
+          <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+          <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
 </template>
 <script>
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
@@ -67,10 +56,6 @@ export default {
   name: 'UsersAdminForm',
   components: { QrcodeCard, UserAvatarHover },
   props: {
-    formTitle: {
-      type: String,
-      dafult: '',
-    },
     user: {
       type: Object,
       dafault: {},
@@ -83,7 +68,7 @@ export default {
         return !!value || 'Required.';
       },
     };
-    this.UserInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
+    this.userInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
   },
   data() {
     return {
@@ -94,16 +79,18 @@ export default {
       error: true,
       avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
-      UserInitials:
+      userInitials:
         this.user.firstName && this.user.firstName.lenght > 0
           ? `${this.user.firstName[0]}${this.user.lastName[0]}`
           : '',
+      valid: true,
     };
   },
   watch: {
     user(newVal) {
+      this.$refs.form.resetValidation();
       if (newVal && newVal.lastName && newVal.firstName && newVal.firstName[0] && newVal.firstName[0]) {
-        this.UserInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
+        this.userInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
       }
       this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
