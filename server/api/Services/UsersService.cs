@@ -30,19 +30,19 @@ namespace api.Services
             _jwtUtils = jwtUtils;
         }
 
-        public async Task<(bool Success, string Token)> Authenticate(AuthenticateRequestDto model)
+        public async Task<(bool Success, string Token, string UserName)> Authenticate(AuthenticateRequestDto model)
         {
             try
             {
                 var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
                 if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
                 {
-                    return (true, _jwtUtils.GenerateToken(user));
+                    return (true, _jwtUtils.GenerateToken(user), user.Username);
                 }
-                 return (false, "User not found");
+                 return (false, "User not found", model.Username);
             } catch(Exception ex)
             {
-                return (false,ex.Message);
+                return (false,ex.Message, "");
             }
         }
 
@@ -192,7 +192,6 @@ namespace api.Services
                 return (false, e.Message, 0, new List<User>());
 
             }
-
         }
 
         public async Task<(bool Success, string Message, User user)> GetUserAsync(string token)

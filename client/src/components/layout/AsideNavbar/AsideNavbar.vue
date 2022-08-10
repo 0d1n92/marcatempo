@@ -1,39 +1,30 @@
 <template>
-  <v-navigation-drawer height="100%" absolute color="grey lighten-3" :mini-variant.sync="mini" permanent app>
+  <v-navigation-drawer
+    v-if="user"
+    height="100%"
+    absolute
+    color="grey lighten-3"
+    :mini-variant.sync="mini"
+    permanent
+    app
+  >
     <v-list class="header-nav pt-9">
       <v-list-item>
         <v-list-item-avatar v-if="mini" style="margin-left: -7px !important">
           <v-avatar class="d-flex justify-center" color="indigo" size="40">
-            <img v-if="user.avatar" :src="`data:image/png;base64,${user.avatar}`" />
+            <img v-if="avatar" :src="avatar" />
             <span v-else class="white--text text-h6">{{ user.initials }}</span>
           </v-avatar>
         </v-list-item-avatar>
         <v-hover v-slot="{ hover }">
           <v-list-item-avatar v-if="!mini" size="90">
-            <v-avatar class="d-flex justify-center" color="indigo" size="90">
-              <img v-if="user.avatar" :src="`data:image/png;base64,${user.avatar}`" />
-              <span v-else class="white--text text-h5">{{ user.initials }}</span>
-              <v-expand-transition>
-                <div
-                  v-if="hover"
-                  title="Upload avatar"
-                  class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-h2 white--text"
-                  style="height: 100%"
-                >
-                  <v-icon size="40" class="absolute" color="white">mdi-file-upload-outline</v-icon>
-                  <v-file-input
-                    :rules="rules"
-                    accept="image/png, image/jpeg, image/bmp"
-                    prepend-icon=""
-                    full-width
-                    height="100%"
-                    v-model="file"
-                    @change="uploadAvatar"
-                  >
-                  </v-file-input>
-                </div>
-              </v-expand-transition>
-            </v-avatar>
+            <user-avatar-hover
+              size="90"
+              :initials="user.initials"
+              :hover="hover"
+              :base64="avatar"
+              @uploadAvatar="uploadAvatar"
+            ></user-avatar-hover>
           </v-list-item-avatar>
         </v-hover>
         <v-spacer></v-spacer>
@@ -67,13 +58,14 @@
 
 <script>
 import enumRoles from '../../../enums/enumRoles';
+import UserAvatarHover from '../../users/UserAvatarHover.vue';
 
 export default {
+  components: { UserAvatarHover },
   name: 'AsideNavabar',
   data() {
     return {
       mini: true,
-      file: null,
       asideItemNavigation: [
         {
           icon: 'mdi-monitor-dashboard',
@@ -93,18 +85,20 @@ export default {
     nav() {
       return this.getMenuByRole();
     },
+    avatar() {
+      return this.user.avatar ? `data:image/png;base64,${this.user.avatar}` : null;
+    },
   },
   methods: {
     logout() {
       this.$store.commit('Logout');
       this.$router.push({ name: 'login' });
     },
-    uploadAvatar() {
+    uploadAvatar(file) {
       const formData = new FormData();
-      formData.append('file', this.file);
+      formData.append('file', file);
       this.$store.dispatch('UploadAvatar', formData);
     },
-
     getMenuByRole() {
       if (this.user.role === Object.keys(enumRoles)[1]) {
         this.asideItemNavigation = [

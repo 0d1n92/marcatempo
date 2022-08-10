@@ -81,7 +81,7 @@ public class UsersController : ControllerBase
         var result = await _userService.Authenticate(request);
 
         if (!result.Success) return NotFound(new { Message = result.Token });
-        return Ok(new { token = result.Token });
+        return Ok(new { token = result.Token, userName= result.UserName });
     }
 
 

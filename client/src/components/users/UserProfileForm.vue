@@ -11,34 +11,15 @@
         <v-row>
           <v-col cols="12" sm="6" md="6">
             <v-hover v-slot="{ hover }">
-              <v-avatar size="200" color="indigo">
-                <img v-if="avatar" :src="avatar" />
-                <span
-                  v-else-if="user && user.firstName && user.lastName && user.firstName[0] && user.lastName[0]"
-                  class="white--text text-h5"
-                  >{{ UserInitials }}</span
-                >
-                <v-expand-transition>
-                  <div
-                    v-if="hover"
-                    title="Upload avatar"
-                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-h2 white--text"
-                    style="height: 100%"
-                  >
-                    <v-icon size="40" class="absolute" color="white">mdi-file-upload-outline</v-icon>
-                    <v-file-input
-                      class="input_avatar"
-                      accept="image/png, image/jpeg, image/bmp"
-                      prepend-icon=""
-                      full-width
-                      height="100%"
-                      v-model="file"
-                      @change="uploadAvatar"
-                    >
-                    </v-file-input>
-                  </div>
-                </v-expand-transition>
-              </v-avatar>
+              <user-avatar-hover
+                :base64="avatar"
+                :hover="hover"
+                :initials="UserInitials"
+                size="200"
+                iconSize="40"
+                @uploadAvatar="uploadAvatar"
+                @deleteAvatar="deleteAvatar"
+              ></user-avatar-hover>
             </v-hover>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -80,10 +61,11 @@
 <script>
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
 import enumRoles from '../../enums/enumRoles';
+import UserAvatarHover from './UserAvatarHover.vue';
 
 export default {
   name: 'UsersAdminForm',
-  components: { QrcodeCard },
+  components: { QrcodeCard, UserAvatarHover },
   props: {
     formTitle: {
       type: String,
@@ -128,13 +110,18 @@ export default {
   },
 
   methods: {
-    uploadAvatar() {
+    uploadAvatar(file) {
+      this.file = file;
       const reader = new FileReader();
-      reader.readAsDataURL(this.file);
+      reader.readAsDataURL(file);
       const self = this;
       reader.onload = () => {
         self.avatar = reader.result;
       };
+    },
+    deleteAvatar() {
+      this.avatar = null;
+      this.$emit('deleteAvatar');
     },
     close() {
       this.$emit('close');
@@ -154,14 +141,15 @@ export default {
   bottom: 0;
   justify-content: center;
   opacity: 0.5;
-  position: absolute;
   width: 100%;
-  height: 40% !important;
+  height: 50% !important;
 }
 
 .input_avatar {
   width: 100% !important;
+  cursor: pointer !important;
   position: absolute !important;
+  bottom: 0;
   display: block !important;
 }
 </style>

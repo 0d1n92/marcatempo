@@ -18,7 +18,10 @@ export default new Vuex.Store({
     getUser: (state) => {
       const user = {
         avatar: state.loggedUser.avatar,
-        initials: `${state.loggedUser.firstName[0]}${state.loggedUser.lastName[0]}`,
+        initials:
+          state.loggedUser && state.loggedUser.firstName && state.loggedUser.lastName
+            ? `${state.loggedUser.firstName[0]}${state.loggedUser.lastName[0]}`
+            : '',
         fullName: `${state.loggedUser.firstName} ${state.loggedUser.lastName}`,
         role: state.loggedUser.roleName,
       };

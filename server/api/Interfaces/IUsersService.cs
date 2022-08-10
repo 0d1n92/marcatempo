@@ -8,7 +8,7 @@ namespace api.Interface
 {
     public interface IUsersService
     {
-        Task<(bool Success, string Token)> Authenticate(AuthenticateRequestDto model);
+        Task<(bool Success, string Token, string UserName)> Authenticate(AuthenticateRequestDto model);
         User GetById(int id);
         Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user);
         Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize);

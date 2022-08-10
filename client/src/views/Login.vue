@@ -71,9 +71,10 @@ export default {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
         .then((response) => {
           this.$store.commit('SetJwtToken', response.data.token);
+          console.log(response.data.username);
           this.$router.push({
             name: 'dash-board',
-            params: { user: response.data.username },
+            params: { user: response.data.userName },
           });
         })
         .catch((error) => {
