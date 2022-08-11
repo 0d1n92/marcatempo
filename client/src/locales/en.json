@@ -1,3 +1,24 @@
 {
-  "message":"Hello"
+  "Dashboard": "My Dashboard",
+  "Users account": "Users account",
+  "Users actions": "Users actions",
+  "Scan qrcode": "Scan qrcode",
+  "Update qrcode": "Update QR",
+  "Delete avatar": "Delete avatar",
+  "Update avatar": "Update avatar",
+  "Administrator": "Administrator",
+  "Operator": "Operator",
+  "Disagree": "Disagree",
+  "Ageree": "Agree",
+  "Save": "Save",
+  "Inreversible operation": "Irreversible operation",
+  "Error": {
+    "Generic": "Generic Error",
+    "Information user": "impossible to get user information",
+    "Save avatar": "impossible to save avatar",
+    "Delete avatar": "impossible to delete avatar"
+  },
+  "Dialog": {
+    "Update qrcode": "Are you sure you want to update qrcode?"
+  }
 }

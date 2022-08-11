@@ -39,7 +39,7 @@
           <v-list-item-title class="text-h6">
             {{ user.fullName }}
           </v-list-item-title>
-          <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ $t(user.role) }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -75,8 +75,8 @@ export default {
       asideItemNavigation: [
         {
           icon: 'mdi-monitor-dashboard',
-          title: 'DashBoard',
-          text: 'My dashboard',
+          title: this.$i18n.t('Dashboard'),
+          text: this.$i18n.t('Dashboard'),
           route_name: 'dash-board',
         },
       ],
@@ -118,35 +118,35 @@ export default {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
-            title: 'DashBoard',
-            route_name: 'dash-board',
-            text: 'My dashboard',
+            title: this.$i18n.t('Dashboard'),
+            text: this.$i18n.t('Dashboard'),
           },
           {
             icon: 'mdi-account-group',
-            title: 'List of users',
+            title: this.$i18n.t('Users account'),
+            text: this.$i18n.t('Users account'),
             route_name: 'users',
-            text: 'Users account',
           },
           {
             icon: 'mdi-table-account',
-            title: 'views action',
+            title: this.$i18n.t('Users actions'),
+            text: this.$i18n.t('Users actions'),
             route_name: 'actions',
-            text: 'Users actions',
           },
         ];
       } else if (this.user.role === Object.keys(enumRoles)[2]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
-            title: 'DashBoard',
+            title: this.$i18n.t('Dashboard'),
+            text: this.$i18n.t('Dashboard'),
             route_name: 'dash-board',
           },
           {
             icon: 'mdi-qrcode-scan',
-            title: 'scan qrcode',
+            title: this.$i18n.t('Scan qrcode'),
+            text: this.$i18n.t('Scan qrcode'),
             route_name: 'scan',
-            text: 'Scan qrcode',
           },
         ];
       }

@@ -1,3 +1,25 @@
 {
-  "message": "Ciao i18n !!"
+  "Dashboard": "Panello di controllo",
+  "Users account": "Account Utenti",
+  "Users actions": "Storico azioni Utenti",
+  "Scan qrcode": "Scansione QR",
+  "Update qrcode": "Aggiorna QR",
+  "Delete avatar": "Cancella avatar",
+  "Update avatar": "Aggiorna avatar",
+  "Administrator": "Amministratore",
+  "Operator": "Operatore",
+  "Disagree": "Annulla",
+  "Save": "Salva",
+  "Ageree": "Acetta",
+  "Inreversible operation": "operazione inreversibile",
+  "Error": {
+    "Generic": "Errore generico",
+    "Information user": "impossibile ottenere le informazioni utente",
+    "Save avatar": "impossibile salvare avatar",
+    "Delete avatar": "impossibile to cancellare avatar"
+  },
+  "Dialog": {
+    "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?"
+
+  }
 }

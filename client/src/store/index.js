@@ -9,13 +9,12 @@ export default new Vuex.Store({
   plugins: [createPersistedState()],
 
   state: {
-    lang: 'it',
     loggedUser: {},
     marked: {},
     isExit: false,
     token: null,
     error: false,
-    messageError: 'Generic Error',
+    messageError: i18n.t('Generic'),
   },
   getters: {
     getUser: (state) => {
@@ -75,7 +74,7 @@ export default new Vuex.Store({
           commit('GetUser', response.data.user);
         })
         .catch((error) => {
-          commit('SetError', `${error}, impossible to give information about the user`);
+          commit('SetError', `${error}, ${i18n.t('Error.Information user')}`);
         });
     },
     UploadAvatar({ commit, state }, formData) {
@@ -86,7 +85,7 @@ export default new Vuex.Store({
           commit('UploadAvatar', response.data.image);
         })
         .catch((error) => {
-          commit('SetError', `${error}, impossible to save avatar`);
+          commit('SetError', `${error}, ${i18n.t('Error.Save avatar')}`);
         });
     },
     DeleteAvatar({ commit, state }) {
@@ -97,7 +96,7 @@ export default new Vuex.Store({
           commit('DeleteAvatar', response.data.image);
         })
         .catch((error) => {
-          commit('SetError', `${error}, impossible to delete avatar`);
+          commit('SetError', `${error}, ${i18n.t('Error.Delete avatar')}`);
         });
     },
     Postmark({ commit }, payload) {
@@ -106,7 +105,7 @@ export default new Vuex.Store({
           commit('Postmark', response.data);
         })
         .catch((error) => {
-          console.log(`errore + ${error}`);
+          console.log(`error + ${error}`);
         });
     },
   },
