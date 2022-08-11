@@ -2,11 +2,14 @@ import Axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+import i18n from '../i18n';
 
 Vue.use(Vuex);
 export default new Vuex.Store({
   plugins: [createPersistedState()],
+
   state: {
+    lang: 'it',
     loggedUser: {},
     marked: {},
     isExit: false,
@@ -31,6 +34,10 @@ export default new Vuex.Store({
   mutations: {
     GetUser(state, payload) {
       state.loggedUser = payload;
+    },
+    SetLang(state, payload) {
+      state.lang = payload;
+      i18n.locale = state.lang;
     },
 
     SetError(state, payload) {

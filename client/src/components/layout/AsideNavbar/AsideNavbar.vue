@@ -3,6 +3,7 @@
     v-if="user"
     height="100%"
     absolute
+    class="pb-9"
     color="grey lighten-3"
     :mini-variant.sync="mini"
     permanent
@@ -54,6 +55,9 @@
       </v-list-item-icon>
       <v-list-item-title>{{ item.text }}</v-list-item-title>
     </v-list-item>
+    <div id="aside-footer">
+      <v-select v-model="locale" :items="$i18n.availableLocales"></v-select>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -67,6 +71,7 @@ export default {
   data() {
     return {
       mini: true,
+      locale: this.$route.params.lang,
       asideItemNavigation: [
         {
           icon: 'mdi-monitor-dashboard',
@@ -78,7 +83,6 @@ export default {
       rules: [(value) => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'],
     };
   },
-  mounted() {},
   computed: {
     user() {
       return this.$store.getters.getUser;
@@ -88,6 +92,12 @@ export default {
     },
     avatar() {
       return this.user.avatar ? `data:image/png;base64,${this.user.avatar}` : null;
+    },
+  },
+  watch: {
+    locale(val) {
+      this.$i18n.locale = val;
+      this.$router.replace({ ...this.$router, name: this.$route.name, params: { lang: val } });
     },
   },
   methods: {
@@ -151,6 +161,13 @@ export default {
 }
 .absolute {
   position: absolute;
+}
+#aside-footer {
+  bottom: 0;
+  position: absolute;
+  margin-bottom: 25px;
+  padding: 5px;
+  width: 60px;
 }
 .v-card--reveal {
   align-items: center;
