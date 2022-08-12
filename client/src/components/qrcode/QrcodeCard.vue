@@ -6,7 +6,7 @@
         <v-btn
           :href="url"
           class="mx-2"
-          title="download qrcode"
+          title="Download qrcode"
           dark
           :disabled="disabled"
           large

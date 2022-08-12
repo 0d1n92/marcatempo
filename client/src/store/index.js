@@ -14,7 +14,7 @@ export default new Vuex.Store({
     isExit: false,
     token: null,
     error: false,
-    messageError: i18n.t('Generic'),
+    messageError: i18n.t('Error.Generic'),
   },
   getters: {
     getUser: (state) => {

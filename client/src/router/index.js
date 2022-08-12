@@ -63,12 +63,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   store.state.error = false;
   let language = to.params.lang;
-  console.log(to.params.lang);
   if (!language) {
     language = 'it';
   }
-  i18n.language = language;
-  console.log(i18n);
+  i18n.locale = language;
   if (!to.meta.middleware) {
     return next();
   }

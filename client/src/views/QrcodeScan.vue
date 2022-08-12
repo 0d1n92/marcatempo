@@ -9,7 +9,7 @@
             :disabled="enterAccordion"
           >
             <v-expansion-panel-header disable-icon-rotate>
-              Entry
+              {{ $t('Entry') }}
               <template v-slot:actions>
                 <v-icon> mdi-door-open </v-icon>
               </template>
@@ -24,7 +24,7 @@
             :disabled="exitAccordion"
           >
             <v-expansion-panel-header disable-icon-rotate>
-              Exit
+              {{ $t('Exit') }}
               <template v-slot:actions>
                 <v-icon> mdi-exit-run</v-icon>
               </template>
@@ -65,7 +65,7 @@ export default {
         reloaded: true,
         show: false,
         status: 'error',
-        message: 'Generic Error',
+        message: this.$i18n.t('Error.Generic'),
         hour: '',
       },
       exitAlert: {
@@ -73,7 +73,7 @@ export default {
         reloaded: true,
         show: false,
         status: 'error',
-        message: 'Generic Error',
+        message: this.$i18n.t('Error.Generic'),
         hour: '',
       },
       response: {},

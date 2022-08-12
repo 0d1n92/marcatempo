@@ -3,7 +3,7 @@
     <v-flex xs12 sm8 md4>
       <v-card class="elevation-12">
         <v-toolbar dark color="primary">
-          <v-toolbar-title>Login form</v-toolbar-title>
+          <v-toolbar-title>Login</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form ref="form">
@@ -12,7 +12,7 @@
               :rules="[rules.required]"
               prepend-icon="fa-user"
               name="login"
-              label="Login"
+              label="Username"
               @keyup.enter="Login"
               type="text"
               required
@@ -44,6 +44,7 @@
 
 <script>
 import Axios from 'axios';
+import i18n from '../i18n';
 
 export default {
   name: 'Login',
@@ -56,7 +57,7 @@ export default {
       password: '',
     },
     rules: {
-      required: (value) => !!value || 'Required.',
+      required: (value) => !!value || i18n.t('Is required'),
     },
     error: {
       isError: false,
@@ -83,7 +84,7 @@ export default {
             message: error,
           };
           if (error.response.status === 404) {
-            self.error = { isError: true, message: 'Wrong user or password' };
+            self.error = { isError: true, message: i18n.t('Error.Wrong user or password') };
           }
           console.log(`errore + ${error}`);
         });
