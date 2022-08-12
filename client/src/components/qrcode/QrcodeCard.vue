@@ -6,7 +6,7 @@
         <v-btn
           :href="url"
           class="mx-2"
-          title="download qrcode"
+          title="Download qrcode"
           dark
           :disabled="disabled"
           large
@@ -19,7 +19,7 @@
           :disabled="disabled"
           @click="showDialog = true"
           class="mx-2"
-          title="update qrcode"
+          :title="$t('Update qrcode')"
           dark
           large
           color="blue"
@@ -30,8 +30,8 @@
     </v-card>
     <confirm-dialog
       :show="showDialog"
-      :title="`Update Qrcode`"
-      :description="`Are you sure you want to update ${user.username}'s qrcode?\n Irreversible operation`"
+      :title="$t('Update qrcode')"
+      :description="`${$t('Dialog.Update qrcode')}\n ${$t('Inreversible operation')}`"
       @agree="UpdateQrcode"
       @disagree="closeDialog"
     ></confirm-dialog>

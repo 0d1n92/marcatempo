@@ -1,0 +1,41 @@
+{
+  "Dashboard": "Panello di controllo",
+  "Users account": "Account Utenti",
+  "Users actions": "Storico azioni utenti",
+  "Scan qrcode": "Scansione QR",
+  "Users": "Utenti",
+  "Update qrcode": "Aggiorna QR",
+  "Delete avatar": "Cancella avatar",
+  "Update avatar": "Aggiorna avatar",
+  "Administrator": "Amministratore",
+  "Actions":"Azioni",
+  "Entry": "Entrata",
+  "Exit":"Uscita",
+  "Add User": "Aggiungi Utente",
+  "User Profile": "Profilo Utente",
+  "Operator": "Operatore",
+  "Disagree": "Annulla",
+  "Save": "Salva",
+  "Is required":"Campo Richiesto",
+  "Agree": "Acetta",
+  "Name": "Nome",
+  "Lastname":"Cognome",
+  "Role":"Ruolo",
+  "Inreversible operation": "operazione inreversibile",
+  "Error": {
+    "Generic": "Errore generico",
+    "Information user": "impossibile ottenere le informazioni utente",
+    "Save avatar": "impossibile salvare avatar",
+    "Delete avatar": "impossibile to cancellare avatar",
+    "Wrong user or password": "Password o utente errato",
+    "Impossible to get users": "Impossibile ottenere utente",
+    "DeleteUser": "Impossibile cancellare utente",
+    "CreateUser": "Impossibile creare l'utente",
+    "UpdateUser": "impossible aggiornare l'utente"
+  },
+  "Dialog": {
+    "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?",
+     "Must be less than 3 characters": "Deve contenere almeno 3 caratteri"
+
+  }
+}

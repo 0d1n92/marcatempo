@@ -3,9 +3,9 @@
     <img v-if="base64" :src="base64 ? base64 : ''" />
     <span v-else class="white--text text-h5">{{ initials }}</span>
     <v-expand-transition>
-      <div v-if="hover" title="Upload avatar" style="width: 100%; height: 100%; position: absolute">
+      <div v-if="hover" :title="$t('Update avatar')" style="width: 100%; height: 100%; position: absolute">
         <div class="transition-fast-in-fast-out red darken-2 v-card--reveal text-h2 white--text">
-          <v-btn class="icon-top" icon title="Delete avatar" @click="deleteAvatar">
+          <v-btn class="icon-top" icon :title="$t('Delete avatar')" @click="deleteAvatar">
             <v-icon :size="iconSize" color="white">mdi-trash-can-outline</v-icon>
           </v-btn>
         </div>

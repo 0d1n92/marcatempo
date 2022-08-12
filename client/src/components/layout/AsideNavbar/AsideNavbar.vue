@@ -3,6 +3,7 @@
     v-if="user"
     height="100%"
     absolute
+    class="pb-9"
     color="grey lighten-3"
     :mini-variant.sync="mini"
     permanent
@@ -38,7 +39,7 @@
           <v-list-item-title class="text-h6">
             {{ user.fullName }}
           </v-list-item-title>
-          <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ $t(user.role) }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -54,6 +55,9 @@
       </v-list-item-icon>
       <v-list-item-title>{{ item.text }}</v-list-item-title>
     </v-list-item>
+    <div id="aside-footer">
+      <v-select v-model="locale" :items="$i18n.availableLocales"></v-select>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -67,18 +71,18 @@ export default {
   data() {
     return {
       mini: true,
+      locale: this.$route.params.lang,
       asideItemNavigation: [
         {
           icon: 'mdi-monitor-dashboard',
-          title: 'DashBoard',
-          text: 'My dashboard',
+          title: this.$i18n.t('Dashboard'),
+          text: this.$i18n.t('Dashboard'),
           route_name: 'dash-board',
         },
       ],
       rules: [(value) => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'],
     };
   },
-  mounted() {},
   computed: {
     user() {
       return this.$store.getters.getUser;
@@ -88,6 +92,12 @@ export default {
     },
     avatar() {
       return this.user.avatar ? `data:image/png;base64,${this.user.avatar}` : null;
+    },
+  },
+  watch: {
+    locale(val) {
+      this.$i18n.locale = val;
+      this.$router.replace({ ...this.$router, name: this.$route.name, params: { lang: val } });
     },
   },
   methods: {
@@ -108,35 +118,35 @@ export default {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
-            title: 'DashBoard',
-            route_name: 'dash-board',
-            text: 'My dashboard',
+            title: this.$i18n.t('Dashboard'),
+            text: this.$i18n.t('Dashboard'),
           },
           {
             icon: 'mdi-account-group',
-            title: 'List of users',
+            title: this.$i18n.t('Users account'),
+            text: this.$i18n.t('Users account'),
             route_name: 'users',
-            text: 'Users account',
           },
           {
             icon: 'mdi-table-account',
-            title: 'views action',
+            title: this.$i18n.t('Users actions'),
+            text: this.$i18n.t('Users actions'),
             route_name: 'actions',
-            text: 'Users actions',
           },
         ];
       } else if (this.user.role === Object.keys(enumRoles)[2]) {
         this.asideItemNavigation = [
           {
             icon: 'mdi-monitor-dashboard',
-            title: 'DashBoard',
+            title: this.$i18n.t('Dashboard'),
+            text: this.$i18n.t('Dashboard'),
             route_name: 'dash-board',
           },
           {
             icon: 'mdi-qrcode-scan',
-            title: 'scan qrcode',
+            title: this.$i18n.t('Scan qrcode'),
+            text: this.$i18n.t('Scan qrcode'),
             route_name: 'scan',
-            text: 'Scan qrcode',
           },
         ];
       }
@@ -151,6 +161,13 @@ export default {
 }
 .absolute {
   position: absolute;
+}
+#aside-footer {
+  bottom: 0;
+  position: absolute;
+  margin-bottom: 25px;
+  padding: 5px;
+  width: 60px;
 }
 .v-card--reveal {
   align-items: center;
