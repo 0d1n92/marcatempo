@@ -1,0 +1,40 @@
+{
+  "Dashboard": "My Dashboard",
+  "Users account": "Users account",
+  "Users actions": "Users actions",
+  "Users": "Users",
+  "Scan qrcode": "Scan qrcode",
+  "Update qrcode": "Update QR",
+  "Delete avatar": "Delete avatar",
+  "Update avatar": "Update avatar",
+  "Administrator": "Administrator",
+  "Entry": "Entry",
+  "Exit":"Exit",
+  "Add User": "Add User",
+  "User Profile": "User Profile",
+  "Actions":"Actions",
+  "Operator": "Operator",
+  "Disagree": "Disagree",
+  "Agree": "Agree",
+  "Save": "Save",
+  "Name": "Name",
+  "Is required":"Is required",
+  "Lastname":"Lastname",
+  "Role":"Role",
+  "Inreversible operation": "Irreversible operation",
+  "Error": {
+    "Generic": "Generic Error",
+    "Information user": "impossible to get user information",
+    "Save avatar": "impossible to save avatar",
+    "Delete avatar": "impossible to delete avatar",
+    "Wrong user or password": "Wrong user or password",
+    "Impossible to get users": "impossible to get users",
+    "DeleteUser": "Impossibile to delete user",
+    "CreateUser": "impossible to create user",
+    "UpdateUser": "impossible to update user"
+  },
+  "Dialog": {
+    "Update qrcode": "Are you sure you want to update qrcode?",
+    "Must be less than 3 characters": "Must be less than 3 characters"
+  }
+}

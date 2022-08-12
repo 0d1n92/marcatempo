@@ -2,7 +2,7 @@
   <WireFrameVue>
     <v-data-table
       :options.sync="options"
-      :headers="headers"
+      :headers="headerTraslate"
       :server-items-length="count"
       :loading="loading"
       :items="users"
@@ -12,7 +12,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title class="mr-16">Users</v-toolbar-title>
+          <v-toolbar-title class="mr-16">{{ $t('Users') }}</v-toolbar-title>
           <v-text-field
             v-model="search"
             @input="onSearch"
@@ -82,44 +82,53 @@ import UserProfileForm from '../components/users/UserProfileForm.vue';
 export default {
   name: 'UserList',
   components: { WireFrameVue, ConfirmDialog, UserProfileForm },
-  data: () => ({
-    search: '',
-    dialog: false,
-    dialogDelete: false,
-    btnDisable: false,
-    loading: true,
-    update: true,
-    options: {},
-    count: 0,
-    qrcode: {},
-    headers: [
-      {
-        text: 'Name',
-        align: 'start',
-        value: 'firstName',
-      },
-      { text: 'Surname', value: 'lastName' },
+  data() {
+    return {
+      search: '',
+      dialog: false,
+      dialogDelete: false,
+      btnDisable: false,
+      loading: true,
+      update: true,
+      options: {},
+      count: 0,
+      qrcode: {},
+      headers: [
+        {
+          text: 'Name',
+          align: 'start',
+          value: 'firstName',
+        },
+        { text: 'Lastname', value: 'lastName' },
 
-      { text: 'Role', value: 'roleName' },
-      { text: 'Actions', value: 'actions', sortable: false },
-    ],
-    users: [],
-    editedIndex: -1,
-    editedItem: {},
-    defaultItem: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      qrCode: '',
-      roleId: 2,
-      roleName: 'Operator',
-      avatar: null,
-    },
-  }),
+        { text: 'Role', value: 'roleName' },
+        { text: 'Actions', value: 'actions', sortable: false },
+      ],
+      users: [],
+      editedIndex: -1,
+      editedItem: {},
+      defaultItem: {
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        qrCode: '',
+        roleId: 2,
+        roleName: 'Operator',
+        avatar: null,
+      },
+    };
+  },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Add User' : 'User Profile';
+      return this.editedIndex === -1 ? this.$i18n.t('Add User') : this.$i18n.t('User Profile');
+    },
+    headerTraslate() {
+      // eslint-disable-next-line no-unused-expressions
+      this.loading;
+      console.log('ricalcolo', this.$i18n.t('Exit'));
+
+      return this.headers.map((header) => ({ ...header, text: this.$i18n.t(header.text) }));
     },
   },
   watch: {
@@ -171,7 +180,7 @@ export default {
           this.loading = false;
         })
         .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to get users`);
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
         });
     },
     initialize() {
@@ -200,7 +209,7 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          this.$store.state.commit('SetError', `${error}, impossible to delete user`);
+          this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
         });
       this.users.splice(this.editedIndex, 1);
       this.closeDelete();
@@ -244,7 +253,7 @@ export default {
           this.close();
         })
         .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to create user`);
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.CreateUser')}`);
         });
     },
     callBackUpdate(formData) {
@@ -255,7 +264,7 @@ export default {
           this.close();
         })
         .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to update user`);
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.UpdateUser')}`);
         });
     },
     createFormData(avatar) {

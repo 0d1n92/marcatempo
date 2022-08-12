@@ -19,10 +19,10 @@
           <QrcodeCard :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.firstName" label="Name"></v-text-field>
+          <v-text-field :rules="rules" v-model="user.firstName" :label="$t('Name')"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.lastName" label="Surname"></v-text-field>
+          <v-text-field :rules="rules" v-model="user.lastName" :label="$t('Lastname')"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-text-field :rules="rules" v-model="user.username" label="Username"></v-text-field>
@@ -31,13 +31,13 @@
           <v-text-field :rules="emailRules" v-model="user.email" label="Email"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
+          <v-select :items="roles" v-model="user.roleName" :label="$t('Role')"></v-select>
         </v-col>
       </v-row>
       <v-row>
         <v-col sm="3" offset-sm="9" class="text-right">
-          <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-          <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+          <v-btn color="blue darken-1" text @click="close"> {{ $t('Disagree') }} </v-btn>
+          <v-btn color="blue darken-1" text @click="save"> {{ $t('Save') }} </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -62,7 +62,10 @@ export default {
     },
   },
   mounted() {
-    this.rules = [(v) => !!v || 'Is required', (v) => (v && v.length <= 10) || 'Must be less than 3 characters'];
+    this.rules = [
+      (v) => !!v || this.$i18n.t('Is required'),
+      (v) => (v && v.length <= 10) || this.$i18n.t('Dialog.Must be less than 3 characters'),
+    ];
     this.userInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
   },
   data() {

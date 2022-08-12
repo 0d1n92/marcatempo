@@ -7,39 +7,50 @@ import UsersList from '../views/UsersList.vue';
 import store from '../store';
 import middlewarePipeline from './middleware-pipeline';
 import { auth, admin } from './middleware';
+import i18n from '../i18n';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: `/${i18n.locale}/login`,
   },
   {
-    path: '/login',
-    name: 'login',
-    component: Login,
-  },
-  {
-    path: '/scan',
-    name: 'scan',
-    component: QrcodeScan,
-  },
-  {
-    path: '/dashboard/:user',
-    name: 'dash-board',
-    component: DashBoard,
-    meta: {
-      middleware: [auth],
+    path: '/:lang',
+    component: {
+      render(c) {
+        return c('router-view');
+      },
     },
-  },
-  {
-    path: '/users',
-    name: 'users',
-    component: UsersList,
-    meta: {
-      middleware: [auth, admin],
-    },
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: Login,
+      },
+      {
+        path: 'scan',
+        name: 'scan',
+        component: QrcodeScan,
+      },
+      {
+        path: 'dashboard/:user',
+        name: 'dash-board',
+        component: DashBoard,
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'users',
+        name: 'users',
+        component: UsersList,
+        meta: {
+          middleware: [auth, admin],
+        },
+      },
+    ],
   },
 ];
 
@@ -51,6 +62,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   store.state.error = false;
+  let language = to.params.lang;
+  if (!language) {
+    language = 'it';
+  }
+  i18n.locale = language;
   if (!to.meta.middleware) {
     return next();
   }
