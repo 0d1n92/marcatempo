@@ -66,7 +66,16 @@ export default {
       (v) => !!v || this.$i18n.t('Is required'),
       (v) => (v && v.length <= 10) || this.$i18n.t('Dialog.Must be less than 3 characters'),
     ];
-    this.userInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
+  },
+  computed: {
+    userInitials() {
+      if (this.user.lastName && this.user.firstName) {
+        if (this.user.firstName[0] && this.user.firstName[0]) {
+          return `${this.user.firstName[0]}${this.user.lastName[0]}`;
+        }
+      }
+      return '';
+    },
   },
   data() {
     return {
@@ -77,19 +86,12 @@ export default {
       error: true,
       avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
       file: null,
-      userInitials:
-        this.user.firstName && this.user.firstName.lenght > 0
-          ? `${this.user.firstName[0]}${this.user.lastName[0]}`
-          : '',
       valid: true,
     };
   },
   watch: {
     user(newVal) {
       this.$refs.form.resetValidation();
-      if (newVal && newVal.lastName && newVal.firstName && newVal.firstName[0] && newVal.firstName[0]) {
-        this.userInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
-      }
       this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
   },

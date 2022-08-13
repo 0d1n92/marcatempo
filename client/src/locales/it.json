@@ -31,7 +31,9 @@
     "Impossible to get users": "Impossibile ottenere utente",
     "DeleteUser": "Impossibile cancellare utente",
     "CreateUser": "Impossibile creare l'utente",
-    "UpdateUser": "impossible aggiornare l'utente"
+    "UpdateUser": "impossible aggiornare l'utente",
+    "Username already taken": "Username già utilizzato",
+    "Email already taken": "Email già utilizzata"
   },
   "Dialog": {
     "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?",
