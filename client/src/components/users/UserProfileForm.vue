@@ -95,10 +95,10 @@ export default {
   },
 
   methods: {
-    uploadAvatar(file) {
-      this.file = file;
+    uploadAvatar(payload) {
+      this.file = payload.file;
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(payload.file);
       const self = this;
       reader.onload = () => {
         self.avatar = reader.result;

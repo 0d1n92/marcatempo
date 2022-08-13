@@ -7,8 +7,8 @@ namespace api.DTOs
 {
     public class PostmarkerQRcodeResponseDto
     {
-        public DateTime? Entry { get; set; } 
-        public DateTime? Exit { get; set; }
+        public string Entry { get; set; } 
+        public string Exit { get; set; }
     }
 }
    

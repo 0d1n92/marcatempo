@@ -268,7 +268,6 @@ export default {
         });
     },
     createFormData(avatar) {
-      debugger;
       this.editedItem.avatar = avatar.base64;
       if (this.update) {
         Object.assign(this.users[this.editedIndex], this.editedItem);
