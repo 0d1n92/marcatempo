@@ -87,7 +87,6 @@ export default {
   width: 100%;
   height: 50% !important;
 }
-
 .input_avatar {
   width: 100% !important;
   height: 100%;

@@ -4,6 +4,7 @@ import QrcodeScan from '../views/QrcodeScan.vue';
 import Login from '../views/Login.vue';
 import DashBoard from '../views/DashBoard.vue';
 import UsersList from '../views/UsersList.vue';
+import Actions from '../views/Actions.vue';
 import store from '../store';
 import middlewarePipeline from './middleware-pipeline';
 import { auth, admin } from './middleware';
@@ -46,6 +47,14 @@ const routes = [
         path: 'users',
         name: 'users',
         component: UsersList,
+        meta: {
+          middleware: [auth, admin],
+        },
+      },
+      {
+        path: 'users/actions',
+        name: 'actions',
+        component: Actions,
         meta: {
           middleware: [auth, admin],
         },

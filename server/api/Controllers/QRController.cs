@@ -60,7 +60,7 @@ public class QRController : ControllerBase
     {
         var response = await _qrService.Postmark(request);
         if (!response.Success) return BadRequest(new { Message = response.Message });
-        var data = _mapper.Map<Model.Entity.Action, PostmarkerQRcodeResponseDto>(response.data);
+         var data = _mapper.Map<Model.Entity.Action, PostmarkerQRcodeResponseDto>(response.data);
         return Ok(new { message = response.Message, data = data });
     }
 

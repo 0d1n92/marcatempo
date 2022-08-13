@@ -1,13 +1,14 @@
 <template>
   <div>
     <v-card elevation="3" class="pa-2" width="200">
-      <QrcodeVue level="M" :value="tokenQr" size="180" />
+      <div :class="disabled ? 'overflow-qr' : ''">
+        <QrcodeVue level="M" :value="tokenQr" size="180" />
+      </div>
       <div class="d-flex">
         <v-btn
           :href="url"
-          class="mx-2"
+          class="mx-2 white--text"
           title="Download qrcode"
-          dark
           :disabled="disabled"
           large
           color="red"
@@ -18,9 +19,8 @@
         <v-btn
           :disabled="disabled"
           @click="showDialog = true"
-          class="mx-2"
+          class="mx-2 white--text"
           :title="$t('Update qrcode')"
-          dark
           large
           color="blue"
         >
@@ -101,3 +101,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.overflow-qr {
+  background: white;
+  opacity: 0.1;
+  z-index: 1;
+}
+</style>

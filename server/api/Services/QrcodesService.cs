@@ -33,6 +33,7 @@ public class QrcodesService : IQrcodesService
                         lastUserAction.Exit = DateTime.Now;
 
                        var updateAct =  _context.Actions.Update(lastUserAction);
+                       await _context.SaveChangesAsync();
 
                     return (true, "Exit", updateAct.Entity);
                     }

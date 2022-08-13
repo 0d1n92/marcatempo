@@ -124,10 +124,6 @@ export default {
       return this.editedIndex === -1 ? this.$i18n.t('Add User') : this.$i18n.t('User Profile');
     },
     headerTraslate() {
-      // eslint-disable-next-line no-unused-expressions
-      this.loading;
-      console.log('ricalcolo', this.$i18n.t('Exit'));
-
       return this.headers.map((header) => ({ ...header, text: this.$i18n.t(header.text) }));
     },
   },
@@ -253,7 +249,12 @@ export default {
           this.close();
         })
         .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.CreateUser')}`);
+          console.log();
+          this.$store.commit(
+            'SetError',
+            // eslint-disable-next-line comma-dangle
+            `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+          );
         });
     },
     callBackUpdate(formData) {
@@ -264,11 +265,14 @@ export default {
           this.close();
         })
         .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.UpdateUser')}`);
+          this.$store.commit(
+            'SetError',
+            // eslint-disable-next-line comma-dangle
+            `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+          );
         });
     },
     createFormData(avatar) {
-      debugger;
       this.editedItem.avatar = avatar.base64;
       if (this.update) {
         Object.assign(this.users[this.editedIndex], this.editedItem);

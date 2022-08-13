@@ -119,9 +119,9 @@ namespace api.Services
             {
                 var user = getUser(id);
                 if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
-                    return (false, "Username '" + model.Username + "' is already taken");
+                    return (false, "Username already taken");
                 if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
-                    return (false, "Email '" + model.Email + "' is already taken");
+                    return (false, "Email already taken");
                 if (user.Role.Name != model.Role && model.Role != null)
                     user.RoleId = (int)model.Role;
                 if (model.Avatar != null)

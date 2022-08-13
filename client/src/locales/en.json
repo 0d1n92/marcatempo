@@ -31,7 +31,9 @@
     "Impossible to get users": "impossible to get users",
     "DeleteUser": "Impossibile to delete user",
     "CreateUser": "impossible to create user",
-    "UpdateUser": "impossible to update user"
+    "UpdateUser": "impossible to update user",
+    "Username already taken": "Username already taken",
+    "Email already taken": "Email already taken"
   },
   "Dialog": {
     "Update qrcode": "Are you sure you want to update qrcode?",
