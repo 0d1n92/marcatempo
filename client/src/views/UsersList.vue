@@ -44,7 +44,13 @@
                   <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
                 </v-toolbar>
               </v-card-title>
-              <user-profile-form :disableQrcode="btnDisable" @save="save" @close="close" :user="editedItem" />
+              <user-profile-form
+                :validation="validation"
+                :disableQrcode="btnDisable"
+                @save="save"
+                @close="close"
+                :user="editedItem"
+              />
             </v-card>
           </v-dialog>
           <ConfirmDialog
@@ -86,6 +92,10 @@ export default {
     return {
       search: '',
       dialog: false,
+      validation: {
+        username: null,
+        email: null,
+      },
       dialogDelete: false,
       btnDisable: false,
       loading: true,
@@ -156,29 +166,6 @@ export default {
         this.onGetUsers();
       }
     },
-    onGetUsers() {
-      // eslint-disable-next-line object-curly-newline
-      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-      // eslint-disable-next-line no-unused-expressions
-      Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
-        headers: { Authorization: this.$store.state.token },
-        params: {
-          page,
-          pageSize: itemsPerPage,
-          name: this.search,
-          sortBy: sortBy[0],
-          desc: sortDesc[0],
-        },
-      })
-        .then((response) => {
-          this.users = response.data.data;
-          this.count = response.data.count;
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
-        });
-    },
     initialize() {
       // eslint-disable-next-line no-unused-expressions
       this.users;
@@ -195,20 +182,6 @@ export default {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = { ...item };
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
-        });
-      this.users.splice(this.editedIndex, 1);
-      this.closeDelete();
     },
 
     close() {
@@ -241,37 +214,6 @@ export default {
       }
       this.callBackCreate(formData);
     },
-    callBackCreate(formData) {
-      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then(() => {
-          this.close();
-        })
-        .catch((error) => {
-          console.log();
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
-        });
-    },
-    callBackUpdate(formData) {
-      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then(() => {
-          this.close();
-        })
-        .catch((error) => {
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
-        });
-    },
     createFormData(avatar) {
       this.editedItem.avatar = avatar.base64;
       if (this.update) {
@@ -293,6 +235,83 @@ export default {
       });
 
       return formData;
+    },
+    onGetUsers() {
+      // eslint-disable-next-line object-curly-newline
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+      // eslint-disable-next-line no-unused-expressions
+      Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
+        headers: { Authorization: this.$store.state.token },
+        params: {
+          page,
+          pageSize: itemsPerPage,
+          name: this.search,
+          sortBy: sortBy[0],
+          desc: sortDesc[0],
+        },
+      })
+        .then((response) => {
+          this.users = response.data.data;
+          this.count = response.data.count;
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
+        });
+    },
+    callBackCreate(formData) {
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          console.log();
+          this.$store.commit(
+            'SetError',
+            // eslint-disable-next-line comma-dangle
+            `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+          );
+          if (error.response.data.message === 'Username already taken') {
+            this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else if (error.response.data.message === 'Email already taken') {
+            this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          }
+        });
+    },
+    callBackUpdate(formData) {
+      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          this.$store.commit(
+            'SetError',
+            // eslint-disable-next-line comma-dangle
+            `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+          );
+          if (error.response.data.message === 'Username already taken') {
+            this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else if (error.response.data.message === 'Email already taken') {
+            this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          }
+        });
+    },
+    deleteItemConfirm() {
+      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
+        });
+      this.users.splice(this.editedIndex, 1);
+      this.closeDelete();
     },
   },
 };

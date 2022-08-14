@@ -25,13 +25,30 @@
           <v-text-field :rules="rules" v-model="user.lastName" :label="$t('Lastname')"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.username" label="Username"></v-text-field>
+          <v-text-field
+            :rules="[...rules, resetValidation]"
+            v-model="user.username"
+            :error-messages="validation.username"
+            label="Username"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="emailRules" v-model="user.email" label="Email"></v-text-field>
+          <v-text-field
+            :rules="[...emailRules, resetValidation]"
+            :error-messages="validation.email"
+            v-model="user.email"
+            label="Email"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-select :items="roles" v-model="user.roleName" :label="$t('Role')"></v-select>
+          <v-select
+            :items="roles"
+            :rules="[(v) => !!v || this.$i18n.t('Is required')]"
+            v-model="user.roleName"
+            item-value="value"
+            item-text="text"
+            :label="$t('Role')"
+          ></v-select>
         </v-col>
       </v-row>
       <v-row>
@@ -60,11 +77,38 @@ export default {
       type: Boolean,
       default: false,
     },
+    validation: {
+      type: Object,
+      default: () => ({
+        username: null,
+        email: null,
+      }),
+    },
+  },
+  data() {
+    return {
+      roles: [],
+      rules: [],
+      cancelAvatar: false,
+      emailRules: [
+        (v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || this.$i18n.t('E-mail must be valid'),
+      ],
+      error: true,
+      avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
+      file: null,
+      valid: true,
+      validationUsr: [],
+    };
   },
   mounted() {
+    Object.keys(enumRoles).forEach((item) => {
+      if (item !== 'Guest') {
+        this.roles.push({ text: this.$i18n.t(item), value: item });
+      }
+    });
     this.rules = [
       (v) => !!v || this.$i18n.t('Is required'),
-      (v) => (v && v.length <= 10) || this.$i18n.t('Dialog.Must be less than 3 characters'),
+      (v) => (v && v.length >= 3) || this.$i18n.t('Dialog.Must be less than 3 characters'),
     ];
   },
   computed: {
@@ -77,26 +121,26 @@ export default {
       return '';
     },
   },
-  data() {
-    return {
-      roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
-      rules: [],
-      cancelAvatar: false,
-      emailRules: [(v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'],
-      error: true,
-      avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
-      file: null,
-      valid: true,
-    };
-  },
   watch: {
     user(newVal) {
       this.$refs.form.resetValidation();
       this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
+    validation(newVal) {
+      if (newVal.username) {
+        this.validationUsername = this.validation.username ? [newVal.username] : [];
+      } else if (newVal.email) {
+        this.validationEmail = this.validation.email ? [newVal.email] : [];
+      }
+    },
   },
 
   methods: {
+    resetValidation() {
+      this.validation.username = null;
+      this.validation.email = null;
+      return true;
+    },
     uploadAvatar(payload) {
       this.file = payload.file;
       const reader = new FileReader();
