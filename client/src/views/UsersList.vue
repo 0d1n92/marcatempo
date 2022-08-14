@@ -4,6 +4,7 @@
       :options.sync="options"
       :headers="headerTraslate"
       :server-items-length="count"
+      :footer-props="{ 'items-per-page-options': [10, 20, 30, 40, -1] }"
       :loading="loading"
       :items="users"
       sort-by="Name"

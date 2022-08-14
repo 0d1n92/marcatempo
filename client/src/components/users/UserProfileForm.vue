@@ -66,7 +66,7 @@ import enumRoles from '../../enums/enumRoles';
 import UserAvatarHover from './UserAvatarHover.vue';
 
 export default {
-  name: 'UsersAdminForm',
+  name: 'UsersProfileForm',
   components: { QrcodeCard, UserAvatarHover },
   props: {
     user: {
@@ -87,7 +87,6 @@ export default {
   },
   data() {
     return {
-      roles: [],
       rules: [],
       cancelAvatar: false,
       emailRules: [
@@ -101,17 +100,21 @@ export default {
     };
   },
   mounted() {
-    Object.keys(enumRoles).forEach((item) => {
-      if (item !== 'Guest') {
-        this.roles.push({ text: this.$i18n.t(item), value: item });
-      }
-    });
     this.rules = [
       (v) => !!v || this.$i18n.t('Is required'),
       (v) => (v && v.length >= 3) || this.$i18n.t('Dialog.Must be less than 3 characters'),
     ];
   },
   computed: {
+    roles() {
+      const roles = [];
+      Object.keys(enumRoles).forEach((item) => {
+        if (item !== 'Guest') {
+          roles.push({ text: this.$i18n.t(item), value: item });
+        }
+      });
+      return roles;
+    },
     userInitials() {
       if (this.user.lastName && this.user.firstName) {
         if (this.user.firstName[0] && this.user.firstName[0]) {
