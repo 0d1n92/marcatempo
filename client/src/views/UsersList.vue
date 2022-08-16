@@ -268,16 +268,16 @@ export default {
           this.close();
         })
         .catch((error) => {
-          console.log();
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
           if (error.response.data.message === 'Username already taken') {
             this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
           } else if (error.response.data.message === 'Email already taken') {
             this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else {
+            this.$store.commit(
+              'SetError',
+              // eslint-disable-next-line comma-dangle
+              `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+            );
           }
         });
     },
@@ -289,15 +289,16 @@ export default {
           this.close();
         })
         .catch((error) => {
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
           if (error.response.data.message === 'Username already taken') {
             this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
           } else if (error.response.data.message === 'Email already taken') {
             this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else {
+            this.$store.commit(
+              'SetError',
+              // eslint-disable-next-line comma-dangle
+              `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+            );
           }
         });
     },
