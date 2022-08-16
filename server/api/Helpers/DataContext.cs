@@ -30,7 +30,7 @@ namespace api.Helpers;
                }
            );
 
-            modelBuilder.Entity<QRcode>(entity => entity.HasIndex(x => x.token).IsUnique());
+            modelBuilder.Entity<QRcode>(entity => entity.HasIndex(x => x.Token).IsUnique());
 
             #region RoleSeed
             modelBuilder.Entity<Role>().HasData(
@@ -57,15 +57,15 @@ namespace api.Helpers;
 
 
             modelBuilder.Entity<QRcode>().HasData(
-              new { Id = 1, token = Guid.Parse("81a130d2-502f-4cf1-a376-63edeb000e9f"), CreationDate = DateTime.Now, UserId = 2 },
-              new { Id = 2, token = Guid.Parse("67c5064b-7160-4d05-a62e-1799f0d13270"), CreationDate = DateTime.Now, UserId = 3 },
-              new { Id = 3, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 4 },
-              new { Id = 4, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 5 },
-              new { Id = 5, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 6 },
-              new { Id = 6, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 7 },
-              new { Id = 7, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 8 },
-              new { Id = 8, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 9 },
-              new { Id = 9, token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 10 }
+              new { Id = 1, Token = Guid.Parse("81a130d2-502f-4cf1-a376-63edeb000e9f"), CreationDate = DateTime.Now, UserId = 2 },
+              new { Id = 2, Token = Guid.Parse("67c5064b-7160-4d05-a62e-1799f0d13270"), CreationDate = DateTime.Now, UserId = 3 },
+              new { Id = 3, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 4 },
+              new { Id = 4, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 5 },
+              new { Id = 5, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 6 },
+              new { Id = 6, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 7 },
+              new { Id = 7, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 8 },
+              new { Id = 8, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 9 },
+              new { Id = 9, Token = Guid.NewGuid(), CreationDate = DateTime.Now, UserId = 10 }
             );
 
 

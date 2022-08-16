@@ -17,12 +17,12 @@ public class QrcodesService : IQrcodesService
     {
         _context = context;
     }
-    public async Task<(bool Success, string Message, Model.Entity.Action data)> Postmark(PostmarkerQRcodeRequestDto request)
+    public async Task<(bool Success, string Message, Model.Entity.Action data)> Postmark(RequestPostmarkerQRcodeDto request)
     {
         var action = new Model.Entity.Action();
         try
         {
-            var qrcode = await _context.QRcodes.Include(qr => qr.User).Where(qr => qr.token== request.token).FirstAsync();
+            var qrcode = await _context.QRcodes.Include(qr => qr.User).Where(qr => qr.Token== request.Token).FirstAsync();
          
                 if (request.Exit && qrcode != null)
                 {
@@ -59,8 +59,8 @@ public class QrcodesService : IQrcodesService
     {
         try
         {
-            var qrcode =  await _context.QRcodes.SingleOrDefaultAsync(qr => qr.token == token);
-            qrcode.token = Guid.NewGuid();
+            var qrcode =  await _context.QRcodes.SingleOrDefaultAsync(qr => qr.Token == token);
+            qrcode.Token = Guid.NewGuid();
             _context.QRcodes.Update(qrcode);
             await _context.SaveChangesAsync();
             return (true, "Qrcode Update", qrcode);

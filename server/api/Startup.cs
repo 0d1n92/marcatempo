@@ -79,6 +79,7 @@ namespace api
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IQrcodesService, QrcodesService>();
+            services.AddScoped<IActionsService, ActionsService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

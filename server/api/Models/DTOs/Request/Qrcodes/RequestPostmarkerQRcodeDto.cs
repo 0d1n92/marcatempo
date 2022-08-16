@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs
 {
-    public class PostmarkerQRcodeRequestDto
+    public class RequestPostmarkerQRcodeDto
     {
         [Required]
         public bool Exit { get; set; } = false;
 
         [Required]
-        public Guid token { get; set; }
+        public Guid Token { get; set; }
     }
 }

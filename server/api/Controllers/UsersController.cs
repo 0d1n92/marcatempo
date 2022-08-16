@@ -76,30 +76,12 @@ public class UsersController : ControllerBase
     /// 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult> Authenticate(AuthenticateRequestDto request)
+    public async Task<ActionResult> Authenticate(RequestAuthenticateDto request)
     {
         var result = await _userService.Authenticate(request);
 
         if (!result.Success) return NotFound(new { Message = result.Token });
         return Ok(new { token = result.Token, userName= result.UserName });
-    }
-
-
-    ///<summary>
-    /// Get List of Action Operator
-    ///</summary>
-    /// <response code="200">Success</response>
-    /// <response code="400">Bad Request</response> 
-    /// <response code="401">Unauthorized</response>
-
-    [AuthorizeAdmin]
-    [HttpGet("actionoperators")]
-    public async Task<ActionResult<PaginatedList<ResponseListofActionUsersDto>>> OperatorActionListAsync(int? page, int? pageSize)
-    {
-        var result = await _userService.OperatorActionListAsync(page, pageSize);
-
-        if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<IList<ResponseListofActionUsersDto>>(result.Items)));
     }
 
     ///<summary>
@@ -139,7 +121,7 @@ public class UsersController : ControllerBase
         var token = Request.Headers["Authorization"];
         var response = await _userService.GetUserAsync(token);
         if (!response.Success) return BadRequest(new { Mesage = response.Message });
-        var user = _mapper.Map<User, AuthenticateResponseDto>(response.user);
+        var user = _mapper.Map<User, ResponseAuthenticateDto>(response.user);
         return Ok(new { user = user });
     }
 
@@ -153,7 +135,7 @@ public class UsersController : ControllerBase
     /// <response code="401">Unauthorized</response>
     [AuthorizeAdmin]
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterRequestDto request)
+    public async Task<ActionResult> Register(RequestRegisterDto request)
     {
         var user = _mapper.Map<User>(request);
         var qrcode = _mapper.Map<QRcode>(new QRcode());
@@ -170,7 +152,7 @@ public class UsersController : ControllerBase
     /// <response code="401">Unauthorized</response>
     [AuthorizeAdmin]
     [HttpPost("create")]
-    public async Task<ActionResult> Create([FromForm] CreateRequestUserDto request)
+    public async Task<ActionResult> Create([FromForm] RequestCreateUserDto request)
     {
         var user = _mapper.Map<User>(request);
         var qrcode = _mapper.Map<QRcode>(new QRcode());
@@ -229,7 +211,7 @@ public class UsersController : ControllerBase
 
     [AuthorizeAdmin]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update([FromForm] UpdateRequestUserDto request, int id)
+    public async Task<IActionResult> Update([FromForm] RequestUpdateUserDto request, int id)
     {
         
         var result = await _userService.Update(id,request);

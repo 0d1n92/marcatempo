@@ -30,7 +30,7 @@ namespace api.Services
             _jwtUtils = jwtUtils;
         }
 
-        public async Task<(bool Success, string Token, string UserName)> Authenticate(AuthenticateRequestDto model)
+        public async Task<(bool Success, string Token, string UserName)> Authenticate(RequestAuthenticateDto model)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace api.Services
             return getUser(id);
         }
 
-        public async Task<(bool Success, string Message)> Register(RegisterRequestDto model, QRcode qrcode, User user)
+        public async Task<(bool Success, string Message)> Register(RequestRegisterDto model, QRcode qrcode, User user)
         {
 
             if (_context.Users.Any(x => x.Username == model.Username))
@@ -71,7 +71,7 @@ namespace api.Services
             if (model.RoleId != (int)EnumRoles.Administrator)
             {
                 qrcode.UserId = user.Id;
-                qrcode.token = Guid.NewGuid();
+                qrcode.Token = Guid.NewGuid();
                 _context.QRcodes.Add(qrcode);    
             }
                 await _context.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace api.Services
             return (true, "Registration successful");
         }
 
-        public async Task<(bool Success, string Message)> CreateUser(CreateRequestUserDto model, QRcode qrcode, User user)
+        public async Task<(bool Success, string Message)> CreateUser(RequestCreateUserDto model, QRcode qrcode, User user)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace api.Services
                 if (model.Role != EnumRoles.Administrator)
                 {
                     qrcode.UserId = user.Id;
-                    qrcode.token = Guid.NewGuid();
+                    qrcode.Token = Guid.NewGuid();
                     _context.QRcodes.Add(qrcode);
                     await _context.SaveChangesAsync();
                 }
@@ -113,7 +113,7 @@ namespace api.Services
 
         }
 
-            public async Task<(bool Success, string Message)> Update (int id, UpdateRequestUserDto model)
+            public async Task<(bool Success, string Message)> Update (int id, RequestUpdateUserDto model)
         {
             try
             {
@@ -150,7 +150,7 @@ namespace api.Services
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.metaLabel == "meta-user-avatar")).AsQueryable();
+                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.Metalabel == "meta-user-avatar")).AsQueryable();
                 if (!String.IsNullOrEmpty(name)){
                      users = users.Where(usr => usr.FirstName.Contains(name) || usr.LastName.Contains(name));
                 }
@@ -179,29 +179,12 @@ namespace api.Services
             }
 
         }
-        public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize)
-        {
-            try
-            {
-                var operators = _context.Users.Include(src => src.Activities.Where(x => x.Entry > System.DateTime.Today)).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).AsQueryable();
-                var count = operators.Count();
-                operators = operators.Paginate(page, pageSize);
-                return (true, "Operator info", count, await operators.ToListAsync());
-
-            }
-            catch (Exception e)
-            {
-                return (false, e.Message, 0, new List<User>());
-
-            }
-        }
-
         public async Task<(bool Success, string Message, User user)> GetUserAsync(string token)
         {
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.metaLabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).FirstAsync();
+                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.Metalabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).FirstAsync();
                 return (true, "Utente trovato", user);
 
             }
@@ -246,7 +229,7 @@ namespace api.Services
                     _context.UserMetas.Update(usermeta);
                 } else
                 {
-                    var avatar = _context.UserMetas.Add(new UserMeta { UserId = userId, metaLabel = "meta-user-avatar", Value = fileBase64 });
+                    var avatar = _context.UserMetas.Add(new UserMeta { UserId = userId, Metalabel = "meta-user-avatar", Value = fileBase64 });
 
                 }
 
@@ -295,7 +278,7 @@ namespace api.Services
         {
             try
             {
-                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.metaLabel == "meta-user-avatar");
+                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.Metalabel == "meta-user-avatar");
                 _context.UserMetas.Remove(meta);
                 await _context.SaveChangesAsync();
                 return (true, "avatar deleted");
@@ -312,7 +295,7 @@ namespace api.Services
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.metaLabel == "meta-user-avatar");
+                var meta = _context.UserMetas.Single(x => x.UserId == userId && x.Metalabel == "meta-user-avatar");
                 _context.UserMetas.Remove(meta);
                 await _context.SaveChangesAsync();
                 return (true, "avatar deleted");

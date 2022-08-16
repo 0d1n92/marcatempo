@@ -2,7 +2,7 @@
 
 namespace api.DTOs
 {
-    public class RegisterRequestDto
+    public class RequestRegisterDto
     {
         [Required]
         public string FirstName { get; set; }

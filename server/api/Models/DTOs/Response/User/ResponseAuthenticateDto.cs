@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace api.DTOs
 {
-    public class AuthenticateResponseDto
+    public class ResponseAuthenticateDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -14,7 +14,7 @@ namespace api.DTOs
         public string RoleName { get; set; }
         public string Token { get; set; }
         public string Avatar { get; set; }
-        public List<UserMetaDto> meta { get; set; }
+        public List<UserMetaDto> Meta { get; set; }
 
     }
 }

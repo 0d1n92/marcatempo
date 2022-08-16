@@ -10,7 +10,7 @@ namespace api.Model.Entity
     {
         public int Id { get; set; }
         [Column(TypeName = "varchar(40)")]
-        public Guid token { get; set; }
+        public Guid Token { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public int UserId { get; set; }
