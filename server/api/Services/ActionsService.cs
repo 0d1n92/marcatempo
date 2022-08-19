@@ -21,24 +21,33 @@ public class ActionsService : IActionsService
     {
         _context = context;
     }
-    public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request )
+    public async Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
     {
         try
         {
-            List<DateTime> dates = DateTime.Parse(request.InitDate).Range( DateTime.Parse(request.EndDate)).ToList();
-            var operators = _context.Users.Include(src => src.Activities).Include(src => src.QRCode).Where(x => x.Role.Id != (int)EnumRoles.Administrator).AsQueryable();
-            var listAction = dates.Select(date => _context.Users.Include(src => src.Activities.Where( act  => act.Entry.ToString() == "2022-08-12 19:48:44.841291"))).ToList();
-            //
-            var count = operators.Count();
-            operators = operators.Paginate(page, pageSize);
-            return (true, "Operator info", count, await operators.ToListAsync());
+            List<DateTime> dates = DateTime.Parse(request.InitDate).Range(DateTime.Parse(request.EndDate)).ToList();
+            var action = await _context.Actions.ToListAsync();
+            var usersAct = new List<UserActions>();
+
+            foreach (var date in dates)
+            {
+
+                usersAct =   _context.Users.AsEnumerable().GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions { Date = date, FirstName = user.FirstName, LastName = user.LastName, Actions = action.Where(a => a.Entry.Value.Date == date.Date).ToList() }).ToList();
+            }
+
+            
+            var response = usersAct.AsQueryable();
+            var count = response.Count();
+            response = response.Paginate(page, pageSize);
+            return (true, "Operator info", count, response);
 
         }
         catch (Exception e)
         {
-            return (false, e.Message, 0, new List<User>());
+            return (false, e.Message, 0, new List<UserActions>());
 
         }
+
     }
 }
 

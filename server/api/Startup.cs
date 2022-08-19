@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace api
 {
@@ -74,7 +75,12 @@ namespace api
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
-            services.AddControllers().AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
+            services.AddControllers().AddNewtonsoftJson(opts => {
+                opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            }
+            );
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUsersService, UsersService>();

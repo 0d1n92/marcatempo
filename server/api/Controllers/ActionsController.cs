@@ -34,15 +34,15 @@ public class ActionsController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
-
-    [AuthorizeAdmin]
+    /// 
+    [AllowAnonymous]
     [HttpPost("actionoperators")]
-    public async Task<ActionResult<PaginatedList<ResponseListofActionUsersDto>>> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
+    public async Task<ActionResult<UserActions>> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
     {
         var result = await _actService.OperatorActionListAsync(page, pageSize, request);
 
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<IList<ResponseListofActionUsersDto>>(result.Items)));
+        return Ok(result.Items);
     }
 
 
