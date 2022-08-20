@@ -1,6 +1,7 @@
 ﻿using api.Model.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace api.DTOs
 {
@@ -10,5 +11,29 @@ namespace api.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public List<Model.Entity.Action> Actions { get; set; }
+        public string Total { get; set; } 
+
+        public UserActions (DateTime Date, string FirstName, string LastName, List<Model.Entity.Action> Actions)
+        {
+            this.Date = Date;
+            this.LastName = LastName;
+            this.FirstName = FirstName;
+            this.Actions = Actions;
+            this.Total = (Actions != null || Actions.Count() > 0)? this.TotalCalcolate(Actions) : "0:00";
+        }
+
+        private string TotalCalcolate(List<Model.Entity.Action> act)
+        {
+            var totalAct = act.Where(x => x.Exit != null).Select(x => $"{(x.Exit.Value - x.Entry.Value).Hours}:{(x.Exit.Value - x.Entry.Value).Minutes}");
+       
+            var sum = totalAct.Select(ta => TimeSpan.Parse(ta));
+            var tot = new TimeSpan();
+            foreach(var s in sum)
+            {
+                tot += s;
+            }
+            return $"{tot.Hours}:{tot.Minutes.ToString("00")}";
+
+        }
     }
 }

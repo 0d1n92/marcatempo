@@ -26,16 +26,16 @@ public class ActionsService : IActionsService
         try
         {
             List<DateTime> dates = DateTime.Parse(request.InitDate).Range(DateTime.Parse(request.EndDate)).ToList();
-            var action = await _context.Actions.ToListAsync();
+            var action = await _context.Actions.AsNoTracking().ToListAsync();
             var usersAct = new List<UserActions>();
 
             foreach (var date in dates)
             {
-
-                usersAct =   _context.Users.AsEnumerable().GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions { Date = date, FirstName = user.FirstName, LastName = user.LastName, Actions = action.Where(a => a.Entry.Value.Date == date.Date).ToList() }).ToList();
+      
+                var actUsr= _context.Users.AsEnumerable().GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList())).ToList();
+                usersAct.AddRange(actUsr);
             }
 
-            
             var response = usersAct.AsQueryable();
             var count = response.Count();
             response = response.Paginate(page, pageSize);
