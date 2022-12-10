@@ -1,6 +1,31 @@
 <template>
   <WireFrameVue>
-    <v-data-table :headers="headers" :items="desserts" class="elevation-1"> </v-data-table>
+    <!-- <v-data-table :headers="headers" :items="desserts" class="elevation-1"> </v-data-table> -->
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+      :expanded.sync="expanded"
+      show-expand
+      single-expand
+      item-key="name"
+      :search="search"
+    >
+      <template v-slot:expanded-item="{ headers}">
+        <td :colspan="headers.length">
+          <div class="row sp-details">
+            <div class="col-4 text-right">
+              <v-text-field v-model="input1" label="Label"></v-text-field>
+            </div>
+            <div class="col-4 text-right">
+              <v-text-field v-model="input2" label="Label 1"></v-text-field>
+            </div>
+            <div class="col-4 text-right">
+              <v-text-field v-model="input3" label="Label 2"></v-text-field>
+            </div>
+          </div>
+        </td>
+      </template>
+    </v-data-table>
   </WireFrameVue>
 </template>
 
@@ -12,6 +37,7 @@ export default {
   components: { WireFrameVue },
   data() {
     return {
+      expanded: [],
       headers: [
         {
           text: 'Dessert (100g serving)',

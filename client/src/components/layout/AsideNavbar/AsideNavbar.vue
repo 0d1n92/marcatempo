@@ -97,7 +97,11 @@ export default {
   watch: {
     locale(val) {
       this.$i18n.locale = val;
-      this.$router.replace({ ...this.$router, name: this.$route.name, params: { lang: val } });
+      this.$router.replace({
+        ...this.$router,
+        name: this.$route.name,
+        params: { lang: val },
+      });
     },
   },
   methods: {
@@ -128,7 +132,7 @@ export default {
             route_name: 'users',
           },
           {
-            icon: 'mdi-table-account',
+            icon: 'mdi-account-clock',
             title: this.$i18n.t('Users actions'),
             text: this.$i18n.t('Users actions'),
             route_name: 'actions',
