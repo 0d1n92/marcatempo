@@ -37,12 +37,11 @@ public class ActionsController : ControllerBase
     /// 
     [AllowAnonymous]
     [HttpPost("actionoperators")]
-    public async Task<ActionResult<UserActions>> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
+    public async Task<ActionResult<PaginatedList<List<ResponseListofActionUsersDto>>>> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
     {
         var result = await _actService.OperatorActionListAsync(page, pageSize, request);
-
         if (!result.Success) return BadRequest(new { message = result.Message });
-        return Ok(result.Items);
+        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<List<ResponseListofActionUsersDto>>(result.Items))) ;
     }
 
 

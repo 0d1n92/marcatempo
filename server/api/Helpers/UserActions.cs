@@ -24,16 +24,14 @@ namespace api.DTOs
 
         private string TotalCalcolate(List<Model.Entity.Action> act)
         {
-            var totalAct = act.Where(x => x.Exit != null).Select(x => $"{(x.Exit.Value - x.Entry.Value).Hours}:{(x.Exit.Value - x.Entry.Value).Minutes}");
-       
-            var sum = totalAct.Select(ta => TimeSpan.Parse(ta));
+            var sumsHoursAct = act.Where(x => x.Exit != null).Select(x => $"{(x.Exit.Value - x.Entry.Value).Hours}:{(x.Exit.Value - x.Entry.Value).Minutes}");
+            var sumsHoursActParse = sumsHoursAct.Select(ta => TimeSpan.Parse(ta));
             var tot = new TimeSpan();
-            foreach(var s in sum)
+            foreach(var s in sumsHoursActParse)
             {
                 tot += s;
             }
             return $"{tot.Hours}:{tot.Minutes.ToString("00")}";
-
         }
     }
 }

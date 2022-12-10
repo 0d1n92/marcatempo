@@ -31,8 +31,7 @@ public class ActionsService : IActionsService
 
             foreach (var date in dates)
             {
-      
-                var actUsr= _context.Users.AsEnumerable().GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList())).ToList();
+                var actUsr= _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList())).ToList();
                 usersAct.AddRange(actUsr);
             }
 
