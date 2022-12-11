@@ -85,10 +85,12 @@ import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import ConfirmDialog from '../components/layout/Message/ConfirmDialog.vue';
 import UserProfileForm from '../components/users/UserProfileForm.vue';
+import Utils from '../mixins/utils';
 
 export default {
   name: 'UserList',
   components: { WireFrameVue, ConfirmDialog, UserProfileForm },
+  mixins: [Utils],
   data() {
     return {
       search: '',
@@ -99,10 +101,8 @@ export default {
       },
       dialogDelete: false,
       btnDisable: false,
-      loading: true,
       update: true,
       options: {},
-      count: 0,
       qrcode: {},
       headers: [
         {
@@ -115,7 +115,6 @@ export default {
         { text: 'Role', value: 'roleName' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      users: [],
       editedIndex: -1,
       editedItem: {},
       defaultItem: {
@@ -141,7 +140,7 @@ export default {
   watch: {
     options: {
       handler() {
-        this.onGetUsers();
+        this.onGetUsers(this.options);
       },
       deep: true,
     },
@@ -162,9 +161,9 @@ export default {
   methods: {
     onSearch() {
       if (this.search.length > 3) {
-        this.onGetUsers();
+        this.onGetUsers(this.options);
       } else if (this.search.length === 0) {
-        this.onGetUsers();
+        this.onGetUsers(this.options);
       }
     },
     initialize() {
@@ -187,7 +186,7 @@ export default {
 
     close() {
       this.dialog = false;
-      this.onGetUsers();
+      this.onGetUsers(this.options);
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
@@ -236,29 +235,6 @@ export default {
       });
 
       return formData;
-    },
-    onGetUsers() {
-      // eslint-disable-next-line object-curly-newline
-      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-      // eslint-disable-next-line no-unused-expressions
-      Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
-        headers: { Authorization: this.$store.state.token },
-        params: {
-          page,
-          pageSize: itemsPerPage,
-          name: this.search,
-          sortBy: sortBy[0],
-          desc: sortDesc[0],
-        },
-      })
-        .then((response) => {
-          this.users = response.data.data;
-          this.count = response.data.count;
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
-        });
     },
     callBackCreate(formData) {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {

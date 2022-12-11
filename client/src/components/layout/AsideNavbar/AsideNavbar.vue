@@ -12,16 +12,14 @@
     <v-list class="header-nav pt-9">
       <v-list-item>
         <v-list-item-avatar v-if="mini" style="margin-left: -7px !important">
-          <v-avatar class="d-flex justify-center" color="indigo" size="40">
-            <img v-if="avatar" :src="avatar" />
-            <span v-else class="white--text text-h6">{{ user.initials }}</span>
+          <v-avatar class="d-flex justify-center" color="primary" :size="40">
+            <user-avatar size="35" :base64="avatar" />
           </v-avatar>
         </v-list-item-avatar>
         <v-hover v-slot="{ hover }">
           <v-list-item-avatar v-if="!mini" size="90">
             <user-avatar-hover
               size="90"
-              :initials="user.initials"
               :hover="hover"
               :base64="avatar"
               @uploadAvatar="uploadAvatar"
@@ -64,9 +62,10 @@
 <script>
 import enumRoles from '../../../enums/enumRoles';
 import UserAvatarHover from '../../users/UserAvatarHover.vue';
+import UserAvatar from '../../users/UserAvatar.vue';
 
 export default {
-  components: { UserAvatarHover },
+  components: { UserAvatarHover, UserAvatar },
   name: 'AsideNavabar',
   data() {
     return {
@@ -91,7 +90,7 @@ export default {
       return this.getMenuByRole();
     },
     avatar() {
-      return this.user.avatar ? `data:image/png;base64,${this.user.avatar}` : null;
+      return this.user.avatar ? this.user.avatar : null;
     },
   },
   watch: {

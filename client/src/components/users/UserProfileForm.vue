@@ -7,7 +7,6 @@
             <user-avatar-hover
               :base64="avatar"
               :hover="hover"
-              :initials="userInitials"
               size="200"
               iconSize="40"
               @uploadAvatar="uploadAvatar"
@@ -64,10 +63,12 @@
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
 import enumRoles from '../../enums/enumRoles';
 import UserAvatarHover from './UserAvatarHover.vue';
+import Utils from '../../mixins/utils';
 
 export default {
   name: 'UsersProfileForm',
   components: { QrcodeCard, UserAvatarHover },
+  mixins: [Utils],
   props: {
     user: {
       type: Object,
@@ -93,7 +94,7 @@ export default {
         (v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || this.$i18n.t('E-mail must be valid'),
       ],
       error: true,
-      avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
+      avatar: this.user.avatar == null ? null : this.user.avatar,
       file: null,
       valid: true,
       validationUsr: [],
@@ -115,19 +116,11 @@ export default {
       });
       return roles;
     },
-    userInitials() {
-      if (this.user.lastName && this.user.firstName) {
-        if (this.user.firstName[0] && this.user.firstName[0]) {
-          return `${this.user.firstName[0]}${this.user.lastName[0]}`;
-        }
-      }
-      return '';
-    },
   },
   watch: {
     user(newVal) {
       this.$refs.form.resetValidation();
-      this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
+      this.avatar = newVal.avatar == null ? null : newVal.avatar;
     },
     validation(newVal) {
       if (newVal.username) {

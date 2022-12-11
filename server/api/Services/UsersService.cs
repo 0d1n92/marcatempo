@@ -219,7 +219,7 @@ namespace api.Services
                 {
                     file.CopyTo(ms);
                     var fileBytes = ms.ToArray();
-                    fileBase64 = Convert.ToBase64String(fileBytes);
+                    fileBase64 = $"data:image/png;base64,{Convert.ToBase64String(fileBytes)}";
                 }
 
                 if (_context.UserMetas.Any(x => x.UserId == userId || x.Value == "meta-user-avatar"))

@@ -1,16 +1,59 @@
 <template>
   <WireFrameVue>
     <!-- <v-data-table :headers="headers" :items="desserts" class="elevation-1"> </v-data-table> -->
+    <v-autocomplete
+      :disabled="isUpdating"
+      :items="users"
+      filled
+      chips
+      color="blue-grey lighten-2"
+      label="Select"
+      item-text="name"
+      item-value="name"
+      multiple
+    >
+      <template v-slot:selection="data">
+        <v-chip
+          v-bind="data.attrs"
+          :input-value="data.selected"
+          close
+          @click="data.select"
+          @click:close="remove(data.item)"
+        >
+          <v-avatar left>
+            <img :src="`data:image/png;base64,${data.item.avatar}`" />
+          </v-avatar>
+          {{ data.item.firstName }}
+        </v-chip>
+      </template>
+      <template v-slot:item="data">
+        <template v-if="typeof data.item !== `object`">
+          <v-list-item-content v-text="data.item"></v-list-item-content>
+        </template>
+        <template v-else>
+          <v-list-item-avatar>
+             <v-avatar class="d-flex justify-center" color="primary" :size="40">
+               <user-avatar :base64="data.item.avatar" :size="40"></user-avatar>
+            </v-avatar>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title v-html="`${data.item.firstName} ${data.item.lastName}`"></v-list-item-title>
+            <v-list-item-subtitle v-html="data.item.roleName"></v-list-item-subtitle>
+          </v-list-item-content>
+        </template>
+      </template>
+    </v-autocomplete>
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :options.sync="options"
+      :items="operators"
       :expanded.sync="expanded"
       show-expand
       single-expand
       item-key="name"
       :search="search"
     >
-      <template v-slot:expanded-item="{ headers}">
+      <template v-slot:expanded-item="{ headers }">
         <td :colspan="headers.length">
           <div class="row sp-details">
             <div class="col-4 text-right">
@@ -30,116 +73,63 @@
 </template>
 
 <script>
+import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
+import Utils from '../mixins/utils';
+import UserAvatar from '../components/users/UserAvatar.vue';
 
 export default {
   name: 'Actions',
-  components: { WireFrameVue },
+  components: { WireFrameVue, UserAvatar },
+  mixins: [Utils],
   data() {
     return {
       expanded: [],
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: this.$t('Name'),
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'firstName',
         },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
-        { text: 'Iron (%)', value: 'iron' },
+        { text: this.$t('Lastname'), value: 'lastName' },
+        { text: this.$t('Total'), value: 'total' },
       ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%',
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%',
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%',
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%',
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%',
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%',
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%',
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%',
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%',
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%',
-        },
-      ],
+      operators: [],
+      options: {},
     };
+  },
+  mounted() {
+    this.getOperetors();
+    this.onGetUsers(this.options);
   },
   methods: {
     getColor(calories) {
       if (calories > 400) return 'red';
       if (calories > 200) return 'orange';
       return 'green';
+    },
+
+    getOperetors() {
+      Axios.post(
+        `${process.env.VUE_APP_ROOT_API}/action/actionoperators`,
+        {
+          initDate: '2022-08-17',
+          endDate: '2022-08-17',
+          pageSize: 10,
+          page: 1,
+          name: [],
+        },
+        {
+          headers: { Authorization: this.$store.state.token },
+        },
+      )
+        .then((response) => {
+          this.operators = response.data.data;
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
+        });
     },
   },
 };
