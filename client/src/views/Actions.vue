@@ -1,48 +1,14 @@
 <template>
   <WireFrameVue>
     <!-- <v-data-table :headers="headers" :items="desserts" class="elevation-1"> </v-data-table> -->
-    <v-autocomplete
-      :disabled="isUpdating"
-      :items="users"
-      filled
-      chips
-      color="blue-grey lighten-2"
-      label="Select"
-      item-text="name"
-      item-value="name"
-      multiple
-    >
-      <template v-slot:selection="data">
-        <v-chip
-          v-bind="data.attrs"
-          :input-value="data.selected"
-          close
-          @click="data.select"
-          @click:close="remove(data.item)"
-        >
-          <v-avatar left>
-            <img :src="`data:image/png;base64,${data.item.avatar}`" />
-          </v-avatar>
-          {{ data.item.firstName }}
-        </v-chip>
-      </template>
-      <template v-slot:item="data">
-        <template v-if="typeof data.item !== `object`">
-          <v-list-item-content v-text="data.item"></v-list-item-content>
-        </template>
-        <template v-else>
-          <v-list-item-avatar>
-             <v-avatar class="d-flex justify-center" color="primary" :size="40">
-               <user-avatar :base64="data.item.avatar" :size="40"></user-avatar>
-            </v-avatar>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title v-html="`${data.item.firstName} ${data.item.lastName}`"></v-list-item-title>
-            <v-list-item-subtitle v-html="data.item.roleName"></v-list-item-subtitle>
-          </v-list-item-content>
-        </template>
-      </template>
-    </v-autocomplete>
+    <v-row no-gutters>
+      <v-col>
+        <multi-select-users @onChange="getOperetors" :items="users" />
+      </v-col>
+      <v-col> </v-col>
+      <v-col> </v-col>
+      <v-col> </v-col>
+    </v-row>
     <v-data-table
       :headers="headers"
       :options.sync="options"
@@ -51,19 +17,18 @@
       show-expand
       single-expand
       item-key="name"
-      :search="search"
     >
       <template v-slot:expanded-item="{ headers }">
         <td :colspan="headers.length">
           <div class="row sp-details">
             <div class="col-4 text-right">
-              <v-text-field v-model="input1" label="Label"></v-text-field>
+              <v-text-field label="Label"></v-text-field>
             </div>
             <div class="col-4 text-right">
-              <v-text-field v-model="input2" label="Label 1"></v-text-field>
+              <v-text-field label="Label 1"></v-text-field>
             </div>
             <div class="col-4 text-right">
-              <v-text-field v-model="input3" label="Label 2"></v-text-field>
+              <v-text-field label="Label 2"></v-text-field>
             </div>
           </div>
         </td>
@@ -76,15 +41,16 @@
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import Utils from '../mixins/utils';
-import UserAvatar from '../components/users/UserAvatar.vue';
+import MultiSelectUsers from '../components/users/MultiSelectUsers.vue';
 
 export default {
   name: 'Actions',
-  components: { WireFrameVue, UserAvatar },
+  components: { WireFrameVue, MultiSelectUsers },
   mixins: [Utils],
   data() {
     return {
       expanded: [],
+      selectedOperator: [],
       headers: [
         {
           text: this.$t('Name'),
@@ -104,13 +70,12 @@ export default {
     this.onGetUsers(this.options);
   },
   methods: {
-    getColor(calories) {
-      if (calories > 400) return 'red';
-      if (calories > 200) return 'orange';
-      return 'green';
-    },
-
-    getOperetors() {
+    getOperetors(selected) {
+      if (selected) {
+        selected.forEach((x) => {
+          this.selectedOperator.push(x.username);
+        });
+      }
       Axios.post(
         `${process.env.VUE_APP_ROOT_API}/action/actionoperators`,
         {
@@ -118,7 +83,7 @@ export default {
           endDate: '2022-08-17',
           pageSize: 10,
           page: 1,
-          name: [],
+          usersName: this.selectedOperator,
         },
         {
           headers: { Authorization: this.$store.state.token },

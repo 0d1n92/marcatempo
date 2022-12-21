@@ -1,4 +1,3 @@
-<!-- eslint-disable max-len -->
 <template>
   <img v-if="base64" :src="base64" />
   <v-icon :size="size" dark v-else> mdi-account-circle </v-icon>
