@@ -5,7 +5,7 @@ namespace api.DTOs;
     {
        public string InitDate { get; set; }
        public string EndDate { get; set; }
-       public IList<string> Name { get; set; }
+       public IList<string> UsersName { get; set; }
         
     }
 

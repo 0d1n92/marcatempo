@@ -31,8 +31,25 @@ public class ActionsService : IActionsService
 
             foreach (var date in dates)
             {
-                var actUsr= _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList())).ToList();
-                usersAct.AddRange(actUsr);
+                List<UserActions> actUsr= _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList(), user.Username)).ToList();
+
+                if (request.UsersName.Any())
+                {
+                    var filteredByUsrName = new List<UserActions>();
+                    foreach(var user in actUsr)
+                    {
+                        if(request.UsersName.Contains(user.UsersName))
+                        filteredByUsrName.Add(user);
+                    }
+                    usersAct.AddRange(filteredByUsrName);
+
+                }
+                else {
+
+                  usersAct.AddRange(actUsr);
+
+                }
+              
             }
 
             var response = usersAct.AsQueryable();
