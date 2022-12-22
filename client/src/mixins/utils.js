@@ -8,16 +8,6 @@ export default {
       loading: false,
     };
   },
-  computed: {
-    userInitials() {
-      if (this.user.lastName && this.user.firstName) {
-        if (this.user.firstName[0] && this.user.firstName[0]) {
-          return `${this.user.firstName[0]}${this.user.lastName[0]}`;
-        }
-      }
-      return '';
-    },
-  },
   methods: {
     onGetUsers(params) {
       // eslint-disable-next-line object-curly-newline

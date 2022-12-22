@@ -2,6 +2,8 @@
   <v-autocomplete
     @change="onChange"
     v-model="selectedItems"
+    height="60"
+    class="p-0"
     prepend-inner-icon="mdi-magnify"
     :items="items"
     filled

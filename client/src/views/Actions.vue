@@ -1,14 +1,17 @@
 <template>
   <WireFrameVue>
     <!-- <v-data-table :headers="headers" :items="desserts" class="elevation-1"> </v-data-table> -->
-    <v-row no-gutters>
-      <v-col>
-        <multi-select-users @onChange="getOperetors" :items="users" />
-      </v-col>
-      <v-col> </v-col>
-      <v-col> </v-col>
-      <v-col> </v-col>
-    </v-row>
+    <div style="height: 60px, padding-bottom: 10px">
+      <v-row no-gutters>
+        <v-col md="4" cols="12">
+          <multi-select-users @onChange="updateOperators" :items="users" />
+        </v-col>
+        <v-col></v-col>
+        <v-col md="4" cols="12">
+          <interval-dates-picker @setDates="setDates" />
+        </v-col>
+      </v-row>
+    </div>
     <v-data-table
       :headers="headers"
       :options.sync="options"
@@ -38,19 +41,22 @@
 </template>
 
 <script>
+import * as moment from 'moment/moment';
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import Utils from '../mixins/utils';
 import MultiSelectUsers from '../components/users/MultiSelectUsers.vue';
+import IntervalDatesPicker from '../components/layout/Input/IntervalDatesPicker.vue';
 
 export default {
   name: 'Actions',
-  components: { WireFrameVue, MultiSelectUsers },
+  components: { WireFrameVue, MultiSelectUsers, IntervalDatesPicker },
   mixins: [Utils],
   data() {
     return {
       expanded: [],
       selectedOperator: [],
+      dates: [moment(new Date()).format('YYYY-MM-DD'), moment(new Date()).format('YYYY-MM-DD')],
       headers: [
         {
           text: this.$t('Name'),
@@ -69,25 +75,37 @@ export default {
     this.getOperetors();
     this.onGetUsers(this.options);
   },
+  watch: {
+    dates() {
+      this.getOperetors();
+    },
+  },
   methods: {
-    getOperetors(selected) {
+    setDates(dates) {
+      this.dates = dates;
+    },
+    updateOperators(selected) {
       if (selected) {
         selected.forEach((x) => {
           this.selectedOperator.push(x.username);
         });
       }
+      this.getOperetors();
+    },
+    getOperetors() {
       Axios.post(
         `${process.env.VUE_APP_ROOT_API}/action/actionoperators`,
         {
-          initDate: '2022-08-17',
-          endDate: '2022-08-17',
+          initDate: this.dates[0],
+          endDate: this.dates[1],
           pageSize: 10,
           page: 1,
           usersName: this.selectedOperator,
         },
         {
           headers: { Authorization: this.$store.state.token },
-        },
+          // eslint-disable-next-line comma-dangle
+        }
       )
         .then((response) => {
           this.operators = response.data.data;
