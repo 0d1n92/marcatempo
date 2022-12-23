@@ -25,7 +25,6 @@
         </v-col>
       </v-row>
     </div>
-    <!-- to do: vedere ordinameto BE -->
     <v-data-table
       :headers="headers"
       :options.sync="options"
@@ -34,22 +33,32 @@
       :loading="loaded"
       show-expand
       multi-sort
-      single-expand
-      item-key="name"
+      item-key="usersName"
       :footer-props="{ 'items-per-page-options': [20, 31, 40, -1] }"
     >
-      <template v-slot:expanded-item="{ headers }">
+      <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <div class="row sp-details">
-            <div class="col-4 text-right">
-              <v-text-field label="Label"></v-text-field>
+          <div class="row sp-details pt-6 pb-6">
+            <div class="col-md-4 col-12">
+              <h3>{{ $t('Actions Operator') }}</h3>
+              <v-data-table hide-default-footer :items="item.actions" :headers="headerTableUserAct">
+                <!-- to do: rifattorizzare  -->
+                <template v-slot:item.actions="{ item }">
+                  <v-hover v-slot="{ hover }">
+                    <v-btn icon :color="hover ? 'blue' : 'grey darken-1'" @click="editItem(item)" title="Edit">
+                      <v-icon small> mdi-pencil </v-icon>
+                    </v-btn>
+                  </v-hover>
+                  <v-hover v-slot="{ hover }">
+                    <v-btn icon :color="hover ? 'red' : 'grey darken-1'" @click="deleteItem(item)" title="Remove">
+                      <v-icon small> {{ hover ? 'mdi-delete-empty' : 'mdi-delete' }} </v-icon>
+                    </v-btn>
+                  </v-hover>
+                </template>
+              </v-data-table>
             </div>
-            <div class="col-4 text-right">
-              <v-text-field label="Label 1"></v-text-field>
-            </div>
-            <div class="col-4 text-right">
-              <v-text-field label="Label 2"></v-text-field>
-            </div>
+            <div class="col-md-4 col-12 text-right"></div>
+            <div class="col-md-4 col-12 text-right"></div>
           </div>
         </td>
       </template>
@@ -73,6 +82,15 @@ export default {
     return {
       expanded: [],
       selectedOperators: [],
+      headerTableUserAct: [
+        {
+          text: this.$t('Entry'),
+          align: 'start',
+          value: 'entry',
+        },
+        { text: this.$t('Exit'), value: 'exit' },
+        { text: this.$t('Actions'), value: 'actions', sortable: false },
+      ],
       loaded: true,
       delateOperators: false,
       dates: [moment(new Date()).format('YYYY-MM-DD'), moment(new Date()).format('YYYY-MM-DD')],

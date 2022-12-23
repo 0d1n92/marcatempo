@@ -74,9 +74,6 @@
           </v-btn>
         </v-hover>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
     </v-data-table>
   </WireFrameVue>
 </template>

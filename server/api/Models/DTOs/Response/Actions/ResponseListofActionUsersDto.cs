@@ -14,8 +14,8 @@ namespace api.DTOs
         public string LastName { get; set; }
         public string Total { get; set; }
         public bool IsPresent { get; set; }
+        public string UsersName { get; set; }
         public List<ActionDto> Actions { get; set; }
-       
     }
 
 }
