@@ -7,20 +7,20 @@
     transition="scale-transition"
     offset-y
     min-width="auto"
+    class="mb-10"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
+        height="50"
         v-model="datesFormat"
         :label="$t('Dates Interval')"
         prepend-inner-icon="mdi-calendar"
-        readonly
+        hint="DD/MM/YYYY,DD/MM/YYYY"
         v-bind="attrs"
         v-on="on"
-        height="50"
       ></v-text-field>
     </template>
     <v-date-picker v-model="dates" range no-title scrollable>
-      <v-spacer></v-spacer>
       <v-btn text color="primary" @click="isOpen = false"> Cancel </v-btn>
       <v-btn text color="primary" @click="onClick"> OK </v-btn>
     </v-date-picker>
@@ -36,19 +36,17 @@ export default {
     return {
       moment,
       dates: [],
-      datesFormat: [moment(new Date()).format('DD-MM-YYYY'), moment(new Date()).format('DD-MM-YYYY')],
+      datesFormat: [moment(new Date()).format('DD/MM/YYYY'), moment(new Date()).format('DD/MM/YYYY')],
       isOpen: false,
     };
   },
 
-  watch: {
-    // eslint-disable-next-line no-unused-vars
-    dates(val, old) {
-      this.datesFormat = [moment(new Date(val[0])).format('DD-MM-YYYY'), moment(new Date(val[1])).format('DD-MM-YYYY')];
-    },
-  },
   methods: {
     onClick() {
+      this.datesFormat = [
+        moment(new Date(this.dates[0])).format('DD/MM/YYYY'),
+        moment(new Date(this.dates[1])).format('DD/MM/YYYY'),
+      ];
       this.$refs.datemenu.save(this.dates);
       this.$emit('setDates', this.dates);
     },
@@ -56,4 +54,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.v-menu__content {
+  margin-top: 10px !important;
+}
+</style>

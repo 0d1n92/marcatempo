@@ -2,8 +2,7 @@
   <v-autocomplete
     @change="onChange"
     v-model="selectedItems"
-    height="60"
-    class="p-0"
+    height="65"
     prepend-inner-icon="mdi-magnify"
     :items="items"
     filled
@@ -52,16 +51,28 @@ export default {
       type: Array,
       default: () => {},
     },
+    deleteInput: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       selectedItems: [],
     };
   },
+  watch: {
+    deleteInput(val) {
+      if (val) {
+        this.selectedItems = [];
+      }
+    },
+  },
   methods: {
     remove(item) {
       const index = this.selectedItems.findIndex((op) => op.username === item.username);
       if (index >= 0) this.selectedItems.splice(index, 1);
+      this.$emit('onRemove', this.selectedItems);
     },
     onChange() {
       this.$emit('onChange', this.selectedItems);
