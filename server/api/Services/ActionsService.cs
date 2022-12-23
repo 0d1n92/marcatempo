@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using api.Utilitis.Enum;
 using api.Extensions;
 using api.Utilitis;
+using System.Linq.Dynamic.Core;
 
 namespace api.Services;
 public class ActionsService : IActionsService
@@ -48,12 +49,19 @@ public class ActionsService : IActionsService
 
                   usersAct.AddRange(actUsr);
 
-                }
-              
+                }             
             }
 
-            var response = usersAct.AsQueryable();
-            var count = response.Count();
+
+            IQueryable <UserActions> response = usersAct.AsQueryable();
+
+            if (request.SortBy.Any())
+            {
+                string multiOrders =string.Concat(request.SortBy.AsQueryable().Select((ord, index) => $"{ord} {(request.SortDesc[index + 1] ? "DESC," : "ASC,") }").ToArray());
+                response = response.OrderBy(multiOrders.Remove(multiOrders.Length -1));
+            }
+
+            int count = response.Count();
             response = response.Paginate(page, pageSize);
             return (true, "Operator info", count, response);
 

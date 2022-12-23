@@ -1,6 +1,5 @@
-﻿using api.Model.Entity;
+﻿
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs

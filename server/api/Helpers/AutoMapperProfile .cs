@@ -23,7 +23,7 @@ namespace api.Helpers
                 .ForMember(x => x.RoleName, opt => opt.MapFrom(usr => usr.Role.Name)).ReverseMap(); 
             CreateMap<UserActions, ResponseListofActionUsersDto>()
                 .ForMember(rla => rla.Actions, opt => opt.MapFrom(usr => usr.Actions.Select(act => new ActionDto { Entry = act.Entry, Exit = act.Exit })
-                .ToList())).ReverseMap();
+                .ToList())).ForMember(x => x.Date, opt => opt.MapFrom( usr =>  usr.Date.ToString("dd/MM/yyyy"))  ).ReverseMap();
             CreateMap<Model.Entity.Action, ResponsePostmarkerQRcodeDto>().ConstructUsing(act => new ResponsePostmarkerQRcodeDto { Entry = (act.Entry.HasValue)? act.Entry.Value.ToString("MM/dd/yyyy HH:mm") : null, Exit = (act.Exit.HasValue) ? act.Exit.Value.ToString("MM/dd/yyyy HH:mm"): null }).ReverseMap();
             CreateMap<RequestRegisterDto, User>();
             CreateMap<RequestUpdateUserDto, User>()

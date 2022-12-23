@@ -1,12 +1,15 @@
 ﻿using api.Model.Entity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs
 {
     public class ResponseListofActionUsersDto
     {
-        public DateTime  Date { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy}")]
+        public string  Date { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Total { get; set; }

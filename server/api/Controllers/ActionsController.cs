@@ -35,7 +35,7 @@ public class ActionsController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
     /// 
-    [AllowAnonymous]
+    [AuthorizeAdmin]
     [HttpPost("actionoperators")]
     public async Task<ActionResult<PaginatedList<List<ResponseListofActionUsersDto>>>> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
     {
