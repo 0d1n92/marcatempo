@@ -30,6 +30,10 @@ namespace api.Services
             _jwtUtils = jwtUtils;
         }
 
+        public Task<int> GetUserId(string UserName)
+        {
+            return Task.FromResult(_context.Users.Where(usr => usr.Username == UserName).Select(usr => usr.Id).FirstOrDefault());
+        }
         public async Task<(bool Success, string Token, string UserName)> Authenticate(RequestAuthenticateDto model)
         {
             try

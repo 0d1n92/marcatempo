@@ -33,27 +33,18 @@
       :loading="loaded"
       show-expand
       multi-sort
-      item-key="usersName"
+      item-key="index"
       :footer-props="{ 'items-per-page-options': [20, 31, 40, -1] }"
     >
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <div class="row sp-details pt-6 pb-6">
             <div class="col-md-4 col-12">
-              <h3>{{ $t('Actions Operator') }}</h3>
+              <h3>{{ $t('Postmarkers') }}</h3>
               <v-data-table hide-default-footer :items="item.actions" :headers="headerTableUserAct">
-                <!-- to do: rifattorizzare  -->
+                <!-- eslint-disable-next-line vue/no-unused-vars -->
                 <template v-slot:item.actions="{ item }">
-                  <v-hover v-slot="{ hover }">
-                    <v-btn icon :color="hover ? 'blue' : 'grey darken-1'" @click="editItem(item)" title="Edit">
-                      <v-icon small> mdi-pencil </v-icon>
-                    </v-btn>
-                  </v-hover>
-                  <v-hover v-slot="{ hover }">
-                    <v-btn icon :color="hover ? 'red' : 'grey darken-1'" @click="deleteItem(item)" title="Remove">
-                      <v-icon small> {{ hover ? 'mdi-delete-empty' : 'mdi-delete' }} </v-icon>
-                    </v-btn>
-                  </v-hover>
+                  <edit-delete-circle-btn @onDeleteItem="onDeleteAction(item.id)" />
                 </template>
               </v-data-table>
             </div>
@@ -73,10 +64,16 @@ import WireFrameVue from '../components/layout/WireFrame.vue';
 import Utils from '../mixins/utils';
 import MultiSelectUsers from '../components/users/MultiSelectUsers.vue';
 import IntervalDatesPicker from '../components/layout/Input/IntervalDatesPicker.vue';
+import EditDeleteCircleBtn from '../components/layout/Input/EditDeleteCircleBtn.vue';
 
 export default {
   name: 'Actions',
-  components: { WireFrameVue, MultiSelectUsers, IntervalDatesPicker },
+  components: {
+    WireFrameVue,
+    MultiSelectUsers,
+    IntervalDatesPicker,
+    EditDeleteCircleBtn,
+  },
   mixins: [Utils],
   data() {
     return {
@@ -171,6 +168,26 @@ export default {
         })
         .catch((error) => {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get operations')}`);
+        });
+    },
+
+    onDeleteAction(id) {
+      Axios.post(
+        `${process.env.VUE_APP_ROOT_API}/action/delete`,
+        {
+          id,
+        },
+        {
+          headers: { Authorization: this.$store.state.token },
+          // eslint-disable-next-line comma-dangle
+        }
+      )
+        // eslint-disable-next-line no-unused-vars
+        .then((response) => {
+          this.getOperetors();
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to remove action')}`);
         });
     },
   },

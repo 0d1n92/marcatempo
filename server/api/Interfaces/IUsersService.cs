@@ -20,5 +20,6 @@ namespace api.Interface
         Task<(bool Success, string Message)> CreateUser(RequestCreateUserDto model, QRcode qrcode, User user);
         Task<(bool Success, string Message)> DeleteAvatar(int userId);
         Task<(bool Success, string Message)> DeleteMyAvatar(string token);
+        public Task<int> GetUserId(string UserName);
     }
 }

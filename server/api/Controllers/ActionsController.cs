@@ -43,7 +43,22 @@ public class ActionsController : ControllerBase
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<List<ResponseListofActionUsersDto>>(result.Items))) ;
     }
-
+    ///<summary>
+    /// Delete Action
+    ///</summary>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+    [AuthorizeAdmin]
+    [HttpPost("delete")]
+    public async Task<IActionResult> Delete(RequestActionDto request)
+    {
+        var response = await _actService.Delete(request.Id);
+        if (!response.Success) return BadRequest(new { Message = response.Message });
+        return Ok(new { message = "Action deleted successfully" });
+    }
 
 }
 

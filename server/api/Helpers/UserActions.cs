@@ -7,20 +7,21 @@ namespace api.DTOs
 {
     public class UserActions
     {
+        public int Index { get; set; }
         public DateTime Date { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string UsersName { get; set; }
+        public string UserName { get; set; }
         public List<Model.Entity.Action> Actions { get; set; }
         public string Total { get; set; } 
 
-        public UserActions (DateTime Date, string FirstName, string LastName, List<Model.Entity.Action> Actions, string UsersName)
+        public UserActions (DateTime Date, string FirstName, string LastName, List<Model.Entity.Action> Actions, string UserName)
         {
             this.Date = Date;
             this.LastName = LastName;
             this.FirstName = FirstName;
             this.Actions = Actions;
-            this.UsersName = UsersName;
+            this.UserName = UserName;
             this.Total = (Actions != null || Actions.Count() > 0)? this.TotalCalcolate(Actions) : "0:00";
         }
 

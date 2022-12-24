@@ -57,22 +57,13 @@
           <ConfirmDialog
             :show="dialogDelete"
             @agree="deleteItemConfirm"
-            title="Delete user"
-            :description="`Are you sure you want to delete user ${editedItem.username}?`"
+            :title="$t('Deleting user')"
+            :description="`${$t('Are you sure you want to delete user')} ${editedItem.username}?`"
           />
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-hover v-slot="{ hover }">
-          <v-btn icon :color="hover ? 'blue' : 'grey darken-1'" @click="editItem(item)" title="Edit">
-            <v-icon small> mdi-pencil </v-icon>
-          </v-btn>
-        </v-hover>
-        <v-hover v-slot="{ hover }">
-          <v-btn icon :color="hover ? 'red' : 'grey darken-1'" @click="deleteItem(item)" title="Remove">
-            <v-icon small> {{ hover ? 'mdi-delete-empty' : 'mdi-delete' }} </v-icon>
-          </v-btn>
-        </v-hover>
+        <edit-delete-circle-btn @onDeleteItem="deleteItem(item)" @onEditItem="editItem(item)" />
       </template>
     </v-data-table>
   </WireFrameVue>
@@ -83,10 +74,16 @@ import WireFrameVue from '../components/layout/WireFrame.vue';
 import ConfirmDialog from '../components/layout/Message/ConfirmDialog.vue';
 import UserProfileForm from '../components/users/UserProfileForm.vue';
 import Utils from '../mixins/utils';
+import EditDeleteCircleBtn from '../components/layout/Input/EditDeleteCircleBtn.vue';
 
 export default {
   name: 'UserList',
-  components: { WireFrameVue, ConfirmDialog, UserProfileForm },
+  components: {
+    WireFrameVue,
+    ConfirmDialog,
+    UserProfileForm,
+    EditDeleteCircleBtn,
+  },
   mixins: [Utils],
   data() {
     return {

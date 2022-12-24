@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations;
 namespace api.DTOs
 {
     public class ActionDto
-    {
-        [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
-        public DateTime? Entry { get; set; }
+    { 
+        public int Id { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
-        public DateTime? Exit { get; set; }
+        public string Entry { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
+        public string Exit { get; set; }
 
     }
 

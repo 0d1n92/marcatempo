@@ -39,7 +39,7 @@ public class ActionsService : IActionsService
                     var filteredByUsrName = new List<UserActions>();
                     foreach(var user in actUsr)
                     {
-                        if(request.UsersName.Contains(user.UsersName))
+                        if(request.UsersName.Contains(user.UserName))
                         filteredByUsrName.Add(user);
                     }
                     usersAct.AddRange(filteredByUsrName);
@@ -52,7 +52,7 @@ public class ActionsService : IActionsService
                 }             
             }
 
-
+            usersAct.ForEach((x) => x.Index = usersAct.IndexOf(x));
             IQueryable <UserActions> response = usersAct.AsQueryable();
 
             if (request.SortBy.Any())
@@ -72,6 +72,22 @@ public class ActionsService : IActionsService
 
         }
 
+    }
+    public async Task<(bool Success, string Message)> Delete(int Id)
+    {
+        try
+        {
+ 
+            Model.Entity.Action action = _context.Actions.Where(act => act.Id == Id ).First(); 
+            _context.Actions.Remove(action);
+            await _context.SaveChangesAsync();
+            return (true, "action deleted");
+
+        }
+        catch (Exception e)
+        {
+            return (false, e.Message);
+        }
     }
 }
 
