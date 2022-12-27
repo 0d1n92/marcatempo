@@ -63,7 +63,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <edit-delete-circle-btn @onDeleteItem="deleteItem(item)" @onEditItem="editItem(item)" />
+        <edit-delete-circle-btn :save="false" @onDeleteItem="deleteItem(item)" @onEditItem="editItem(item)" />
       </template>
     </v-data-table>
   </WireFrameVue>
@@ -276,9 +276,8 @@ export default {
       Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
         headers: { Authorization: this.$store.state.token },
       })
-        .then((response) => {
-          console.log(response.data);
-        })
+        // eslint-disable-next-line no-unused-vars
+        .then((response) => {})
         .catch((error) => {
           this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
         });

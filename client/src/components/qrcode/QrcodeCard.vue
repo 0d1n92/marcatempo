@@ -96,7 +96,6 @@ export default {
     },
     closeDialog() {
       this.showDialog = false;
-      console.log('close');
     },
   },
 };

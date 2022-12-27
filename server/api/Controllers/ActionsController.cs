@@ -52,13 +52,31 @@ public class ActionsController : ControllerBase
     /// <response code="401">Unauthorized</response>
     /// 
     [AuthorizeAdmin]
-    [HttpPost("delete")]
-    public async Task<IActionResult> Delete(RequestActionDto request)
+    [HttpPost("delete/{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var response = await _actService.Delete(id);
+        if (!response.Success) return BadRequest(new { Message = response.Message });
+        return Ok(new { message = "Action deleted successfully" });
+    }
+
+    ///<summary>
+    /// Delete Action
+    ///</summary>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+   /* TO DO [AuthorizeAdmin]
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] RequestActionDto request)
     {
         var response = await _actService.Delete(request.Id);
         if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "Action deleted successfully" });
     }
+   */
 
 }
 

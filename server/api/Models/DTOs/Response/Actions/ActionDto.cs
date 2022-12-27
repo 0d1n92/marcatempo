@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace api.DTOs
 {
     public class ActionDto
-    { 
+    {
         public int Id { get; set; }
 
         [DataType(DataType.Date)]
@@ -16,6 +16,7 @@ namespace api.DTOs
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
         public string Exit { get; set; }
 
+        public Boolean disableSaveBtn { get; set; } = true;
     }
 
 }

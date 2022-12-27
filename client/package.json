@@ -13,6 +13,7 @@
     "moment": "^2.29.4",
     "qrcode.vue": "^1.7.0",
     "vue": "^2.6.11",
+    "vue-fragment": "^1.6.0",
     "vue-i18n": "^8.26.3",
     "vue-i18n-bridge": "^9.2.0-beta.10",
     "vue-qrcode-reader": "^3.1.0",

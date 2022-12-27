@@ -3,7 +3,8 @@
 namespace api.DTOs;
     public class RequestActionDto
     {
-       public int Id { get; set; }
-        
-    }
+       public string Entry { get; set; }
+       public string Exit { get; set; }
+
+}
 

@@ -43,8 +43,40 @@
               <h3>{{ $t('Postmarkers') }}</h3>
               <v-data-table hide-default-footer :items="item.actions" :headers="headerTableUserAct">
                 <!-- eslint-disable-next-line vue/no-unused-vars -->
+                <template v-slot:item.entry="{ item }">
+                  <v-form :ref="`formDate-${item.id}-entry`">
+                    <v-text-field
+                      :value="item.entry | getHour"
+                      :readonly="disableModifyAction"
+                      @change="onChangeDate(item, $event, 'entry')"
+                      :background-color="disableModifyAction ? '' : 'grey lighten-2'"
+                      :rules="dateRule"
+                      hint="HH:mm"
+                    />
+                  </v-form>
+                </template>
+                <template v-slot:item.exit="{ item }">
+                  <v-form :ref="`formDate-${item.id}-exit`">
+                    <v-text-field
+                      @change="onChangeDate(item, $event, 'exit')"
+                      :value="item.exit | getHour"
+                      :background-color="disableModifyAction ? '' : 'grey lighten-2'"
+                      :readonly="disableModifyAction"
+                      :rules="dateRule"
+                      hint="HH:mm"
+                    >
+                    </v-text-field>
+                  </v-form>
+                </template>
                 <template v-slot:item.actions="{ item }">
-                  <edit-delete-circle-btn @onDeleteItem="onDeleteAction(item.id)" />
+                  <edit-delete-circle-btn
+                    :save="true"
+                    :disableSave="item.disableSaveBtn"
+                    @onDeleteItem="onDeleteAction(item.id)"
+                    @onEditItem="onEditItem()"
+                    @onSaveItem="onSaveAction()"
+                    hint="DD/MM/YYYY HH:mm"
+                  />
                 </template>
               </v-data-table>
             </div>
@@ -79,6 +111,15 @@ export default {
     return {
       expanded: [],
       selectedOperators: [],
+      disableModifyAction: true,
+      disableSave: true,
+      dateRule: [
+        // eslint-disable-next-line prettier/prettier
+        (v) => !v ||
+          /^[012]{0,1}[0-9]:[0-6][0-9]$/.test(v) ||
+          this.$i18n.t('Date must be valid'),
+        (v) => !!v || this.$i18n.t('Is required'),
+      ],
       headerTableUserAct: [
         {
           text: this.$t('Entry'),
@@ -144,6 +185,21 @@ export default {
       }
       this.getOperetors();
     },
+    onChangeDate(item, event, typeAct) {
+      // eslint-disable-next-line no-param-reassign
+      item.disableSaveBtn = true;
+      if (this.$refs[`formDate-${item.id}-entry`].validate() && this.$refs[`formDate-${item.id}-exit`].validate()) {
+        // eslint-disable-next-line no-param-reassign
+        item.disableSaveBtn = false;
+        if (typeAct === 'entry') {
+          // eslint-disable-next-line no-param-reassign
+          item.entry = moment(item.entry, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY ') + event;
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          item.exit = moment(item.entry, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY ') + event;
+        }
+      }
+    },
     getOperetors() {
       Axios.post(
         `${process.env.VUE_APP_ROOT_API}/action/actionoperators`,
@@ -172,16 +228,10 @@ export default {
     },
 
     onDeleteAction(id) {
-      Axios.post(
-        `${process.env.VUE_APP_ROOT_API}/action/delete`,
-        {
-          id,
-        },
-        {
-          headers: { Authorization: this.$store.state.token },
-          // eslint-disable-next-line comma-dangle
-        }
-      )
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/action/delete/${id}`, {
+        headers: { Authorization: this.$store.state.token },
+        // eslint-disable-next-line comma-dangle
+      })
         // eslint-disable-next-line no-unused-vars
         .then((response) => {
           this.getOperetors();
@@ -189,6 +239,18 @@ export default {
         .catch((error) => {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to remove action')}`);
         });
+    },
+    onSaveAction() {
+      // to do
+      console.log();
+    },
+    onEditItem() {
+      this.disableModifyAction = !this.disableModifyAction;
+    },
+  },
+  filters: {
+    getHour(date) {
+      return moment(date, 'DD/MM/YYYY HH:mm').format('HH:mm');
     },
   },
 };
