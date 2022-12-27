@@ -47,10 +47,11 @@
                   <v-form :ref="`formDate-${item.id}-entry`">
                     <v-text-field
                       :value="item.entry | getHour"
-                      :readonly="disableModifyAction"
+                      :readonly="item.disableModifyAction"
                       @change="onChangeDate(item, $event, 'entry')"
-                      :background-color="disableModifyAction ? '' : 'grey lighten-2'"
+                      :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
                       :rules="dateRule"
+                      :error-messages="this"
                       hint="HH:mm"
                     />
                   </v-form>
@@ -60,8 +61,8 @@
                     <v-text-field
                       @change="onChangeDate(item, $event, 'exit')"
                       :value="item.exit | getHour"
-                      :background-color="disableModifyAction ? '' : 'grey lighten-2'"
-                      :readonly="disableModifyAction"
+                      :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
+                      :readonly="item.disableModifyAction"
                       :rules="dateRule"
                       hint="HH:mm"
                     >
@@ -73,7 +74,7 @@
                     :save="true"
                     :disableSave="item.disableSaveBtn"
                     @onDeleteItem="onDeleteAction(item.id)"
-                    @onEditItem="onEditItem()"
+                    @onEditItem="onEditItem(item)"
                     @onSaveItem="onSaveAction()"
                     hint="DD/MM/YYYY HH:mm"
                   />
@@ -228,7 +229,7 @@ export default {
     },
 
     onDeleteAction(id) {
-      Axios.post(`${process.env.VUE_APP_ROOT_API}/action/delete/${id}`, {
+      Axios.delete(`${process.env.VUE_APP_ROOT_API}/action/${id}`, {
         headers: { Authorization: this.$store.state.token },
         // eslint-disable-next-line comma-dangle
       })
@@ -244,8 +245,9 @@ export default {
       // to do
       console.log();
     },
-    onEditItem() {
-      this.disableModifyAction = !this.disableModifyAction;
+    onEditItem(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.disableModifyAction = !item.disableModifyAction;
     },
   },
   filters: {

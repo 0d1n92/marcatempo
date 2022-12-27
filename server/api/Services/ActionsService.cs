@@ -32,33 +32,34 @@ public class ActionsService : IActionsService
 
             foreach (var date in dates)
             {
-                List<UserActions> actUsr= _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date,user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList(), user.Username)).ToList();
+                List<UserActions> actUsr = _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date, user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList(), user.Username)).ToList();
 
                 if (request.UsersName.Any())
                 {
                     var filteredByUsrName = new List<UserActions>();
-                    foreach(var user in actUsr)
+                    foreach (var user in actUsr)
                     {
-                        if(request.UsersName.Contains(user.UserName))
-                        filteredByUsrName.Add(user);
+                        if (request.UsersName.Contains(user.UserName))
+                            filteredByUsrName.Add(user);
                     }
                     usersAct.AddRange(filteredByUsrName);
 
                 }
-                else {
+                else
+                {
 
-                  usersAct.AddRange(actUsr);
+                    usersAct.AddRange(actUsr);
 
-                }             
+                }
             }
 
             usersAct.ForEach((x) => x.Index = usersAct.IndexOf(x));
-            IQueryable <UserActions> response = usersAct.AsQueryable();
+            IQueryable<UserActions> response = usersAct.AsQueryable();
 
             if (request.SortBy.Any())
             {
-                string multiOrders =string.Concat(request.SortBy.AsQueryable().Select((ord, index) => $"{ord} {(request.SortDesc[index + 1] ? "DESC," : "ASC,") }").ToArray());
-                response = response.OrderBy(multiOrders.Remove(multiOrders.Length -1));
+                string multiOrders = string.Concat(request.SortBy.AsQueryable().Select((ord, index) => $"{ord} {(request.SortDesc[index + 1] ? "DESC," : "ASC,") }").ToArray());
+                response = response.OrderBy(multiOrders.Remove(multiOrders.Length - 1));
             }
 
             int count = response.Count();
@@ -77,8 +78,8 @@ public class ActionsService : IActionsService
     {
         try
         {
- 
-            Model.Entity.Action action = _context.Actions.Where(act => act.Id == Id ).First(); 
+
+            Model.Entity.Action action = _context.Actions.Where(act => act.Id == Id).First();
             _context.Actions.Remove(action);
             await _context.SaveChangesAsync();
             return (true, "action deleted");
@@ -89,5 +90,27 @@ public class ActionsService : IActionsService
             return (false, e.Message);
         }
     }
-}
 
+    public async Task<(bool Success, string Message)> Update(int id, RequestActionDto request)
+    {
+        try
+        {
+            Model.Entity.Action action = await _context.Actions.FindAsync(id);
+            DateTime entry = DateTime.Parse(request.Entry);
+            DateTime exit = DateTime.Parse(request.Exit);
+            if( entry > exit)
+            {
+              return (false, "The entry date must be less than the exit date");
+            }
+            action.Entry = entry;
+            action.Exit = exit;
+            await _context.SaveChangesAsync();
+            return (true, "action update");
+        } catch (Exception e)
+        {
+            return (false, e.Message);
+        }
+
+
+    }
+}

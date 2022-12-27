@@ -9,5 +9,6 @@ namespace api.Interface
     {
         Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request);
         Task<(bool Success, string Message)> Delete(int id);
+        Task<(bool Success, string Message)> Update(int id, RequestActionDto request);
     }
 }

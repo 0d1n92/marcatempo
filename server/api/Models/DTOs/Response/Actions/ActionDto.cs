@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs
@@ -17,6 +18,10 @@ namespace api.DTOs
         public string Exit { get; set; }
 
         public Boolean disableSaveBtn { get; set; } = true;
+
+        public Boolean disableModifyAction { get; set; } = true;
+
+        public IList<string> errorMessage { get; set; };
     }
 
 }
