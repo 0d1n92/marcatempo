@@ -51,7 +51,8 @@
                       @change="onChangeDate(item, $event, 'entry')"
                       :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
                       :rules="dateRule"
-                      :error-messages="this"
+                      :error-messages="item.errorMessage"
+                      :success-messages="item.successMessage"
                       hint="HH:mm"
                     />
                   </v-form>
@@ -64,6 +65,8 @@
                       :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
                       :readonly="item.disableModifyAction"
                       :rules="dateRule"
+                      :error-messages="item.errorMessage"
+                      :success-messages="item.successMessage"
                       hint="HH:mm"
                     >
                     </v-text-field>
@@ -75,7 +78,7 @@
                     :disableSave="item.disableSaveBtn"
                     @onDeleteItem="onDeleteAction(item.id)"
                     @onEditItem="onEditItem(item)"
-                    @onSaveItem="onSaveAction()"
+                    @onSaveItem="onSaveAction(item)"
                     hint="DD/MM/YYYY HH:mm"
                   />
                 </template>
@@ -189,6 +192,8 @@ export default {
     onChangeDate(item, event, typeAct) {
       // eslint-disable-next-line no-param-reassign
       item.disableSaveBtn = true;
+      // eslint-disable-next-line no-param-reassign
+      item.errorMessage = [];
       if (this.$refs[`formDate-${item.id}-entry`].validate() && this.$refs[`formDate-${item.id}-exit`].validate()) {
         // eslint-disable-next-line no-param-reassign
         item.disableSaveBtn = false;
@@ -241,9 +246,38 @@ export default {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to remove action')}`);
         });
     },
-    onSaveAction() {
-      // to do
-      console.log();
+    onSaveAction(item) {
+      if (moment(item.entry, 'DD/MM/YYYY HH:mm') > moment(item.exit, 'DD/MM/YYYY HH:mm')) {
+        // eslint-disable-next-line no-param-reassign
+        item.disableSaveBtn = true;
+        // eslint-disable-next-line no-param-reassign
+        item.errorMessage = [this.$t('Error.Date Entry')];
+        return;
+      }
+      Axios.put(
+        `${process.env.VUE_APP_ROOT_API}/action/${item.id}`,
+        {
+          Entry: item.entry,
+          Exit: item.exit,
+        },
+        {
+          headers: { Authorization: this.$store.state.token },
+          // eslint-disable-next-line comma-dangle
+        }
+      )
+        .then(() => {
+          // eslint-disable-next-line no-param-reassign
+          item.successMessage = this.$t('Success.Update successful');
+          // eslint-disable-next-line no-param-reassign
+          item.disableSaveBtn = true;
+          setTimeout(() => {
+            // eslint-disable-next-line no-param-reassign
+            item.successMessage = [];
+          }, 5000);
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Update failed')}`);
+        });
     },
     onEditItem(item) {
       // eslint-disable-next-line no-param-reassign

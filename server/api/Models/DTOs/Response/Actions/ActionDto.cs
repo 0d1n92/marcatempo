@@ -21,7 +21,9 @@ namespace api.DTOs
 
         public Boolean disableModifyAction { get; set; } = true;
 
-        public IList<string> errorMessage { get; set; };
+        public IList<string> errorMessage { get; set; }
+
+        public IList<string> successMessage { get; set; }
     }
 
 }

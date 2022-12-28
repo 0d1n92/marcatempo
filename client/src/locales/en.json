@@ -34,6 +34,9 @@
   "Lastname":"Lastname",
   "Role":"Role",
   "Inreversible operation": "Irreversible operation",
+  "Success" : {
+   "Update successful": "Update successful"
+  },
   "Error": {
     "Generic": "Generic Error",
     "Information user": "impossible to get user information",
@@ -46,7 +49,9 @@
     "CreateUser": "impossible to create user",
     "UpdateUser": "impossible to update user",
     "Username already taken": "Username already taken",
-    "Email already taken": "Email already taken"
+    "Email already taken": "Email already taken",
+    "Update failed": "Update failed",
+    "Date Entry": "The entry date must be less than the exit date"
   },
   "Dialog": {
     "Update qrcode": "Are you sure you want to update qrcode?",

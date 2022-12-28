@@ -11,7 +11,7 @@
       </v-btn>
     </v-hover>
     <v-hover v-slot="{ hover }" v-if="save">
-      <v-btn icon :disabled="disableSave" :color="hover ? 'green' : 'green darken-1'" title="">
+      <v-btn icon :disabled="disableSave" :color="hover ? 'green' : 'green darken-1'" title="Save" @click="saveItem()">
         <v-icon small> mdi-content-save </v-icon>
       </v-btn>
     </v-hover>
@@ -48,6 +48,9 @@ export default {
     },
     editItem() {
       this.$emit('onEditItem');
+    },
+    saveItem() {
+      this.$emit('onSaveItem');
     },
   },
 };
