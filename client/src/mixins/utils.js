@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import * as moment from 'moment/moment';
 
 export default {
   data() {
@@ -30,6 +31,23 @@ export default {
         .catch((error) => {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
         });
+    },
+  },
+  filters: {
+    getHour(date) {
+      if (moment(date).isValid) {
+        return moment(date).format('HH:mm');
+      }
+      return moment(date, 'DD/MM/YYYY HH:mm').format('HH:mm');
+    },
+    getDateTime(date) {
+      if (moment(date).isValid) {
+        return moment(date).format('DD/MM/YYYY HH:mm');
+      }
+      return 'Date not valid';
+    },
+    getDate(date) {
+      return moment(date).format('DD/MM/YYYY');
     },
   },
 };

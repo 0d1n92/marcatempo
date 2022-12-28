@@ -18,6 +18,7 @@
         hint="DD/MM/YYYY,DD/MM/YYYY"
         v-bind="attrs"
         v-on="on"
+        @blur="onBlur"
       ></v-text-field>
     </template>
     <v-date-picker v-model="dates" range no-title scrollable>
@@ -29,26 +30,31 @@
 
 <script>
 import * as moment from 'moment/moment';
+import Utils from '../../../mixins/utils';
 
 export default {
   name: 'IntervalDatesPicker',
+  mixins: [Utils],
   data() {
     return {
       moment,
       dates: [],
-      datesFormat: [moment(new Date()).format('DD/MM/YYYY'), moment(new Date()).format('DD/MM/YYYY')],
+      datesFormat: [this.$options.filters.getDate(new Date()), this.$options.filters.getDate(new Date())],
       isOpen: false,
     };
   },
-
   methods: {
     onClick() {
-      this.datesFormat = [
-        moment(new Date(this.dates[0])).format('DD/MM/YYYY'),
-        moment(new Date(this.dates[1])).format('DD/MM/YYYY'),
-      ];
+      this.datesFormat = [this.$options.filters.getDate(this.dates[0]), this.$options.filters.getDate(this.dates[1])];
       this.$refs.datemenu.save(this.dates);
-      this.$emit('setDates', this.dates);
+      this.$emit('onSetDates', this.dates);
+    },
+
+    onBlur() {
+      this.datesFormat = this.datesFormat.split(',');
+      const dates = this.datesFormat.map((date) => moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD'));
+      this.$refs.datemenu.save(dates);
+      this.$emit('onBlurDates', dates);
     },
   },
 };

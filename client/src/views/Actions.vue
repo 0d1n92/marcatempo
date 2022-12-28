@@ -12,7 +12,7 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col md="4" cols="12">
-          <interval-dates-picker @setDates="setDates" />
+          <interval-dates-picker @onSetDates="setDates" @onBlurDates="setDates" />
         </v-col>
         <v-spacer></v-spacer>
         <v-col>
@@ -284,11 +284,7 @@ export default {
       item.disableModifyAction = !item.disableModifyAction;
     },
   },
-  filters: {
-    getHour(date) {
-      return moment(date, 'DD/MM/YYYY HH:mm').format('HH:mm');
-    },
-  },
+
 };
 </script>
 
