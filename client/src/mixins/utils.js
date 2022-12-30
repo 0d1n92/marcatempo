@@ -35,13 +35,13 @@ export default {
   },
   filters: {
     getHour(date) {
-      if (moment(date).isValid) {
+      if (moment(date).isValid()) {
         return moment(date).format('HH:mm');
       }
       return moment(date, 'DD/MM/YYYY HH:mm').format('HH:mm');
     },
     getDateTime(date) {
-      if (moment(date).isValid) {
+      if (moment(date).isValid()) {
         return moment(date).format('DD/MM/YYYY HH:mm');
       }
       return 'Date not valid';

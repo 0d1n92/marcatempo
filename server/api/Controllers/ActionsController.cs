@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using api.Authorization;
 using api.Helpers;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Options;
 using api.DTOs;
 using api.Interface;
 using System.Collections.Generic;
+using System;
 
 namespace api.Controllers;
 [Authorize]
@@ -76,6 +76,42 @@ public class ActionsController : ControllerBase
         var response = await _actService.Update(id,request);
         if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "Action update successfully" });
+    }
+
+    ///<summary>
+    /// Calcolate totals
+    ///</summary>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+    [AuthorizeAdmin]
+    [HttpPost("total")]
+    public  IActionResult CalcolateTotal(RequestActionTotalDto request)
+    {
+        var response =  _actService.CalcolateTotal(request);
+        if (!response.Success) return BadRequest(new { Message = response.Totals });
+        return Ok(new { Totals = response.Totals });
+    }
+
+
+    ///<summary>
+    /// Dowload csv
+    ///</summary>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+    [AuthorizeAdmin]
+    [HttpPost("export")]
+    public IActionResult ExportCsvFile(List<RequestActionCsvDto> request)
+    {
+        var response = _actService.ExportCsvFile(request);
+        if (!response.Success) return BadRequest(new { Message = "Impossible to export csv"});
+       
+        return File(response.stream, "application/octet-stream", $"postmark-{DateTime.Now.ToFileTime()}.csv");
     }
 
 }

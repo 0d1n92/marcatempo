@@ -26,7 +26,6 @@
   "Postmarkers": "Postmarkers",
   "Total": "Total",
   "Agree": "Agree",
-  "Date must be valid": "Date must be valid",
   "E-mail must be valid" : "E-mail must be valid",
   "Save": "Save",
   "Name": "Name",
@@ -34,11 +33,15 @@
   "Lastname":"Lastname",
   "Role":"Role",
   "Inreversible operation": "Irreversible operation",
+  "Calcolate":"Calcolate",
+  "Adds up the total users": "Adds up the total users",
   "Success" : {
    "Update successful": "Update successful"
   },
   "Error": {
+    "Date must be valid": "the date must respect the format DD/MM/YYYY HH:mm",
     "Generic": "Generic Error",
+    "Impossible calculate total": "Impossible calculate total",
     "Information user": "impossible to get user information",
     "Save avatar": "impossible to save avatar",
     "Delete avatar": "impossible to delete avatar",
@@ -51,7 +54,8 @@
     "Username already taken": "Username already taken",
     "Email already taken": "Email already taken",
     "Update failed": "Update failed",
-    "Date Entry": "The entry date must be less than the exit date"
+    "Date Entry": "The entry date must be less than the exit date",
+    "Export Falied":"export failed, unable to download csv"
   },
   "Dialog": {
     "Update qrcode": "Are you sure you want to update qrcode?",

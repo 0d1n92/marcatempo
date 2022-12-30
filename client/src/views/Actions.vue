@@ -1,3 +1,4 @@
+v-card-subttile
 <template>
   <WireFrameVue>
     <div style="height: 60px, padding-bottom: 10px">
@@ -19,7 +20,7 @@
           <v-btn icon color="primary" :title="$t('Reload table')">
             <v-icon @click="onReset"> mdi-reload </v-icon>
           </v-btn>
-          <v-btn icon color="primary" :title="$t('Export to csv')">
+          <v-btn @click="onDownLoadCsv" icon color="primary" :title="$t('Export to csv')">
             <v-icon> mdi-file-export-outline </v-icon>
           </v-btn>
         </v-col>
@@ -36,6 +37,9 @@
       item-key="index"
       :footer-props="{ 'items-per-page-options': [20, 31, 40, -1] }"
     >
+      <template v-slot:item.total="{ item }">
+        <span>{{ item.total.toFixed(2) }}</span>
+      </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <div class="row sp-details pt-6 pb-6">
@@ -46,14 +50,14 @@
                 <template v-slot:item.entry="{ item }">
                   <v-form :ref="`formDate-${item.id}-entry`">
                     <v-text-field
-                      :value="item.entry | getHour"
+                      :value="item.entry"
                       :readonly="item.disableModifyAction"
                       @change="onChangeDate(item, $event, 'entry')"
                       :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
                       :rules="dateRule"
                       :error-messages="item.errorMessage"
                       :success-messages="item.successMessage"
-                      hint="HH:mm"
+                      hint="DD/MM/YYYY HH:mm"
                     />
                   </v-form>
                 </template>
@@ -61,13 +65,13 @@
                   <v-form :ref="`formDate-${item.id}-exit`">
                     <v-text-field
                       @change="onChangeDate(item, $event, 'exit')"
-                      :value="item.exit | getHour"
+                      :value="item.exit"
                       :background-color="item.disableModifyAction ? '' : 'grey lighten-2'"
                       :readonly="item.disableModifyAction"
                       :rules="dateRule"
                       :error-messages="item.errorMessage"
                       :success-messages="item.successMessage"
-                      hint="HH:mm"
+                      hint="DD/MM/YYYY HH:mm"
                     >
                     </v-text-field>
                   </v-form>
@@ -90,6 +94,23 @@
         </td>
       </template>
     </v-data-table>
+    <v-row>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-col>
+        <v-card elevation="0">
+          <v-card-title
+            >{{ $t('Total') + ': ' }} <span>{{ this.total }}</span></v-card-title
+          >
+          <v-card-subtitle>{{ $t('Adds up the total users') }}</v-card-subtitle>
+          <v-card-actions>
+            <v-btn color="primary" @click="onCacolateTotal"> {{ $t('Calcolate') }} </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </WireFrameVue>
 </template>
 
@@ -113,6 +134,7 @@ export default {
   mixins: [Utils],
   data() {
     return {
+      total: '0,00',
       expanded: [],
       selectedOperators: [],
       disableModifyAction: true,
@@ -120,8 +142,8 @@ export default {
       dateRule: [
         // eslint-disable-next-line prettier/prettier
         (v) => !v ||
-          /^[012]{0,1}[0-9]:[0-6][0-9]$/.test(v) ||
-          this.$i18n.t('Date must be valid'),
+          /^([1-9]|([012][0-9])|(3[01]))\/([0]{0,1}[1-9]|1[012])\/\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/.test(v) ||
+          this.$i18n.t('Error.Date must be valid'),
         (v) => !!v || this.$i18n.t('Is required'),
       ],
       headerTableUserAct: [
@@ -163,6 +185,24 @@ export default {
     },
   },
   methods: {
+    onCacolateTotal() {
+      Axios.post(
+        `${process.env.VUE_APP_ROOT_API}/action/total`,
+        {
+          TotalsUsers: this.operators.map((x) => x.total.toFixed(2)),
+        },
+        {
+          headers: { Authorization: this.$store.state.token },
+          // eslint-disable-next-line comma-dangle
+        }
+      )
+        .then((response) => {
+          this.total = response.data.totals;
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible calculate total')}`);
+        });
+    },
     setDates(dates) {
       this.dates = dates;
     },
@@ -199,10 +239,10 @@ export default {
         item.disableSaveBtn = false;
         if (typeAct === 'entry') {
           // eslint-disable-next-line no-param-reassign
-          item.entry = moment(item.entry, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY ') + event;
+          item.entry = event;
         } else {
           // eslint-disable-next-line no-param-reassign
-          item.exit = moment(item.entry, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY ') + event;
+          item.exit = event;
         }
       }
     },
@@ -215,7 +255,7 @@ export default {
           pageSize: this.options.itemsPerPage,
           page: this.options.page,
           usersName: this.selectedOperators,
-          sortDesc: this.options.sortDesc,
+          sortDesc: this.options.sortDesc.slice(0, -1),
           sortBy: this.options.sortBy,
         },
         {
@@ -268,6 +308,7 @@ export default {
         .then(() => {
           // eslint-disable-next-line no-param-reassign
           item.successMessage = this.$t('Success.Update successful');
+          this.getOperetors();
           // eslint-disable-next-line no-param-reassign
           item.disableSaveBtn = true;
           setTimeout(() => {
@@ -283,8 +324,36 @@ export default {
       // eslint-disable-next-line no-param-reassign
       item.disableModifyAction = !item.disableModifyAction;
     },
-  },
 
+    onDownLoadCsv() {
+      const payload = this.operators.map((x) => ({
+        date: x.date,
+        firstName: x.firstName,
+        lastName: x.lastName,
+        total: x.total,
+        username: x.userName,
+      }));
+
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/action/export`, payload, {
+        headers: { Authorization: this.$store.state.token },
+        responseType: 'blob',
+        // eslint-disable-next-line comma-dangle
+      })
+        .then((response) => {
+          const href = URL.createObjectURL(response.data);
+          const link = document.createElement('a');
+          link.href = href;
+          link.setAttribute('download', `postmarker-${moment(new Date()).format('dd-mm-YYYY HH:mm')}.csv`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(href);
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Export Falied')}`);
+        });
+    },
+  },
 };
 </script>
 

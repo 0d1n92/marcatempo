@@ -27,20 +27,23 @@
   "Disagree": "Annulla",
   "Save": "Salva",
   "Is required":"Campo Richiesto",
-  "Date must be valid": "La Data deve essere valida",
   "E-mail must be valid" : "E-mail deve essere valida",
   "Agree": "Acetta",
+   "Adds up the total users":"Somma i totali degli utenti",
   "Name": "Nome",
   "Lastname":"Cognome",
   "Role":"Ruolo",
   "Inreversible operation": "operazione inreversibile",
+  "Calcolate":"Calcola",
   "Success" : {
    "Update successful": "Aggiornamento riuscito"
   },
   "Error": {
     "Generic": "Errore generico",
+     "Impossible calculate total": "Impossibile calcolare i totali",
     "Information user": "impossibile ottenere le informazioni utente",
     "Impossible to get operations": "Impossibile ottenere informazioni operazioni",
+    "Date must be valid": "La Data deve rispettare il formato DD/MM/YYYY HH:mm",
     "Save avatar": "impossibile salvare avatar",
     "Delete avatar": "impossibile to cancellare avatar",
     "Wrong user or password": "Password o utente errato",
@@ -51,7 +54,8 @@
     "Username already taken": "Username già utilizzato",
     "Email already taken": "Email già utilizzata",
     "Update failed": "Aggiornamento non riuscito",
-    "Date Entry": "La data di entrata deve essere minore della data di uscita"
+    "Date Entry": "La data di entrata deve essere minore della data di uscita",
+    "Export Falied":"esportazione fallita, impossibile scaricare csv"
   },
   "Dialog": {
     "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?",

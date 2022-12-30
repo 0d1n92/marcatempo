@@ -3,7 +3,6 @@ using api.DTOs;
 using System;
 using System.Linq;
 using api.Interface;
-using api.Model.Entity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,6 +10,10 @@ using api.Utilitis.Enum;
 using api.Extensions;
 using api.Utilitis;
 using System.Linq.Dynamic.Core;
+using CsvHelper;
+using System.IO;
+using System.Globalization;
+using CsvHelper.Configuration;
 
 namespace api.Services;
 public class ActionsService : IActionsService
@@ -58,7 +61,7 @@ public class ActionsService : IActionsService
 
             if (request.SortBy.Any())
             {
-                string multiOrders = string.Concat(request.SortBy.AsQueryable().Select((ord, index) => $"{ord} {(request.SortDesc[index + 1] ? "DESC," : "ASC,") }").ToArray());
+                string multiOrders = string.Concat(request.SortBy.AsQueryable().Select((ord, index) => $"{ord} {(request.SortDesc[index] ? "DESC," : "ASC,") }").ToArray());
                 response = response.OrderBy(multiOrders.Remove(multiOrders.Length - 1));
             }
 
@@ -98,19 +101,122 @@ public class ActionsService : IActionsService
             Model.Entity.Action action = await _context.Actions.FindAsync(id);
             DateTime entry = DateTime.Parse(request.Entry);
             DateTime exit = DateTime.Parse(request.Exit);
-            if( entry > exit)
+            if (entry > exit)
             {
-              return (false, "The entry date must be less than the exit date");
+                return (false, "The entry date must be less than the exit date");
             }
             action.Entry = entry;
             action.Exit = exit;
             await _context.SaveChangesAsync();
             return (true, "action update");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return (false, e.Message);
         }
 
+    }
+
+    public (bool Success, string Totals) CalcolateTotal(RequestActionTotalDto request)
+    {
+        try
+        {
+            var totals = new TimeSpan();
+            request.TotalsUsers.ForEach(x =>
+            {
+                var value = String.Format("{0:0.00}", x);
+                int hours = (int)x;
+                if (hours >= 24)
+                {
+                    value = new TimeSpan(hours,    // hours
+                       int.Parse(value.Split(',')[1]),    // minutes
+                       00   // seconds
+                       ).ToString();
+                }
+                else
+                {
+                    value = value.Replace(',', ':') + ":00";
+                }
+
+                totals += TimeSpan.Parse(value);
+            }
+            );
+
+            return (true, $"{(int)totals.TotalHours},{totals.Minutes.ToString("00")}");
+        }
+        catch (Exception e)
+        {
+            return (false, e.Message);
+        }
+    }
+
+    public (bool Success, MemoryStream stream) ExportCsvFile(List<RequestActionCsvDto> request)
+    {
+        try { 
+
+             var memoryStream = new MemoryStream();
+             var streamWriter = new StreamWriter(memoryStream, leaveOpen: true);
+             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+             {
+                 Delimiter = ";",
+             };
+             var csvWriter = new CsvWriter(streamWriter, config);
+             var Dateheaders = new List<string>();
+             var UserNames = new List<string>();
+
+             request.ForEach(x =>
+             {
+
+                 if (!Dateheaders.Contains(x.Date))
+                 {
+                     Dateheaders.Add(x.Date);
+                 } 
+                 if (!UserNames.Contains(x.UserName))
+                 {
+                     UserNames.Add(x.UserName);
+                 }
+
+             });
+
+             var headers = new List<string>()
+             {
+                 "Nome",
+                 "Cognome",
+             };
+             headers.AddRange(Dateheaders);
+             headers.Add("Totali");
+             foreach (var header in headers)
+             {
+                 csvWriter.WriteField(header);
+             }
+             csvWriter.NextRecord();
+
+    
+            foreach (var name in UserNames)
+            {
+                var listTotal = new RequestActionTotalDto();
+                var usr = request.First(x => x.UserName == name);
+                csvWriter.WriteField(usr.FirstName);
+                csvWriter.WriteField(usr.LastName);
+                listTotal.TotalsUsers = new List<decimal>();
+                request.Where(x => x.UserName == name).ToList().ForEach(x =>
+                {
+                    listTotal.TotalsUsers.Add(x.Total);
+                    csvWriter.WriteField(String.Format("{0:0.00}", x.Total));
+                }
+                );
+                csvWriter.WriteField(String.Format("{0:0.00}", this.CalcolateTotal(listTotal).Totals));
+                csvWriter.NextRecord();
+            }
+
+            csvWriter.Flush();
+            memoryStream.Position = 0;
+            return (true, memoryStream);
+        }
+        catch (Exception e)
+        {
+            return (false, new MemoryStream());
+        }
 
     }
 }
