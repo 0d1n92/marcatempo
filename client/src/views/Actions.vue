@@ -16,6 +16,16 @@ v-card-subttile
           <interval-dates-picker @onSetDates="setDates" @onBlurDates="setDates" />
         </v-col>
         <v-spacer></v-spacer>
+        <v-col md="2" cols="12">
+          <v-select
+            height="50"
+            :items="optionsPresent"
+            item-text="text"
+            item-value="value"
+            :label="$t('Filter by presents')"
+            v-model="present"
+          ></v-select>
+        </v-col>
         <v-col>
           <v-btn icon color="primary" :title="$t('Reload table')">
             <v-icon @click="onReset"> mdi-reload </v-icon>
@@ -170,6 +180,21 @@ export default {
       ],
       operators: [],
       options: {},
+      optionsPresent: [
+        {
+          text: this.$t('All'),
+          value: 0,
+        },
+        {
+          text: this.$t('Absent'),
+          value: 1,
+        },
+        {
+          text: this.$t('Present'),
+          value: 2,
+        },
+      ],
+      present: 0,
     };
   },
   mounted() {
@@ -181,6 +206,9 @@ export default {
       this.getOperetors();
     },
     options() {
+      this.getOperetors();
+    },
+    present() {
       this.getOperetors();
     },
   },
@@ -257,6 +285,7 @@ export default {
           usersName: this.selectedOperators,
           sortDesc: this.options.sortDesc.slice(0, -1),
           sortBy: this.options.sortBy,
+          present: this.present,
         },
         {
           headers: { Authorization: this.$store.state.token },

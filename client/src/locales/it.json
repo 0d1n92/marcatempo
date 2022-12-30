@@ -17,6 +17,8 @@
   "Exit":"Uscita",
   "Search":"Cerca",
   "Total": "Totali",
+  "All": "Tutti",
+  "Absent": "Assenti",
   "Add User": "Aggiungi Utente",
   "User Profile": "Profilo Utente",
   "Operator": "Operatore",
@@ -35,6 +37,8 @@
   "Role":"Ruolo",
   "Inreversible operation": "operazione inreversibile",
   "Calcolate":"Calcola",
+   "Filter by presents": "Filtra per presenze",
+  "Present": "Presenti",
   "Success" : {
    "Update successful": "Aggiornamento riuscito"
   },

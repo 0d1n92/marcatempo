@@ -31,11 +31,21 @@ public class ActionsService : IActionsService
         {
             List<DateTime> dates = DateTime.Parse(request.InitDate).Range(DateTime.Parse(request.EndDate)).ToList();
             var action = await _context.Actions.AsNoTracking().ToListAsync();
+          
+
             var usersAct = new List<UserActions>();
 
             foreach (var date in dates)
             {
-                List<UserActions> actUsr = _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action, user => user.Id, action => action.UserId, (user, action) => new UserActions(date, user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList(), user.Username)).ToList();
+                List<UserActions> actUsr = _context.Users.AsEnumerable().Where(x => x.RoleId != (int)EnumRoles.Administrator).GroupJoin(action,user => user.Id, action => action.UserId, (user, action) => new UserActions(date, user.FirstName, user.LastName, action.Where(a => a.Entry.Value.Date == date.Date).ToList(), user.Username)).ToList();
+               
+                if (request.Present == EnumUserPresent.Present)
+                {
+                    actUsr = actUsr.Where(x => x.Actions.Count > 0).ToList();
+                } else if (request.Present == EnumUserPresent.Absent)
+                {
+                    actUsr = actUsr.Where(x => x.Actions.Count == 0).ToList();
+                }
 
                 if (request.UsersName.Any())
                 {

@@ -3,6 +3,8 @@
   "Users account": "Users account",
   "Users actions": "Users actions",
   "Users": "Users",
+  "All": "All",
+  "Absent": "Absent",
   "Scan qrcode": "Scan qrcode",
   "Update qrcode": "Update QR",
   "Delete avatar": "Delete avatar",
@@ -35,6 +37,8 @@
   "Inreversible operation": "Irreversible operation",
   "Calcolate":"Calcolate",
   "Adds up the total users": "Adds up the total users",
+  "Filter by presents": " Filter by presents",
+  "Present": "Present",
   "Success" : {
    "Update successful": "Update successful"
   },
