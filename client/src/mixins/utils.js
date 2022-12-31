@@ -12,13 +12,13 @@ export default {
   methods: {
     onGetUsers(params) {
       // eslint-disable-next-line object-curly-newline
-      const { sortBy, sortDesc, page, itemsPerPage } = params;
+      const { sortBy, sortDesc, page, itemsPerPage, name } = params;
       Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
         headers: { Authorization: this.$store.state.token },
         params: {
           page,
           pageSize: itemsPerPage,
-          name: '',
+          name,
           sortBy: sortBy[0],
           desc: sortDesc[0],
         },

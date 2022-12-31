@@ -16,12 +16,15 @@ namespace api.Controllers;
 public class ActionsController : ControllerBase
 {
     private IActionsService _actService;
+    private IUsersService _usrService;
     private IMapper _mapper;
     public ActionsController(
         IActionsService actService,
+        IUsersService usrService,
         IMapper mapper,
         IOptions<AppSettings> appSettings)
     {
+         _usrService = usrService;
         _actService = actService;
         _mapper = mapper;
     }
@@ -112,6 +115,24 @@ public class ActionsController : ControllerBase
         if (!response.Success) return BadRequest(new { Message = "Impossible to export csv"});
        
         return File(response.stream, "application/octet-stream", $"postmark-{DateTime.Now.ToFileTime()}.csv");
+    }
+
+    ///<summary>
+    /// Create Action
+    ///</summary>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+    [AuthorizeAdmin]
+    [HttpPost()]
+    public async Task<IActionResult> AddAction(RequestAddActionDto request)
+    {
+        int usrId = await _usrService.GetUserId(request.UserName);
+        var response = await _actService.AddAction(usrId, request);
+        if (!response.Success) return BadRequest(new { Message = response.Message });
+        return Ok(new { message = "Action added" });
     }
 
 }

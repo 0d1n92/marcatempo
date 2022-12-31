@@ -87,6 +87,29 @@ public class ActionsService : IActionsService
         }
 
     }
+
+    public async Task<(bool Success, string Message)> AddAction(int UserId, RequestAddActionDto request)
+    {
+        try
+        {
+            Model.Entity.Action action = new Model.Entity.Action
+            {
+                Entry = DateTime.Parse(request.Entry),
+                Exit = DateTime.Parse(request.Exit),
+                IsPresent = true,
+                UserId = UserId,
+            };
+
+            _context.Actions.Add(action);
+            await _context.SaveChangesAsync();
+            return (true, "action added");
+
+        } catch (Exception e)
+        {
+            return (false, e.Message);
+        }
+    }
+
     public async Task<(bool Success, string Message)> Delete(int Id)
     {
         try

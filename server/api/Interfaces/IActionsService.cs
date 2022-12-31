@@ -14,5 +14,6 @@ namespace api.Interface
         Task<(bool Success, string Message)> Update(int id, RequestActionDto request);
         (bool Success, string Totals) CalcolateTotal(RequestActionTotalDto request);
         (bool Success, MemoryStream stream) ExportCsvFile(List<RequestActionCsvDto> request);
+        Task<(bool Success, string Message)> AddAction(int id, RequestAddActionDto request);
     }
 }

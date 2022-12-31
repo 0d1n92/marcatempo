@@ -7,11 +7,12 @@
     :items="items"
     filled
     chips
+    @update:search-input="onEditInput"
     color="blue-grey lighten-2"
     background-color="white"
     :label="$t('Search')"
-    item-text="itemsSelect"
-    item-value="itemsSelect"
+    :item-text="getItemText"
+    item-value="username"
     multiple
   >
     <template v-slot:selection="data">
@@ -70,12 +71,18 @@ export default {
   },
   methods: {
     remove(item) {
-      const index = this.selectedItems.findIndex((op) => op.username === item.username);
+      const index = this.selectedItems.findIndex((op) => op === item.username);
       if (index >= 0) this.selectedItems.splice(index, 1);
       this.$emit('onRemove', this.selectedItems);
     },
     onChange() {
       this.$emit('onChange', this.selectedItems);
+    },
+    getItemText(item) {
+      return `${item.firstName} ${item.lastName}`;
+    },
+    onEditInput(value) {
+      this.$emit('onEditInput', value);
     },
   },
 };

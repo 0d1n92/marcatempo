@@ -154,28 +154,39 @@ namespace api.Services
             var userId = _jwtUtils.ValidateToken(token);
             try
             {
-                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.Metalabel == "meta-user-avatar")).AsQueryable();
+                var users = _context.Users.Where(usr => usr.Id != userId).Include(usr => usr.Role).Include(usr => usr.QRCode).Include(x => x.UserMetas.Where(x => x.Metalabel == "meta-user-avatar")).AsQueryable().ToList();
                 if (!String.IsNullOrEmpty(name)){
-                     users = users.Where(usr => usr.FirstName.Contains(name) || usr.LastName.Contains(name));
+                    // users = users.Where(usr => usr.FirstName.Contains(name) || usr.LastName.Contains(name)).ToList();
+                    var filterdUsr = new List <User>();
+                    foreach (var usr in users)
+                    { 
+                        if ($"{usr.FirstName.ToLower()} {usr.LastName.ToLower()}".Contains(name.ToLower()))
+                        {
+                            filterdUsr.Add(usr);
+                        }
+                    }
+                    users = filterdUsr;
+
                 }
                 var count = users.Count();
+                var querableUsr = users.AsQueryable();
                 switch (sortby)
                 {
                     case "firstName":
-                        users = users.OrderBy(x => x.FirstName, desc);
+                        users = querableUsr.OrderBy(x => x.FirstName, desc).ToList();
                         break;
                     case "roleName":
-                        users = users.OrderBy(x => x.Role.Id, desc);
+                        users = querableUsr.OrderBy(x => x.Role.Id, desc).ToList();
                         break;
                     case "lastName":
-                        users = users.OrderBy(x => x.LastName, desc);
+                        users = querableUsr.OrderBy(x => x.LastName, desc).ToList();
                         break ;
                     default:
                         break;
                 }
                
-                users = users.Paginate(page, pageSize);
-                return (true, "Users Finded", count, await users.ToListAsync());
+                users =  querableUsr.Paginate(page, pageSize).ToList();
+                return (true, "Users Finded", count, users.ToList());
             }
             catch (Exception e)
             {

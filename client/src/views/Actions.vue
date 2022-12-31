@@ -6,6 +6,11 @@ v-card-subttile
         <v-col md="4" cols="12">
           <multi-select-users
             @onChange="updateOperators"
+            @onEditInput="
+              (value) => {
+                this.name = value;
+              }
+            "
             @onRemove="removeSelectedOperators"
             :items="users"
             :deleteInput="delateOperators"
@@ -22,6 +27,7 @@ v-card-subttile
             :items="optionsPresent"
             item-text="text"
             item-value="value"
+            prepend-inner-icon="mdi-filter-outline"
             :label="$t('Filter by presents')"
             v-model="present"
           ></v-select>
@@ -98,7 +104,11 @@ v-card-subttile
                 </template>
               </v-data-table>
             </div>
-            <div class="col-md-4 col-12 text-right"></div>
+            <div class="col-md-4 col-12">
+              <v-btn color="primary" @click="onClickAddAction(item.index)" icon :title="$t('Add Postmaker')">
+                <v-icon>mdi-briefcase-plus-outline</v-icon>
+              </v-btn>
+            </div>
             <div class="col-md-4 col-12 text-right"></div>
           </div>
         </td>
@@ -195,11 +205,18 @@ export default {
         },
       ],
       present: 0,
+      name: '',
     };
   },
   mounted() {
     this.getOperetors();
-    this.onGetUsers(this.options);
+    this.onGetUsers({
+      page: 1,
+      pagesize: 20,
+      name: '',
+      sortBy: ['FirstName'],
+      sortDesc: [false],
+    });
   },
   watch: {
     dates() {
@@ -210,6 +227,17 @@ export default {
     },
     present() {
       this.getOperetors();
+    },
+    name(value) {
+      if (value.length > 3) {
+        this.onGetUsers({
+          page: 1,
+          pagesize: 20,
+          name: value,
+          sortBy: ['FirstName'],
+          sortDesc: [false],
+        });
+      }
     },
   },
   methods: {
@@ -243,7 +271,7 @@ export default {
     updateOperators(selected) {
       if (selected) {
         selected.forEach((x) => {
-          this.selectedOperators.push(x.username);
+          this.selectedOperators.push(x);
         });
       }
       this.getOperetors();
@@ -252,7 +280,7 @@ export default {
       if (selected) {
         this.selectedOperators = [];
         selected.forEach((x) => {
-          this.selectedOperators.push(x.username);
+          this.selectedOperators.push(x);
         });
       }
       this.getOperetors();
@@ -372,7 +400,7 @@ export default {
           const href = URL.createObjectURL(response.data);
           const link = document.createElement('a');
           link.href = href;
-          link.setAttribute('download', `postmarker-${moment(new Date()).format('dd-mm-YYYY HH:mm')}.csv`);
+          link.setAttribute('download', `postmarker-${moment(new Date()).format('DD/MM/YYYY HH:mm')}.csv`);
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -380,6 +408,31 @@ export default {
         })
         .catch((error) => {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Export Falied')}`);
+        });
+    },
+
+    onClickAddAction(IdOperator) {
+      let newAction = {};
+      this.operators.forEach((item) => {
+        if (item.index === IdOperator) {
+          // eslint-disable-next-line no-param-reassign
+          newAction = {
+            entry: moment(item.date, 'DD/MM/YYYY').format('DD/MM/YYYY HH:mm'),
+            exit: moment(item.date, 'DD/MM/YYYY').add(30, 'm').format('DD/MM/YYYY HH:mm'),
+            userName: item.userName,
+          };
+        }
+      });
+
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/action`, newAction, {
+        headers: { Authorization: this.$store.state.token },
+        // eslint-disable-next-line comma-dangle
+      })
+        .then(() => {
+          this.getOperetors();
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get operations')}`);
         });
     },
   },
