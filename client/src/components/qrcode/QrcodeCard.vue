@@ -7,6 +7,7 @@
       <div class="d-flex">
         <v-btn
           :href="url"
+          @click="GetLinkQrcode()"
           class="mx-2 white--text"
           title="Download qrcode"
           :disabled="disabled"
@@ -71,6 +72,9 @@ export default {
     },
   },
   mounted() {
+    this.GetLinkQrcode();
+  },
+  update() {
     this.GetLinkQrcode();
   },
   methods: {

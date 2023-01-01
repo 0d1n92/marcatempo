@@ -185,8 +185,7 @@ namespace api.Services
                         break;
                 }
                
-                users =  querableUsr.Paginate(page, pageSize).ToList();
-                return (true, "Users Finded", count, users.ToList());
+                return (true, "Users Finded", count, users.AsQueryable().Paginate(page, pageSize).ToList());
             }
             catch (Exception e)
             {

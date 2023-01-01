@@ -308,8 +308,6 @@ export default {
         {
           initDate: this.dates[0],
           endDate: this.dates[1],
-          pageSize: this.options.itemsPerPage,
-          page: this.options.page,
           usersName: this.selectedOperators,
           sortDesc: this.options.sortDesc.slice(0, -1),
           sortBy: this.options.sortBy,
@@ -317,6 +315,10 @@ export default {
         },
         {
           headers: { Authorization: this.$store.state.token },
+          params: {
+            page: this.options.page,
+            pagesize: this.options.itemsPerPage,
+          },
           // eslint-disable-next-line comma-dangle
         }
       )

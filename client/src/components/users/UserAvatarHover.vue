@@ -46,11 +46,6 @@ export default {
       type: [String, null],
       default: '',
     },
-    initials: {
-      type: String,
-      default: 'AA',
-      required: true,
-    },
     hover: {
       type: Boolean,
       default: false,

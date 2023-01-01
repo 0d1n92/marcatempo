@@ -155,7 +155,7 @@ export default {
   methods: {
     onSearch() {
       if (this.search.length > 3) {
-        this.onGetUsers(this.options);
+        this.onGetUsers({ ...this.options, name: this.search });
       } else if (this.search.length === 0) {
         this.onGetUsers(this.options);
       }
