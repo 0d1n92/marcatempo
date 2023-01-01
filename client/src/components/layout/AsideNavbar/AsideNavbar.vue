@@ -9,52 +9,58 @@
     permanent
     app
   >
-    <v-list class="header-nav pt-9">
-      <v-list-item>
-        <v-list-item-avatar v-if="mini" style="margin-left: -7px !important">
-          <v-avatar class="d-flex justify-center" color="primary" :size="40">
-            <user-avatar size="35" :base64="avatar" />
-          </v-avatar>
-        </v-list-item-avatar>
-        <v-hover v-slot="{ hover }">
-          <v-list-item-avatar v-if="!mini" size="90">
-            <user-avatar-hover
-              size="90"
-              :hover="hover"
-              :base64="avatar"
-              @uploadAvatar="uploadAvatar"
-              @deleteAvatar="deleteAvatar"
-            ></user-avatar-hover>
+    <div style="height: 100%" @click.stop="mini = !mini">
+      <v-list class="header-nav pt-9">
+        <v-list-item>
+          <v-list-item-avatar v-if="mini" style="margin-left: -7px !important">
+            <v-avatar class="d-flex justify-center" color="primary" :size="40">
+              <user-avatar size="35" :base64="avatar" />
+            </v-avatar>
           </v-list-item-avatar>
-        </v-hover>
-        <v-spacer></v-spacer>
-        <v-btn @click="logout" icon color="red" title="logout">
-          <v-icon>mdi-location-exit</v-icon>
-        </v-btn>
+          <v-hover v-slot="{ hover }">
+            <v-list-item-avatar v-if="!mini" size="90">
+              <user-avatar-hover
+                size="90"
+                :hover="hover"
+                :base64="avatar"
+                @uploadAvatar="uploadAvatar"
+                @deleteAvatar="deleteAvatar"
+              ></user-avatar-hover>
+            </v-list-item-avatar>
+          </v-hover>
+          <v-spacer></v-spacer>
+          <v-list>
+            <v-list-item>
+              <v-btn @click="logout" icon color="red" title="logout">
+                <v-icon>mdi-location-exit</v-icon>
+              </v-btn>
+            </v-list-item>
+          </v-list>
+        </v-list-item>
+        <v-list-item v-if="!mini">
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
+              {{ user.fullName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{ $t(user.role) }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list-item
+        v-for="(item, index) in nav"
+        :key="index"
+        :title="item.title"
+        @click="$router.push({ name: item.route_name, params: { user: $store.state.loggedUser.username } })"
+        link
+      >
+        <v-list-item-icon>
+          <v-icon v-text="item.icon"></v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>{{ item.text }}</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="!mini">
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            {{ user.fullName }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ $t(user.role) }}</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-    <v-list-item
-      v-for="(item, index) in nav"
-      :key="index"
-      :title="item.title"
-      @click="$router.push({ name: item.route_name })"
-      link
-    >
-      <v-list-item-icon>
-        <v-icon v-text="item.icon"></v-icon>
-      </v-list-item-icon>
-      <v-list-item-title>{{ item.text }}</v-list-item-title>
-    </v-list-item>
-    <div id="aside-footer">
-      <v-select v-model="locale" :items="$i18n.availableLocales"></v-select>
+      <div id="aside-footer">
+        <v-select v-model="locale" :items="$i18n.availableLocales"></v-select>
+      </div>
     </div>
   </v-navigation-drawer>
 </template>
@@ -123,6 +129,7 @@ export default {
             icon: 'mdi-monitor-dashboard',
             title: this.$i18n.t('Dashboard'),
             text: this.$i18n.t('Dashboard'),
+            route_name: 'dash-board',
           },
           {
             icon: 'mdi-account-group',

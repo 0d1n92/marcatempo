@@ -229,7 +229,7 @@ export default {
       this.getOperetors();
     },
     name(value) {
-      if (value.length > 3) {
+      if (value !== null && value.length > 3) {
         this.onGetUsers({
           page: 1,
           pagesize: 20,
