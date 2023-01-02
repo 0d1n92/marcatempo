@@ -153,7 +153,36 @@ namespace api.Services
         public async Task<(bool Success, string Message)> Update(string token, RequestUpdateUserDto model)
         {
             int UserId = (int)_jwtUtils.ValidateToken(token);
-            return await this.Update(UserId, model);
+            var user = getUser(UserId);
+            if(user.Role.Name == EnumRoles.Administrator)
+            {
+                return await this.Update(UserId, model);
+            }
+            return await this.UpdateOperator(user, model);
+
+        }
+        public async Task<(bool Success, string Message)> UpdateOperator( User user , RequestUpdateUserDto model)
+        {
+            try
+            {
+                if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
+                    return (false, "Username already taken");
+                if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
+                    return (false, "Email already taken");
+                if (model.Avatar != null)
+                    await PostAvatarUser(user.Id, model.Avatar);
+                if (model.deleteAvatar)
+                    await DeleteAvatar(user.Id);
+
+                user.Email = model.Email;
+                user.Username = model.Username;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return (true, "User updated successfully");
+            } catch (Exception ex)
+            {
+                return (true, ex.Message);
+            }
         }
         public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name, string sortby, bool desc)
         {

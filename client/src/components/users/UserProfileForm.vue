@@ -18,10 +18,20 @@
           <QrcodeCard @updateQrCode="updateQrCode" :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.firstName" :label="$t('Name')"></v-text-field>
+          <v-text-field
+            :disabled="disableField.name"
+            :rules="rules"
+            v-model="user.firstName"
+            :label="$t('Name')"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.lastName" :label="$t('Lastname')"></v-text-field>
+          <v-text-field
+            :disabled="disableField.surname"
+            :rules="rules"
+            v-model="user.lastName"
+            :label="$t('Lastname')"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-text-field
@@ -43,6 +53,7 @@
           <v-select
             :items="roles"
             :rules="[(v) => !!v || this.$i18n.t('Is required')]"
+            :disabled="disableField.role"
             v-model="user.roleName"
             item-value="value"
             item-text="text"
@@ -87,6 +98,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    disableField: {
+      type: Object,
+      default: () => ({
+        name: false,
+        surname: false,
+        role: false,
+      }),
+    },
     validation: {
       type: Object,
       default: () => ({
@@ -125,6 +144,9 @@ export default {
       });
       return roles;
     },
+    saveDisable() {
+      return this.disableSave;
+    },
   },
   watch: {
     user(newVal) {
@@ -151,6 +173,7 @@ export default {
     },
     uploadAvatar(payload) {
       this.file = payload.file;
+      this.$emit('saveDisableAvatar');
       const reader = new FileReader();
       reader.readAsDataURL(payload.file);
       const self = this;
@@ -160,6 +183,7 @@ export default {
     },
     deleteAvatar() {
       this.avatar = null;
+      this.$emit('saveDisableAvatar');
       this.cancelAvatar = true;
     },
     close() {

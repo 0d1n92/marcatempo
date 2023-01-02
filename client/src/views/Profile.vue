@@ -4,6 +4,8 @@
       ref="userProfileForm"
       :disableSave="disableSave"
       @save="onSaveUser"
+      @saveDisableAvatar="disableSave = false"
+      :disableField="disableField"
       @updateQrCode="updateQrCode"
       @close="onClose"
       :validation="validation"
@@ -16,6 +18,7 @@
 import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import UserProfileForm from '../components/users/UserProfileForm.vue';
+import enumRoles from '../enums/enumRoles';
 
 export default {
   name: 'Profile',
@@ -27,12 +30,26 @@ export default {
         email: null,
       },
       disableSave: true,
+      disableField: {
+        name: false,
+        surname: false,
+        role: false,
+      },
     };
   },
   computed: {
     user() {
       return this.$store.state.loggedUser;
     },
+  },
+  mounted() {
+    if (this.$store.state.loggedUser.roleId === enumRoles.Operator) {
+      this.disableField = {
+        name: true,
+        surname: true,
+        role: true,
+      };
+    }
   },
   watch: {
     user: {
@@ -75,6 +92,7 @@ export default {
       })
         .then(() => {
           this.$store.commit('GetUser', this.user);
+          this.disableSave = true;
         })
         .catch((error) => {
           if (error.response.data.message === 'Username already taken') {

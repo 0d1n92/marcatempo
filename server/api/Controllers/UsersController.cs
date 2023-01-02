@@ -226,7 +226,7 @@ public class UsersController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
 
-    [AuthorizeAdmin]
+    [Authorize]
     [HttpPut("profile")]
     public async Task<IActionResult> UpdateMyProfile([FromForm] RequestUpdateUserDto request)
     {

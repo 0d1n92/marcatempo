@@ -19,6 +19,7 @@ namespace api.Interface
         Task<(bool Success, string Message, string imgBase64)> PostAvatarUser(int? id, IFormFile file);
         Task<(bool Success, string Message, string imgBase64)> UpdateAvatar(string token, IFormFile file);
         Task<(bool Success, string Message)> CreateUser(RequestCreateUserDto model, QRcode qrcode, User user);
+        Task<(bool Success, string Message)> UpdateOperator(User user, RequestUpdateUserDto model);
         Task<(bool Success, string Message)> DeleteAvatar(int userId);
         Task<(bool Success, string Message)> DeleteMyAvatar(string token);
         Task<int> GetUserId(string UserName);
