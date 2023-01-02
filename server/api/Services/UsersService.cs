@@ -149,6 +149,12 @@ namespace api.Services
                 return (true, ex.Message);
             }
         }
+
+        public async Task<(bool Success, string Message)> Update(string token, RequestUpdateUserDto model)
+        {
+            int UserId = (int)_jwtUtils.ValidateToken(token);
+            return await this.Update(UserId, model);
+        }
         public async Task<(bool Success, string Message, int Count, IEnumerable<User> Items)> UsersListAsync(string token, int? page, int? pageSize, string name, string sortby, bool desc)
         {
             var userId = _jwtUtils.ValidateToken(token);
@@ -198,7 +204,7 @@ namespace api.Services
             try
             {
                 var userId = _jwtUtils.ValidateToken(token);
-                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.Metalabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).FirstAsync();
+                var user = await _context.Users.Include(x => x.UserMetas.Where( x => x.Metalabel == "meta-user-avatar")).Where(x => x.Id == userId).Include( x => x.Role).Include(x => x.QRCode).FirstAsync();
                 return (true, "Utente trovato", user);
 
             }

@@ -55,7 +55,7 @@ public class QrcodesService : IQrcodesService
             return (false, ex.Message, new Model.Entity.Action());
         }
     }
-    public async Task<(bool Success, string Message, QRcode data)> UpdateQrcode(Guid token)
+    public async Task<(bool Success, string Message, string data)> UpdateQrcode(Guid token)
     {
         try
         {
@@ -63,11 +63,11 @@ public class QrcodesService : IQrcodesService
             qrcode.Token = Guid.NewGuid();
             _context.QRcodes.Update(qrcode);
             await _context.SaveChangesAsync();
-            return (true, "Qrcode Update", qrcode);
+            return (true, "Qrcode Update", qrcode.Token.ToString());
         }
         catch (Exception ex)
         {
-            return (false, ex.Message, new QRcode());
+            return (false, ex.Message, "");
 
         }
     }

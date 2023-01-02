@@ -17,7 +17,8 @@ namespace api.Helpers
                .ForMember(cr => cr.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap(); 
             CreateMap<User, ResponseAuthenticateDto>()
                 .ForMember(ar => ar.RoleName, opt => opt.MapFrom(usr => usr.Role.Name))
-                .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap();
+                .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault()))
+                .ForMember(ar => ar.QrCode, opt => opt.MapFrom(usr => usr.QRCode.Token)).ReverseMap();
             CreateMap<User, ResponsUsersDto>().ForMember(x => x.QrCode, opt => opt.MapFrom(usr => usr.QRCode.Token))
                 .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault()))
                 .ForMember(x => x.RoleName, opt => opt.MapFrom(usr => usr.Role.Name)).ReverseMap(); 

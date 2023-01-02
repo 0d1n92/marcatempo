@@ -20,10 +20,6 @@ export default new Vuex.Store({
     getUser: (state) => {
       const user = {
         avatar: state.loggedUser.avatar,
-        initials:
-          state.loggedUser && state.loggedUser.firstName && state.loggedUser.lastName
-            ? `${state.loggedUser.firstName[0]}${state.loggedUser.lastName[0]}`
-            : '',
         fullName: `${state.loggedUser.firstName} ${state.loggedUser.lastName}`,
         role: state.loggedUser.roleName,
       };
@@ -33,6 +29,9 @@ export default new Vuex.Store({
   mutations: {
     GetUser(state, payload) {
       state.loggedUser = payload;
+    },
+    SetQrcode(state, payload) {
+      state.loggedUser.qrCode = payload;
     },
     SetLang(state, payload) {
       state.lang = payload;
@@ -106,6 +105,26 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.log(`error + ${error}`);
+        });
+    },
+    UpdateQrcode({ commit, state }, user) {
+      debugger;
+      Axios.post(
+        `${process.env.VUE_APP_ROOT_API}/qrcodes/update`,
+        { token: user.qrCode },
+        {
+          headers: { Authorization: state.token },
+          // eslint-disable-next-line prettier/prettier
+        },
+      )
+        .then((response) => {
+          debugger;
+          // eslint-disable-next-line no-param-reassign
+          user.qrCode = response.data;
+          return user.qrCode;
+        })
+        .catch((error) => {
+          commit('SetError', `${error}, impossible to update qrcode`);
         });
     },
   },

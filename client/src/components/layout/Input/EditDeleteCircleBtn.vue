@@ -11,7 +11,13 @@
       </v-btn>
     </v-hover>
     <v-hover v-slot="{ hover }" v-if="save">
-      <v-btn icon :disabled="disableSave" :color="hover ? 'green' : 'green darken-1'" title="Save" @click="saveItem()">
+      <v-btn
+        icon
+        :disabled="disableSave"
+        :color="hover ? 'green' : 'green darken-1'"
+        :title="$t('Save')"
+        @click="saveItem()"
+      >
         <v-icon small> mdi-content-save </v-icon>
       </v-btn>
     </v-hover>

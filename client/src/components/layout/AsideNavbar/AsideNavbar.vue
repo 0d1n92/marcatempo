@@ -35,6 +35,11 @@
                 <v-icon>mdi-location-exit</v-icon>
               </v-btn>
             </v-list-item>
+            <v-list-item>
+              <v-btn @click="$router.push({ name: 'profile' })" icon :title="$t('Modify Profile')">
+                <v-icon>mdi-account-cog</v-icon>
+              </v-btn>
+            </v-list-item>
           </v-list>
         </v-list-item>
         <v-list-item v-if="!mini">

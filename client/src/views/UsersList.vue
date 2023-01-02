@@ -48,6 +48,7 @@
               <user-profile-form
                 :validation="validation"
                 :disableQrcode="btnDisable"
+                @updateQrCode="updateQrCode"
                 @save="save"
                 @close="close"
                 :user="editedItem"
@@ -159,6 +160,9 @@ export default {
       } else if (this.search.length === 0) {
         this.onGetUsers(this.options);
       }
+    },
+    updateQrCode(user) {
+      this.$store.dispatch('UpdateQrcode', user);
     },
     initialize() {
       // eslint-disable-next-line no-unused-expressions

@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import DashBoard from '../views/DashBoard.vue';
 import UsersList from '../views/UsersList.vue';
 import Actions from '../views/Actions.vue';
+import Profile from '../views/Profile.vue';
 import store from '../store';
 import middlewarePipeline from './middleware-pipeline';
 import { auth, admin } from './middleware';
@@ -55,6 +56,14 @@ const routes = [
         path: 'users/actions',
         name: 'actions',
         component: Actions,
+        meta: {
+          middleware: [auth, admin],
+        },
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: Profile,
         meta: {
           middleware: [auth, admin],
         },

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation style="position: relative">
+  <v-form ref="formUser" v-model="valid" lazy-validation style="position: relative">
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" md="6">
@@ -15,7 +15,7 @@
           </v-hover>
         </v-col>
         <v-col cols="12" sm="6" md="6">
-          <QrcodeCard :disabled="disableQrcode" :user="user" />
+          <QrcodeCard @updateQrCode="updateQrCode" :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-text-field :rules="rules" v-model="user.firstName" :label="$t('Name')"></v-text-field>
@@ -52,8 +52,13 @@
       </v-row>
       <v-row>
         <v-col sm="3" offset-sm="9" class="text-right">
-          <v-btn color="blue darken-1" text @click="close"> {{ $t('Disagree') }} </v-btn>
-          <v-btn color="blue darken-1" text @click="save"> {{ $t('Save') }} </v-btn>
+          <v-btn class="mr-3" color="error" @click="close"
+            ><v-icon small> mdi-close-thick </v-icon> {{ $t('Disagree') }}
+          </v-btn>
+          <v-btn :disabled="disableSave" color="success" :title="$t('Save')" @click="save">
+            <v-icon small> mdi-content-save </v-icon>
+            {{ $t('Save') }}
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -75,6 +80,10 @@ export default {
       dafault: {},
     },
     disableQrcode: {
+      type: Boolean,
+      default: false,
+    },
+    disableSave: {
       type: Boolean,
       default: false,
     },
@@ -119,7 +128,7 @@ export default {
   },
   watch: {
     user(newVal) {
-      this.$refs.form.resetValidation();
+      this.$refs.formUser.resetValidation();
       this.avatar = newVal.avatar == null ? null : newVal.avatar;
     },
     validation(newVal) {
@@ -132,6 +141,9 @@ export default {
   },
 
   methods: {
+    updateQrCode(user) {
+      this.$emit('updateQrCode', user);
+    },
     resetValidation() {
       this.validation.username = null;
       this.validation.email = null;
@@ -154,7 +166,7 @@ export default {
       this.$emit('close');
     },
     save() {
-      if (!this.error || !this.$refs.form.validate()) {
+      if (!this.error || !this.$refs.formUser.validate()) {
         return;
       }
       this.$emit('save', { file: this.file, base64: this.avatar, deleteAvatar: this.cancelAvatar });

@@ -218,7 +218,23 @@ public class UsersController : ControllerBase
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new { message = result.Message });
     }
+    ///<summary>
+    /// Update my profile
+    ///</summary>
+    /// <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
 
+    [AuthorizeAdmin]
+    [HttpPut("profile")]
+    public async Task<IActionResult> UpdateMyProfile([FromForm] RequestUpdateUserDto request)
+    {
+        var token = Request.Headers["Authorization"];
+        var result = await _userService.Update(token, request);
+        if (!result.Success) return BadRequest(new { message = result.Message });
+        return Ok(new { message = result.Message });
+    }
     ///<summary>
     /// Delete user
     ///</summary>
