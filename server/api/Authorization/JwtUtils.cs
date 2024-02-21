@@ -11,7 +11,7 @@ using api.Model.Entity;
 
 namespace api.Authorization
 {
-   
+
     public class JwtUtils : IJwtUtils
     {
         private readonly AppSettings _appSettings;
@@ -34,7 +34,7 @@ namespace api.Authorization
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-      
+
         public int? ValidateToken(string token)
         {
             if (token == null)
@@ -60,6 +60,48 @@ namespace api.Authorization
             catch
             {
                 return null;
+            }
+        }
+
+        public string GenerateResetPasswordToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddHours(1), // Imposta la scadenza del token di reset
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        public bool ValidateResetPasswordToken(string token, User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+
+                // Verifica che l'ID dell'utente nel token corrisponda all'utente specificato
+                return userId == user.Id;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

@@ -13,6 +13,7 @@ using api.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using api.Utilitis.Enum;
+using api.Models.DTOs.Request.Users;
 
 namespace api.Services
 {
@@ -20,14 +21,17 @@ namespace api.Services
     {
         private DataContext _context;
         private IJwtUtils _jwtUtils;
+        private readonly IEmailHelper _emailHelper;
 
         public UsersService(
             DataContext context,
-            IJwtUtils jwtUtils
+            IJwtUtils jwtUtils,
+            IEmailHelper emailHelper
             )
         {
             _context = context;
             _jwtUtils = jwtUtils;
+            _emailHelper = emailHelper;
         }
 
         public Task<int> GetUserId(string UserName)
@@ -356,6 +360,55 @@ namespace api.Services
             }
         }
 
+        public async Task<(bool Success, string Message)> SendRequestPasswordLost(RequestSendRequestDto model)
+        {
+            var user = _context.Users.First(x => x.Email == model.Email);
+            
+            if (user != null)
+            {
+                try
+                {
+                    var jwt = _jwtUtils.GenerateResetPasswordToken(user);
+                    return
+                        (
+                             await _emailHelper.SendEmailResetPswd(user.Email, user.FirstName + " " + user.LastName, jwt),
+                              $"Mail reset password sended to: {user.Email}"
+                         );
+                }  catch (Exception e)
+                {
+                    return(false, e.Message);
+                }
+
+            } else
+            {
+                return (false, $"User with Email {model.Email} not found");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> ResetPasswordUser(string token, ResetPasswordModelDto model)
+        {
+            var usr = _context.Users.First(x => x.Email == model.Email);
+            if(usr != null)
+            {
+               if ( _jwtUtils.ValidateResetPasswordToken(token, usr)) {
+                    
+                    if( model.Password == model.ConfirmPassword)
+                    {
+                    
+                        usr.Password = BCryptNet.HashPassword(model.Password);
+                        await _context.SaveChangesAsync();
+                        return (true, "Passwords sucessful change");
+                    }
+
+                    return (false, "Passwords don't match");
+               }
+
+                return (false, "Unauthorized");
+
+            }
+            return (false, "User not found");
+           
+        }
     }
 
 }

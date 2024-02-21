@@ -9,7 +9,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using api.Helpers;
 using Microsoft.AspNetCore.Http;
-
+using api.Models.DTOs.Request.Users;
 
 namespace api.Controllers;
 [Authorize]
@@ -23,7 +23,8 @@ public class UsersController : ControllerBase
 
     public UsersController(
         IUsersService userService,
-         IMapper mapper
+         IMapper mapper,
+         IEmailHelper mailHelper
         )
     {
 
@@ -81,7 +82,7 @@ public class UsersController : ControllerBase
         var result = await _userService.Authenticate(request);
 
         if (!result.Success) return NotFound(new { Message = result.Token });
-        return Ok(new { token = result.Token, userName= result.UserName });
+        return Ok(new { token = result.Token, userName = result.UserName });
     }
 
     ///<summary>
@@ -213,8 +214,8 @@ public class UsersController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update([FromForm] RequestUpdateUserDto request, int id)
     {
-        
-        var result = await _userService.Update(id,request);
+
+        var result = await _userService.Update(id, request);
         if (!result.Success) return BadRequest(new { message = result.Message });
         return Ok(new { message = result.Message });
     }
@@ -247,7 +248,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-       var response = await _userService.Delete(id);
+        var response = await _userService.Delete(id);
         if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "User deleted successfully" });
     }
@@ -281,6 +282,32 @@ public class UsersController : ControllerBase
         var response = await _userService.DeleteMyAvatar(token);
         if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "Avatar deleted successfully" });
+    }
+    [AllowAnonymous]
+    [HttpPost("send-email-reset-pswd")]
+    public async Task<IActionResult> SendRequestPasswordLost([FromBody] RequestSendRequestDto model)
+    {
+        var response = await _userService.SendRequestPasswordLost(model);
+        if (!response.Success) return BadRequest(new { Message = response.Message });
+        return Ok(new { message = response.Message });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("reset-user-pswd")]
+    public async Task<IActionResult> ResetPasswordUser([FromBody] ResetPasswordModelDto model)
+    {
+        // Verifica il token di ripristino password
+     
+        var result = await _userService.ResetPasswordUser(model.Token, model);
+
+        if (result.Success)
+        {
+            return Ok(new { Message = result.Message });
+        }
+        else
+        {
+            return BadRequest(new { Message = result.Message });
+        }
     }
 
 }

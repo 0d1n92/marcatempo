@@ -3,6 +3,7 @@ using api.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using api.Models.DTOs.Request.Users;
 
 namespace api.Interface
 {
@@ -23,5 +24,7 @@ namespace api.Interface
         Task<(bool Success, string Message)> DeleteAvatar(int userId);
         Task<(bool Success, string Message)> DeleteMyAvatar(string token);
         Task<int> GetUserId(string UserName);
+        Task<(bool Success, string Message)> SendRequestPasswordLost(RequestSendRequestDto model);
+        Task <(bool Success, string Message)>ResetPasswordUser(string token, ResetPasswordModelDto model);
     }
 }
