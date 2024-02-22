@@ -52,11 +52,6 @@ export default {
       rules: [
         (v) => !!v || this.$i18n.t('Is required'),
         (v) => (v && v.length >= 6) || this.$i18n.t('Error.Minimum 6'),
-        (v) => (v && /\d/.test(v)) || this.$i18n.t('Error.At least two digits'),
-        (v) => (v && v.match(/\d/g).length >= 2) ||
-          this.$i18n.t('Error.The password must contain at least 2 numbers and 4 characters'),
-        (v) => (v && /[a-zA-Z]/.test(v)) ||
-          this.$i18n.t('Error.The password must contain at least 2 numbers and 4 characters'),
       ],
     };
   },

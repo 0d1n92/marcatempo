@@ -47,15 +47,25 @@ export default {
             issuccess: response,
             message: self.$i18n.t('Success.Update password'),
           };
+          debugger;
+          self.error = {
+            isError: false,
+            message: '',
+          };
 
           setTimeout(() => {
             self.$router.push({ name: 'login' });
           }, 5000);
         })
         .catch((e) => {
+          debugger;
+          self.success = {
+            issuccess: false,
+            message: '',
+          };
           self.error = {
             isError: true,
-            message: e.message,
+            message: Object.values(e.response.data.errors)[0][0],
           };
         });
     },
