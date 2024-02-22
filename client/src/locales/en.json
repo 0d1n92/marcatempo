@@ -5,9 +5,11 @@
   "Users": "Users",
   "All": "All",
   "Absent": "Absent",
+  "Forgot password": "Forgot password",
   "Scan qrcode": "Scan qrcode",
   "Update qrcode": "Update QR",
   "Delete avatar": "Delete avatar",
+  "Repeat password":"Repeat password",
   "Date": "Date",
   "Update avatar": "Update avatar",
   "Administrator": "Administrator",
@@ -42,12 +44,15 @@
   "Filter by presents": " Filter by presents",
   "Present": "Present",
   "Success" : {
-   "Update successful": "Update successful"
+   "Update successful": "Update successful",
+   "Update password": "updated password please login"
   },
   "Error": {
+    "Password match":"Password must match",
     "Date must be valid": "the date must respect the format DD/MM/YYYY HH:mm",
     "Generic": "Generic Error",
     "Impossible calculate total": "Impossible calculate total",
+    "At least one digit":"At least one digit",
     "Information user": "impossible to get user information",
     "Save avatar": "impossible to save avatar",
     "Delete avatar": "impossible to delete avatar",
@@ -60,11 +65,15 @@
     "Username already taken": "Username already taken",
     "Email already taken": "Email already taken",
     "Update failed": "Update failed",
+    "Minimum 6": "must contain at least six characters",
     "Date Entry": "The entry date must be less than the exit date",
-    "Export Falied":"export failed, unable to download csv"
+    "Impossibile update pswd": "impossible to update password",
+    "Export Falied":"export failed, unable to download csv",
+    "User not found": "User not found"
   },
   "Dialog": {
     "Update qrcode": "Are you sure you want to update qrcode?",
-    "Must be less than 3 characters": "Must be less than 3 characters"
+    "Must be less than 3 characters": "Must be less than 3 characters",
+    "Send Mail": "Follow the instructions in the email to reset your password"
   }
 }

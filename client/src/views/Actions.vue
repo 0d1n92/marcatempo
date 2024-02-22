@@ -1,4 +1,3 @@
-v-card-subttile
 <template>
   <WireFrameVue>
     <div style="height: 60px, padding-bottom: 10px">
@@ -241,6 +240,9 @@ export default {
     },
   },
   methods: {
+    onEditOperator(value) {
+      this.name = value;
+    },
     onCacolateTotal() {
       Axios.post(
         `${process.env.VUE_APP_ROOT_API}/action/total`,

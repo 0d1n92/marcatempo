@@ -35,11 +35,16 @@ import Utils from '../../../mixins/utils';
 export default {
   name: 'IntervalDatesPicker',
   mixins: [Utils],
+  props: {
+    dates: {
+      type: Array,
+      default: () => [moment(new Date()).format('YYYY-MM-DD'), moment(new Date()).format('YYYY-MM-DD')],
+    },
+  },
   data() {
     return {
       moment,
-      dates: [],
-      datesFormat: [this.$options.filters.getDate(new Date()), this.$options.filters.getDate(new Date())],
+      datesFormat: [this.$options.filters.getDate(this.dates[0]), this.$options.filters.getDate(this.dates[1])],
       isOpen: false,
     };
   },

@@ -131,12 +131,6 @@ export default {
       if (this.user.role === Object.keys(enumRoles)[1]) {
         this.asideItemNavigation = [
           {
-            icon: 'mdi-monitor-dashboard',
-            title: this.$i18n.t('Dashboard'),
-            text: this.$i18n.t('Dashboard'),
-            route_name: 'dash-board',
-          },
-          {
             icon: 'mdi-account-group',
             title: this.$i18n.t('Users account'),
             text: this.$i18n.t('Users account'),

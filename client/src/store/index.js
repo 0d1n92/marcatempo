@@ -66,15 +66,19 @@ export default new Vuex.Store({
   },
   actions: {
     GetUser({ commit, state }) {
-      Axios.get(`${process.env.VUE_APP_ROOT_API}/users/user-info`, {
-        headers: { Authorization: state.token },
-      })
-        .then((response) => {
-          commit('GetUser', response.data.user);
+      return new Promise((resolve, reject) => {
+        Axios.get(`${process.env.VUE_APP_ROOT_API}/users/user-info`, {
+          headers: { Authorization: state.token },
         })
-        .catch((error) => {
-          commit('SetError', `${error}, ${i18n.t('Error.Information user')}`);
-        });
+          .then((response) => {
+            commit('GetUser', response.data.user);
+            resolve(response.data.user);
+          })
+          .catch((error) => {
+            commit('SetError', `${error}, ${i18n.t('Error.Information user')}`);
+            reject(error);
+          });
+      });
     },
     UploadAvatar({ commit, state }, formData) {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/save-avatar`, formData, {
@@ -108,7 +112,6 @@ export default new Vuex.Store({
         });
     },
     UpdateQrcode({ commit, state }, user) {
-      debugger;
       Axios.post(
         `${process.env.VUE_APP_ROOT_API}/qrcodes/update`,
         { token: user.qrCode },
@@ -118,7 +121,6 @@ export default new Vuex.Store({
         },
       )
         .then((response) => {
-          debugger;
           // eslint-disable-next-line no-param-reassign
           user.qrCode = response.data;
           return user.qrCode;
@@ -126,6 +128,16 @@ export default new Vuex.Store({
         .catch((error) => {
           commit('SetError', `${error}, impossible to update qrcode`);
         });
+    },
+    // eslint-disable-next-line no-unused-vars
+    ResetPassword({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        Axios.post(`${process.env.VUE_APP_ROOT_API}/users/reset-user-pswd`, payload)
+          .then((response) => resolve(response.data))
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
   },
   modules: {},

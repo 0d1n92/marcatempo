@@ -46,8 +46,11 @@
                 </v-toolbar>
               </v-card-title>
               <user-profile-form
+                ref="userProfileForm"
+                :disableSave="disableSave"
                 :validation="validation"
                 :disableQrcode="btnDisable"
+                @saveDisableAvatar="disableSave = false"
                 @updateQrCode="updateQrCode"
                 @save="save"
                 @close="close"
@@ -94,6 +97,7 @@ export default {
         username: null,
         email: null,
       },
+      disableSave: true,
       dialogDelete: false,
       btnDisable: false,
       update: true,
@@ -136,6 +140,16 @@ export default {
     options: {
       handler() {
         this.onGetUsers(this.options);
+      },
+      deep: true,
+    },
+    editedItem: {
+      handler() {
+        if (!this.$refs.userProfileForm.$refs.formUser.validate()) {
+          this.disableSave = true;
+        } else {
+          this.disableSave = false;
+        }
       },
       deep: true,
     },

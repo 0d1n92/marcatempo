@@ -8,10 +8,12 @@
   "Delete avatar": "Cancella avatar",
   "Update avatar": "Aggiorna avatar",
   "Date": "Data",
+  "Repeat password":"Ripeti password",
   "Modify Profile": "Modifica Profilo",
   "Administrator": "Amministratore",
   "Dates Interval": "Intervallo Date",
   "Actions":"Azioni",
+  "Forgot password": "Password Dimenticata",
   "Export to csv": "Esporta csv",
   "Reload table": "Ricarica Tabella",
   "Add Postmaker":"Aggiungi Timbratura",
@@ -42,11 +44,15 @@
    "Filter by presents": "Filtra per presenze",
   "Present": "Presenti",
   "Success" : {
-   "Update successful": "Aggiornamento riuscito"
+  "Update successful": "Aggiornamento riuscito",
+  "Update password": "Password aggiornata, esegui il login"
   },
   "Error": {
+     "Password match":"Le password devono coincidere",
     "Generic": "Errore generico",
-     "Impossible calculate total": "Impossibile calcolare i totali",
+    "Minimum 6": "Deve contenere almeno 6 caratteri",
+    "At least one digit":"Deve contenere almeno un numero",
+    "Impossible calculate total": "Impossibile calcolare i totali",
     "Information user": "impossibile ottenere le informazioni utente",
     "Impossible to get operations": "Impossibile ottenere informazioni operazioni",
     "Date must be valid": "La Data deve rispettare il formato DD/MM/YYYY HH:mm",
@@ -59,13 +65,15 @@
     "UpdateUser": "impossible aggiornare l'utente",
     "Username already taken": "Username già utilizzato",
     "Email already taken": "Email già utilizzata",
+    "Impossibile update pswd": "Impossibile aggiornare password",
     "Update failed": "Aggiornamento non riuscito",
     "Date Entry": "La data di entrata deve essere minore della data di uscita",
-    "Export Falied":"esportazione fallita, impossibile scaricare csv"
+    "Export Falied":"esportazione fallita, impossibile scaricare csv",
+    "User not found": "Utente non trovato"
   },
   "Dialog": {
     "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?",
-     "Must be less than 3 characters": "Deve contenere almeno 3 caratteri"
-
+     "Must be less than 3 characters": "Deve contenere almeno 3 caratteri",
+     "Send Mail": "Segui le istruzioni nella mail per resettare la password"
   }
 }
