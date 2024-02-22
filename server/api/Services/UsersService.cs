@@ -42,7 +42,7 @@ namespace api.Services
         {
             try
             {
-                var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username);
+                var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username || x.Email == model.Username);
                 if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
                 {
                     return (true, _jwtUtils.GenerateToken(user), user.Username);
@@ -111,6 +111,10 @@ namespace api.Services
 
                 if ( model.Avatar != null)
                     await PostAvatarUser(user.Id, model.Avatar);
+                var jwt = _jwtUtils.GenerateResetPasswordToken(user);
+
+                await _emailHelper.SendEmailAddedUser(user.Username, user.Email, user.FirstName + " " + user.LastName, jwt);
+                    
 
                 return (true, "User added");
 
@@ -387,7 +391,7 @@ namespace api.Services
 
         public async Task<(bool Success, string Message)> ResetPasswordUser(string token, ResetPasswordModelDto model)
         {
-            var usr = _context.Users.First(x => x.Email == model.Email);
+            var usr = _context.Users.FirstOrDefault(x => x.Email == model.Email);
             if(usr != null)
             {
                if ( _jwtUtils.ValidateResetPasswordToken(token, usr)) {
@@ -408,6 +412,23 @@ namespace api.Services
             }
             return (false, "User not found");
            
+        }
+        public async Task<(bool Success, string Message)> UpdatePassword (string token, RequestUserUpdatePswdDto model)
+        {
+            if (model.Password == model.ConfirmPassword) {
+                var userId = _jwtUtils.ValidateToken(token);
+                if (userId == null)
+                {
+                    return (false, "User not found");
+                }
+
+                var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+                user.Password = BCryptNet.HashPassword(model.Password);
+                return (true, "Passwords sucessful change");
+            }
+
+            return (false, "Passwords don't match");
+
         }
     }
 

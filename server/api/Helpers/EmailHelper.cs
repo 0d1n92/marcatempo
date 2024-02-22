@@ -17,16 +17,27 @@ namespace api.Helpers
             _config = config;
         }
 
+        public async Task<bool> SendEmailAddedUser(string username, string email, string name, string jwt)
+        {
+            var MailData = new MailData();
+            MailData.EmailSubject = "Reset Password Email Marcatempo";
+            MailData.EmailBody = $"User has been created with username: {username}. <br> Please reset your password :<a href=\"{_config["Client:url"]}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
+            MailData.EmailToName = name;
+            MailData.EmailToId = email;
+            return await SendMail(MailData);
+        }
+
         public async Task<bool> SendEmailResetPswd(string email, string name, string jwt)
         {
             var MailData = new MailData();
             MailData.EmailSubject = "Reset Password Email Marcatempo";
-            MailData.EmailBody = $"For reset password go to link :<a href=\"{_config["Client:url"]}/reset-password/{jwt}\">reset password page</a>";
+            MailData.EmailBody = $"For reset password go to link :<a href=\"{_config["Client:url"]}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
 
         }
+
 
         private  async Task<bool> SendMail(MailData mailData)
         {

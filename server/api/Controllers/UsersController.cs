@@ -138,6 +138,11 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult> Register(RequestRegisterDto request)
     {
+        if (!ModelState.IsValid)
+        {
+        
+            return BadRequest(ModelState);
+        }
         var user = _mapper.Map<User>(request);
         var qrcode = _mapper.Map<QRcode>(new QRcode());
         var result = await _userService.Register(request, qrcode, user);
@@ -297,8 +302,36 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> ResetPasswordUser([FromBody] ResetPasswordModelDto model)
     {
         // Verifica il token di ripristino password
-     
+        if (!ModelState.IsValid)
+        {
+
+            return BadRequest(ModelState);
+        }
+
         var result = await _userService.ResetPasswordUser(model.Token, model);
+
+        if (result.Success)
+        {
+            return Ok(new { Message = result.Message });
+        }
+        else
+        {
+            return BadRequest(new { Message = result.Message });
+        }
+    }
+    [Authorize]
+    [HttpPut("update-password")]
+    public async Task<IActionResult> UpdatePassword([FromBody] RequestUserUpdatePswdDto model)
+    {
+        var token = Request.Headers["Authorization"];
+        // Verifica il token di ripristino password
+        if (!ModelState.IsValid)
+        {
+
+            return BadRequest(ModelState);
+        }
+
+        var result = await _userService.UpdatePassword(token, model);
 
         if (result.Success)
         {

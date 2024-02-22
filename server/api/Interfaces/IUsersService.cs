@@ -26,5 +26,6 @@ namespace api.Interface
         Task<int> GetUserId(string UserName);
         Task<(bool Success, string Message)> SendRequestPasswordLost(RequestSendRequestDto model);
         Task <(bool Success, string Message)>ResetPasswordUser(string token, ResetPasswordModelDto model);
+        Task<(bool Success, string Message)> UpdatePassword(string token, RequestUserUpdatePswdDto model);
     }
 }
