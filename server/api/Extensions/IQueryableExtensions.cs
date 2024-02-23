@@ -16,7 +16,7 @@ public static class IQueryableExtensions
     /// <returns>The paginated query if the offset and the pagesize have values; the query itself otherwise</returns>
     public static IQueryable<T> Paginate<T>(this IQueryable<T> elements, int? page, int? pageSize)
     {
-        if (page.HasValue && pageSize.HasValue)
+        if (page.HasValue && pageSize.HasValue && pageSize != -1)
             return elements.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
         else
             return elements;

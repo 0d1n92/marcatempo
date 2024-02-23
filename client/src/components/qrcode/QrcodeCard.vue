@@ -7,6 +7,7 @@
       <div class="d-flex">
         <v-btn
           :href="url"
+          @click="getLinkQrcode()"
           class="mx-2 white--text"
           title="Download qrcode"
           :disabled="disabled"
@@ -32,14 +33,13 @@
       :show="showDialog"
       :title="$t('Update qrcode')"
       :description="`${$t('Dialog.Update qrcode')}\n ${$t('Inreversible operation')}`"
-      @agree="UpdateQrcode"
+      @agree="updateQrcode"
       @disagree="closeDialog"
     ></confirm-dialog>
   </div>
 </template>
 <script>
 import QrcodeVue from 'qrcode.vue';
-import Axios from 'axios';
 import ConfirmDialog from '../layout/Message/ConfirmDialog.vue';
 
 export default {
@@ -59,44 +59,30 @@ export default {
     return {
       url: '',
       showDialog: false,
-      tokenQr: this.user.qrCode,
     };
   },
-  watch: {
-    tokenQr(newVal) {
-      this.tokenQr = newVal;
-    },
-    user(newVal) {
-      this.tokenQr = newVal.qrCode;
+  computed: {
+    tokenQr() {
+      return this.user.qrCode;
     },
   },
   mounted() {
-    this.GetLinkQrcode();
+    this.getLinkQrcode();
+  },
+  update() {
+    this.getLinkQrcode();
   },
   methods: {
-    GetLinkQrcode() {
+    getLinkQrcode() {
       const img = this.$el.querySelector('canvas').toDataURL();
       this.url = img;
     },
-    UpdateQrcode() {
-      Axios.post(
-        `${process.env.VUE_APP_ROOT_API}/qrcodes/update`,
-        { token: this.tokenQr },
-        {
-          headers: { Authorization: this.$store.state.token },
-          // eslint-disable-next-line prettier/prettier
-        },
-      )
-        .then((response) => {
-          this.tokenQr = response.data.token;
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to update qrcode`);
-        });
+    updateQrcode() {
+      this.$emit('updateQrCode', this.user);
+      this.showDialog = false;
     },
     closeDialog() {
       this.showDialog = false;
-      console.log('close');
     },
   },
 };

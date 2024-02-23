@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.DTOs
 {
-    public class PostmarkerQRcodeResponseDto
+    public class ResponsePostmarkerQRcodeDto
     {
         public string Entry { get; set; } 
         public string Exit { get; set; }

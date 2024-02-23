@@ -4,6 +4,7 @@
       :options.sync="options"
       :headers="headerTraslate"
       :server-items-length="count"
+      :footer-props="{ 'items-per-page-options': [10, 20, 30, 40, -1] }"
       :loading="loading"
       :items="users"
       sort-by="Name"
@@ -44,31 +45,29 @@
                   <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
                 </v-toolbar>
               </v-card-title>
-              <user-profile-form :disableQrcode="btnDisable" @save="save" @close="close" :user="editedItem" />
+              <user-profile-form
+                ref="userProfileForm"
+                :disableSave="disableSave"
+                :validation="validation"
+                :disableQrcode="btnDisable"
+                @saveDisableAvatar="disableSave = false"
+                @updateQrCode="updateQrCode"
+                @save="save"
+                @close="close"
+                :user="editedItem"
+              />
             </v-card>
           </v-dialog>
           <ConfirmDialog
             :show="dialogDelete"
             @agree="deleteItemConfirm"
-            title="Delete user"
-            :description="`Are you sure you want to delete user ${editedItem.username}?`"
+            :title="$t('Deleting user')"
+            :description="`${$t('Are you sure you want to delete user')} ${editedItem.username}?`"
           />
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-hover v-slot="{ hover }">
-          <v-btn icon :color="hover ? 'blue' : 'grey darken-1'" @click="editItem(item)" title="Edit">
-            <v-icon small> mdi-pencil </v-icon>
-          </v-btn>
-        </v-hover>
-        <v-hover v-slot="{ hover }">
-          <v-btn icon :color="hover ? 'red' : 'grey darken-1'" @click="deleteItem(item)" title="Remove">
-            <v-icon small> {{ hover ? 'mdi-delete-empty' : 'mdi-delete' }} </v-icon>
-          </v-btn>
-        </v-hover>
-      </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <edit-delete-circle-btn :save="false" @onDeleteItem="deleteItem(item)" @onEditItem="editItem(item)" />
       </template>
     </v-data-table>
   </WireFrameVue>
@@ -78,20 +77,31 @@ import Axios from 'axios';
 import WireFrameVue from '../components/layout/WireFrame.vue';
 import ConfirmDialog from '../components/layout/Message/ConfirmDialog.vue';
 import UserProfileForm from '../components/users/UserProfileForm.vue';
+import Utils from '../mixins/utils';
+import EditDeleteCircleBtn from '../components/layout/Input/EditDeleteCircleBtn.vue';
 
 export default {
   name: 'UserList',
-  components: { WireFrameVue, ConfirmDialog, UserProfileForm },
+  components: {
+    WireFrameVue,
+    ConfirmDialog,
+    UserProfileForm,
+    EditDeleteCircleBtn,
+  },
+  mixins: [Utils],
   data() {
     return {
       search: '',
       dialog: false,
+      validation: {
+        username: null,
+        email: null,
+      },
+      disableSave: true,
       dialogDelete: false,
       btnDisable: false,
-      loading: true,
       update: true,
       options: {},
-      count: 0,
       qrcode: {},
       headers: [
         {
@@ -104,7 +114,6 @@ export default {
         { text: 'Role', value: 'roleName' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      users: [],
       editedIndex: -1,
       editedItem: {},
       defaultItem: {
@@ -130,7 +139,17 @@ export default {
   watch: {
     options: {
       handler() {
-        this.onGetUsers();
+        this.onGetUsers(this.options);
+      },
+      deep: true,
+    },
+    editedItem: {
+      handler() {
+        if (!this.$refs.userProfileForm.$refs.formUser.validate()) {
+          this.disableSave = true;
+        } else {
+          this.disableSave = false;
+        }
       },
       deep: true,
     },
@@ -151,33 +170,13 @@ export default {
   methods: {
     onSearch() {
       if (this.search.length > 3) {
-        this.onGetUsers();
+        this.onGetUsers({ ...this.options, name: this.search });
       } else if (this.search.length === 0) {
-        this.onGetUsers();
+        this.onGetUsers(this.options);
       }
     },
-    onGetUsers() {
-      // eslint-disable-next-line object-curly-newline
-      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-      // eslint-disable-next-line no-unused-expressions
-      Axios.get(`${process.env.VUE_APP_ROOT_API}/Users/users-list`, {
-        headers: { Authorization: this.$store.state.token },
-        params: {
-          page,
-          pageSize: itemsPerPage,
-          name: this.search,
-          sortBy: sortBy[0],
-          desc: sortDesc[0],
-        },
-      })
-        .then((response) => {
-          this.users = response.data.data;
-          this.count = response.data.count;
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
-        });
+    updateQrCode(user) {
+      this.$store.dispatch('UpdateQrcode', user);
     },
     initialize() {
       // eslint-disable-next-line no-unused-expressions
@@ -197,23 +196,9 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
-        });
-      this.users.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
     close() {
       this.dialog = false;
-      this.onGetUsers();
+      this.onGetUsers(this.options);
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
@@ -241,37 +226,6 @@ export default {
       }
       this.callBackCreate(formData);
     },
-    callBackCreate(formData) {
-      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then(() => {
-          this.close();
-        })
-        .catch((error) => {
-          console.log();
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
-        });
-    },
-    callBackUpdate(formData) {
-      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
-        headers: { Authorization: this.$store.state.token },
-      })
-        .then(() => {
-          this.close();
-        })
-        .catch((error) => {
-          this.$store.commit(
-            'SetError',
-            // eslint-disable-next-line comma-dangle
-            `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
-          );
-        });
-    },
     createFormData(avatar) {
       this.editedItem.avatar = avatar.base64;
       if (this.update) {
@@ -293,6 +247,60 @@ export default {
       });
 
       return formData;
+    },
+    callBackCreate(formData) {
+      Axios.post(`${process.env.VUE_APP_ROOT_API}/users/create`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          if (error.response.data.message === 'Username already taken') {
+            this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else if (error.response.data.message === 'Email already taken') {
+            this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else {
+            this.$store.commit(
+              'SetError',
+              // eslint-disable-next-line comma-dangle
+              `${error}, ${this.$i18n.t('Error.CreateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+            );
+          }
+        });
+    },
+    callBackUpdate(formData) {
+      Axios.put(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, formData, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          if (error.response.data.message === 'Username already taken') {
+            this.validation.username = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else if (error.response.data.message === 'Email already taken') {
+            this.validation.email = this.$i18n.t(`Error.${error.response.data.message}`);
+          } else {
+            this.$store.commit(
+              'SetError',
+              // eslint-disable-next-line comma-dangle
+              `${error}, ${this.$i18n.t('Error.UpdateUser')}: ${this.$i18n.t(`Error.${error.response.data.message}`)}`
+            );
+          }
+        });
+    },
+    deleteItemConfirm() {
+      Axios.delete(`${process.env.VUE_APP_ROOT_API}/users/${this.editedItem.id}`, {
+        headers: { Authorization: this.$store.state.token },
+      })
+        // eslint-disable-next-line no-unused-vars
+        .then((response) => {})
+        .catch((error) => {
+          this.$store.state.commit('SetError', `${error}, ${this.$i18n.t('Error.DeleteUser')}`);
+        });
+      this.users.splice(this.editedIndex, 1);
+      this.closeDelete();
     },
   },
 };

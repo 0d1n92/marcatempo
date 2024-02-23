@@ -2,7 +2,7 @@
 
 namespace api.DTOs
 {
-    public class AuthenticateRequestDto
+    public class RequestAuthenticateDto
     {
         [Required]
         public string Username { get; set; }

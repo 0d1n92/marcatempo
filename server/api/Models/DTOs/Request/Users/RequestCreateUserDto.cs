@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs
 {
-    public class CreateRequestUserDto
+    public class RequestCreateUserDto
     {
         [Required]
         public string FirstName { get; set; }

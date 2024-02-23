@@ -2,9 +2,13 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import QrcodeScan from '../views/QrcodeScan.vue';
 import Login from '../views/Login.vue';
-import DashBoard from '../views/DashBoard.vue';
 import UsersList from '../views/UsersList.vue';
 import Actions from '../views/Actions.vue';
+import Profile from '../views/Profile.vue';
+import ForgotPassword from '../views/ForgotPassword.vue';
+import MyActions from '../views/MyActions.vue';
+import ResetPassword from '../views/ResetPassword.vue';
+import UserUpdatePassword from '../views/UserUpdatePassword.vue';
 import store from '../store';
 import middlewarePipeline from './middleware-pipeline';
 import { auth, admin } from './middleware';
@@ -38,7 +42,15 @@ const routes = [
       {
         path: 'dashboard/:user',
         name: 'dash-board',
-        component: DashBoard,
+        component: MyActions,
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'actions/:username',
+        name: 'my-actions',
+        component: MyActions,
         meta: {
           middleware: [auth],
         },
@@ -58,6 +70,33 @@ const routes = [
         meta: {
           middleware: [auth, admin],
         },
+      },
+      {
+        path: 'user/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'user/update-password',
+        name: 'update-password',
+        component: UserUpdatePassword,
+        meta: {
+          middleware: [auth],
+        },
+      },
+      {
+        path: 'password-forgot',
+        name: 'password-forgot',
+        component: ForgotPassword,
+      },
+      {
+        path: 'reset-password',
+        name: 'reset-password',
+        query: { email: '', token: '' },
+        component: ResetPassword,
       },
     ],
   },

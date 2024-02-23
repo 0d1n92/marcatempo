@@ -1,7 +1,6 @@
 <template>
-  <v-avatar class="d-flex justify-center" color="indigo" :size="size">
-    <img v-if="base64" :src="base64 ? base64 : ''" />
-    <span v-else class="white--text text-h5">{{ initials }}</span>
+  <v-avatar class="d-flex justify-center" color="primary" :size="size">
+    <user-avatar :size="size" :base64="base64"></user-avatar>
     <v-expand-transition>
       <div v-if="hover" :title="$t('Update avatar')" style="width: 100%; height: 100%; position: absolute">
         <div class="transition-fast-in-fast-out red darken-2 v-card--reveal text-h2 white--text">
@@ -33,7 +32,10 @@
 </template>
 
 <script>
+import UserAvatar from './UserAvatar.vue';
+
 export default {
+  components: { UserAvatar },
   name: 'UserAvatarHover',
   props: {
     size: {
@@ -43,11 +45,6 @@ export default {
     base64: {
       type: [String, null],
       default: '',
-    },
-    initials: {
-      type: String,
-      default: 'AA',
-      required: true,
     },
     hover: {
       type: Boolean,
