@@ -14,6 +14,7 @@
     <user-profile-form
       ref="userProfileForm"
       :disableSave="disableSave"
+      :disableQrcode="$store.state.loggedUser.roleId === 1"
       @save="onSaveUser"
       @saveDisableAvatar="disableSave = false"
       :disableField="disableField"
