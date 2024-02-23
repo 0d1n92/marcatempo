@@ -50,6 +50,23 @@
         </td>
       </template>
     </v-data-table>
+    <v-row>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <v-col>
+        <v-card elevation="0">
+          <v-card-title
+            >{{ $t('Total') + ': ' }} <span>{{ this.total }}</span></v-card-title
+          >
+          <v-card-subtitle>{{ $t('Adds up the total users') }}</v-card-subtitle>
+          <v-card-actions>
+            <v-btn color="primary" @click="onCacolateTotal"> {{ $t('Calcolate') }} </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </WireFrameVue>
 </template>
 
@@ -68,6 +85,7 @@ export default {
   data() {
     return {
       expanded: [],
+      total: '0,00',
       present: 0,
       dates: [moment().startOf('week').format('YYYY-MM-DD'), moment().endOf('week').format('YYYY-MM-DD')],
       optionsPresent: [
@@ -141,6 +159,25 @@ export default {
     onReset() {
       this.dates = [moment().startOf('week').format('YYYY-MM-DD'), moment().endOf('week').format('YYYY-MM-DD')];
       this.actions();
+    },
+
+    onCacolateTotal() {
+      Axios.post(
+        `${process.env.VUE_APP_ROOT_API}/action/total`,
+        {
+          TotalsUsers: this.actions.map((x) => x.total.toFixed(2)),
+        },
+        {
+          headers: { Authorization: this.$store.state.token },
+          // eslint-disable-next-line comma-dangle
+        }
+      )
+        .then((response) => {
+          this.total = response.data.totals;
+        })
+        .catch((error) => {
+          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible calculate total')}`);
+        });
     },
   },
   watch: {

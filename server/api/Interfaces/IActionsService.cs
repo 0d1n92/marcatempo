@@ -15,5 +15,6 @@ namespace api.Interface
         (bool Success, string Totals) CalcolateTotal(RequestActionTotalDto request);
         (bool Success, MemoryStream stream) ExportCsvFile(List<RequestActionCsvDto> request);
         Task<(bool Success, string Message)> AddAction(int id, RequestAddActionDto request);
+        Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> UserActionListAsync(int? page, int? pageSize, RequestActionListDto request, string token);
     }
 }

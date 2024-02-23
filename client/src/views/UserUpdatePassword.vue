@@ -49,12 +49,20 @@ export default {
         .then(() => {
           this.showSucessBox();
         })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossibile update pswd')}`);
+        .catch((e) => {
+          this.success = {
+            issuccess: false,
+            message: '',
+          };
+          this.error = {
+            isError: true,
+            message: Object.values(e.response.data.errors)[0][0],
+          };
         });
     },
 
     showSucessBox() {
+      this.error = { isError: false, message: '' };
       this.success.issuccess = true;
       this.success.message = 'Password changed';
       setTimeout(() => {

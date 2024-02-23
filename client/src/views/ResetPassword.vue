@@ -47,7 +47,6 @@ export default {
             issuccess: response,
             message: self.$i18n.t('Success.Update password'),
           };
-          debugger;
           self.error = {
             isError: false,
             message: '',
@@ -58,7 +57,6 @@ export default {
           }, 5000);
         })
         .catch((e) => {
-          debugger;
           self.success = {
             issuccess: false,
             message: '',

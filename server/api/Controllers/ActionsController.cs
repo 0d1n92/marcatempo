@@ -89,7 +89,7 @@ public class ActionsController : ControllerBase
     /// <response code="400">Bad Request</response> 
     /// <response code="401">Unauthorized</response>
     /// 
-    [AuthorizeAdmin]
+    [Authorize]
     [HttpPost("total")]
     public  IActionResult CalcolateTotal(RequestActionTotalDto request)
     {
@@ -134,6 +134,25 @@ public class ActionsController : ControllerBase
         if (!response.Success) return BadRequest(new { Message = response.Message });
         return Ok(new { message = "Action added" });
     }
-
+    ///<summary>
+    /// Get List of Action a user
+    ///</summary>
+    /// <param name="page"></param>
+    /// <param name="pageSize"></param>
+    ///  <param name="request"></param>
+    /// <response code="200">Success</response>
+    /// <response code="400">Bad Request</response> 
+    /// <response code="401">Unauthorized</response>
+    /// 
+    [Authorize]
+    [HttpPost("useractions")]
+    public async Task<ActionResult<PaginatedList<List<ResponseListofActionUsersDto>>>> UserActionListAsync(int? page, int? pageSize, RequestActionListDto request)
+    {
+        var token = Request.Headers["Authorization"];
+        
+        var result = await _actService.UserActionListAsync(page, pageSize, request, token);
+        if (!result.Success) return BadRequest(new { message = result.Message });
+        return Ok(new PaginatedList<ResponseListofActionUsersDto>(result.Count, _mapper.Map<List<ResponseListofActionUsersDto>>(result.Items)));
+    }
 }
 

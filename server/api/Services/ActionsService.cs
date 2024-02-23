@@ -19,13 +19,30 @@ namespace api.Services;
 public class ActionsService : IActionsService
 {
     private DataContext _context;
+    private readonly IJwtUtils _jwtUtils;
     public ActionsService(
           DataContext context
+        , IJwtUtils jwtUtils
         )
     {
-        _context = context;
+       _jwtUtils = jwtUtils;
+       _context = context;
     }
-    public async Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
+
+    public async Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> UserActionListAsync(int? page, int? pageSize, RequestActionListDto request, string token)
+    {
+        var usrid = _jwtUtils.ValidateToken(token);
+        var usr = _context.Users.FirstOrDefault(x => x.Id == usrid);
+        if(usr != null)
+        {
+            request.UsersName = new List <string> { usr.Username };
+            var response = await OperatorActionListAsync(page, pageSize, request);
+            return response;
+        }
+        return (false, "User not found", 0, new List<UserActions>());
+    }
+    
+        public async Task<(bool Success, string Message, int Count, IEnumerable<UserActions> Items)> OperatorActionListAsync(int? page, int? pageSize, RequestActionListDto request)
     {
         try
         {
