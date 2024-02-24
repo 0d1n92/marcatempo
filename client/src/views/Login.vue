@@ -72,20 +72,19 @@ export default {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
         .then((response) => {
           this.$store.commit('SetJwtToken', response.data.token);
-          if (response.data.userName !== self.$store.state.loggedUser.username) {
-            self.$store.dispatch('GetUser').then((usr) => {
-              if (usr.roleId === 1) {
-                self.$router.push({
-                  name: 'actions',
-                });
-              } else {
-                self.$router.push({
-                  name: 'dash-board',
-                  params: { user: response.data.userName },
-                });
-              }
-            });
-          }
+
+          self.$store.dispatch('GetUser').then((usr) => {
+            if (usr.roleId === 1) {
+              self.$router.push({
+                name: 'actions',
+              });
+            } else {
+              self.$router.push({
+                name: 'dash-board',
+                params: { user: response.data.userName },
+              });
+            }
+          });
         })
         .catch((error) => {
           self.error = {
