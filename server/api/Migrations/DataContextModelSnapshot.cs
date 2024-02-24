@@ -31,9 +31,6 @@ namespace api.Migrations
                     b.Property<DateTime?>("Exit")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("GiustificationId")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("IsPresent")
                         .HasColumnType("tinyint(1)");
 
@@ -41,8 +38,6 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GiustificationId");
 
                     b.HasIndex("UserId");
 
@@ -55,6 +50,9 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
@@ -64,13 +62,10 @@ namespace api.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("code")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("note")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -87,22 +82,22 @@ namespace api.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("varchar(40)");
+
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("token")
-                        .IsRequired()
-                        .HasColumnType("varchar(40)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("Token")
                         .IsUnique();
 
-                    b.HasIndex("token")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("QRcodes");
@@ -111,65 +106,65 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2285),
-                            UserId = 2,
-                            token = "81a130d2-502f-4cf1-a376-63edeb000e9f"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(91),
+                            Token = "81a130d2-502f-4cf1-a376-63edeb000e9f",
+                            UserId = 2
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2288),
-                            UserId = 3,
-                            token = "67c5064b-7160-4d05-a62e-1799f0d13270"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(94),
+                            Token = "67c5064b-7160-4d05-a62e-1799f0d13270",
+                            UserId = 3
                         },
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2307),
-                            UserId = 4,
-                            token = "b936fb76-2be4-4423-8299-c7e084e75a9c"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(125),
+                            Token = "753085f7-0900-4b76-9ba3-5992c1e7605e",
+                            UserId = 4
                         },
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2309),
-                            UserId = 5,
-                            token = "4bfa4dda-356e-460a-b03f-71850d69eabc"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(127),
+                            Token = "b65edeef-01bb-4419-ba88-e89e4124a801",
+                            UserId = 5
                         },
                         new
                         {
                             Id = 5,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2321),
-                            UserId = 6,
-                            token = "29088189-957f-4a6b-887b-818e879dfe0e"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(129),
+                            Token = "75c59376-3d67-447c-adc2-50dcb47954c0",
+                            UserId = 6
                         },
                         new
                         {
                             Id = 6,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2323),
-                            UserId = 7,
-                            token = "a36d8ed2-1b34-476d-aa4b-185995c92f44"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(130),
+                            Token = "84268cdf-8e13-4fe4-a938-5c0f050e1fe1",
+                            UserId = 7
                         },
                         new
                         {
                             Id = 7,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2325),
-                            UserId = 8,
-                            token = "72fa217e-d3e6-4614-afea-be2e9abb84e7"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(132),
+                            Token = "f5e03bc7-306a-482c-9950-f099d911e8f0",
+                            UserId = 8
                         },
                         new
                         {
                             Id = 8,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2327),
-                            UserId = 9,
-                            token = "2d715fe2-4a53-4c04-a595-c29a87e9bd9e"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(134),
+                            Token = "0ae939ae-1083-412a-9e91-5ed7e7e2d4c7",
+                            UserId = 9
                         },
                         new
                         {
                             Id = 9,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(2328),
-                            UserId = 10,
-                            token = "6919b7a9-e5e6-4871-9bf8-38c33329ed69"
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 706, DateTimeKind.Local).AddTicks(135),
+                            Token = "74373076-5485-4791-a09f-63afcd7f87df",
+                            UserId = 10
                         });
                 });
 
@@ -257,122 +252,122 @@ namespace api.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 39, 938, DateTimeKind.Local).AddTicks(5044),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 39, 938, DateTimeKind.Local).AddTicks(5078),
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 43, 407, DateTimeKind.Local).AddTicks(6660),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 43, 407, DateTimeKind.Local).AddTicks(6707),
                             Email = "admin@mail.com",
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "$2a$11$e/16/tKRGgcNXRoo8McLyedGIUXmCzRyzu4SF45y5a4cUv/5j54qq",
+                            Password = "$2a$11$fbCDBRGE7WLFZQNk2raLk.JtXRLncrGB9dVHXwVUejXb12cLdYBTa",
                             RoleId = 1,
                             Username = "Administrator"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 80, DateTimeKind.Local).AddTicks(3580),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 80, DateTimeKind.Local).AddTicks(3644),
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 43, 550, DateTimeKind.Local).AddTicks(8265),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 43, 550, DateTimeKind.Local).AddTicks(8325),
                             Email = "operator@mail.com",
                             FirstName = "operator",
                             LastName = "operator",
-                            Password = "$2a$11$w8Aaj5kmzqjtQT.1F3k0HOCivEpGis8maBYXtevzOmvaC..B7Us1u",
+                            Password = "$2a$11$97njbg7zgrpoQCD/fGKqiOE6ddB3eqjH252qKTsdMFfltx5hZuI/i",
                             RoleId = 2,
                             Username = "Operator"
                         },
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 224, DateTimeKind.Local).AddTicks(1415),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 224, DateTimeKind.Local).AddTicks(1446),
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 43, 696, DateTimeKind.Local).AddTicks(2722),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 43, 696, DateTimeKind.Local).AddTicks(2755),
                             Email = "pippo@mail.com",
                             FirstName = "Jonh",
                             LastName = "Doe",
-                            Password = "$2a$11$U045xWyqFkCLaxtuPAa1ROeXR7ODlNm47J8Jvil23E7JNSjeBK3yO",
+                            Password = "$2a$11$GJg7caCgdB3zJCy3h0.dque/q7Mo2ywhR842EgSUoh3LdPWh8MKnK",
                             RoleId = 2,
                             Username = "Pippo"
                         },
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 368, DateTimeKind.Local).AddTicks(3593),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 368, DateTimeKind.Local).AddTicks(3651),
-                            Email = "chester_murphy@wolffconn.us",
-                            FirstName = "Emma",
-                            LastName = "Johnston",
-                            Password = "$2a$11$W2UMOADMBR.O5dWM/ixceOaYSG0Y7jlOfqLpdHcNhDb9XKj8/k0j2",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 43, 840, DateTimeKind.Local).AddTicks(1403),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 43, 840, DateTimeKind.Local).AddTicks(1503),
+                            Email = "trevor_turner@romaguera.biz",
+                            FirstName = "Jalyn",
+                            LastName = "Pfeffer",
+                            Password = "$2a$11$hu32FSh2N3wx0cUD1/8IzO4ow3hxHbqYOfERlpk0abMWUmzLgS2K2",
                             RoleId = 2,
-                            Username = "logan"
+                            Username = "kariane_deckow"
                         },
                         new
                         {
                             Id = 5,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 511, DateTimeKind.Local).AddTicks(245),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 511, DateTimeKind.Local).AddTicks(264),
-                            Email = "frank.block@braun.ca",
-                            FirstName = "Darren",
-                            LastName = "Becker",
-                            Password = "$2a$11$1FCMIKL1Vl.dwJkObcukNuEjp.X6ggFKr0Io4z/ZSagm4Tt/otYj2",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 43, 983, DateTimeKind.Local).AddTicks(7902),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 43, 983, DateTimeKind.Local).AddTicks(7918),
+                            Email = "maeve_mccullough@goodwin.co.uk",
+                            FirstName = "Vergie",
+                            LastName = "Parker",
+                            Password = "$2a$11$7S6t81/FC/DBezMtl89jEOUK.1r4ZMbVhFowTMR7ikMq3eveun6nq",
                             RoleId = 2,
-                            Username = "zion_leuschke"
+                            Username = "issac"
                         },
                         new
                         {
                             Id = 6,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 652, DateTimeKind.Local).AddTicks(9299),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 652, DateTimeKind.Local).AddTicks(9319),
-                            Email = "claudie@collins.ca",
-                            FirstName = "Karlee",
-                            LastName = "Rogahn",
-                            Password = "$2a$11$kLFRcKVdutm8WRVqUcxxkO7IqzsM/W448eETMMZ3Msts3vNzrHmLu",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 131, DateTimeKind.Local).AddTicks(3921),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 44, 131, DateTimeKind.Local).AddTicks(3940),
+                            Email = "liliana@roberts.us",
+                            FirstName = "Marina",
+                            LastName = "Ruecker",
+                            Password = "$2a$11$TvtBwus8LoA4map/Quhr.OzIlQdMa6FfUYpIEXl6Q08BFPhh2wRLe",
                             RoleId = 2,
-                            Username = "leonard_maggio"
+                            Username = "teresa_conn"
                         },
                         new
                         {
                             Id = 7,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 800, DateTimeKind.Local).AddTicks(3831),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 800, DateTimeKind.Local).AddTicks(3852),
-                            Email = "morgan@erdman.com",
-                            FirstName = "Janice",
-                            LastName = "Botsford",
-                            Password = "$2a$11$Hp44skb3LcsyaXZBRTLX6eiL6XAegppQJgR0l/kmaYxhOQj2/MfXy",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 274, DateTimeKind.Local).AddTicks(8602),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 44, 274, DateTimeKind.Local).AddTicks(8617),
+                            Email = "daron_marvin@hoegerhomenick.info",
+                            FirstName = "Verona",
+                            LastName = "Streich",
+                            Password = "$2a$11$UzEtKjshRmUvffdO2r7qEu6T1TurXLUVUkYEFwWwxyaDNIuco6Uou",
                             RoleId = 2,
-                            Username = "harry.kuhn"
+                            Username = "hester.beatty"
                         },
                         new
                         {
                             Id = 8,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 40, 942, DateTimeKind.Local).AddTicks(3083),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 40, 942, DateTimeKind.Local).AddTicks(3104),
-                            Email = "yasmeen@sauerwhite.info",
-                            FirstName = "Otha",
-                            LastName = "Turner",
-                            Password = "$2a$11$vlGqf4Yw/sgHojiKHT5jL..idXY0CrNgR/nMvtvFuSr/By0utGkYq",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 418, DateTimeKind.Local).AddTicks(4377),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 44, 418, DateTimeKind.Local).AddTicks(4396),
+                            Email = "eloisa@gibson.ca",
+                            FirstName = "Pauline",
+                            LastName = "Kertzmann",
+                            Password = "$2a$11$3lXF7kIQZqpLreOW4Edcl.IomnkIf7/9.1e52WPm3dhtZqFYclMWa",
                             RoleId = 2,
-                            Username = "pink"
+                            Username = "elliott.hoppe"
                         },
                         new
                         {
                             Id = 9,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 84, DateTimeKind.Local).AddTicks(997),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 41, 84, DateTimeKind.Local).AddTicks(1016),
-                            Email = "barry@collier.biz",
-                            FirstName = "Ibrahim",
-                            LastName = "Rice",
-                            Password = "$2a$11$AtE7WWwKrTywD9c4PCbw8eUstdWf0qjXoSHWOo/R1FymTvXJG8Z/q",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 561, DateTimeKind.Local).AddTicks(6507),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 44, 561, DateTimeKind.Local).AddTicks(6531),
+                            Email = "zoie@mckenziestracke.name",
+                            FirstName = "Lawrence",
+                            LastName = "Weissnat",
+                            Password = "$2a$11$pjaPdU5.gO5SSnS0/7CyteDMTzDt1/tT/GFefNpac5jVAUOKGydC.",
                             RoleId = 2,
-                            Username = "aryanna"
+                            Username = "corine"
                         },
                         new
                         {
                             Id = 10,
-                            CreationDate = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(1931),
-                            DateOfBirth = new DateTime(2022, 8, 6, 17, 32, 41, 226, DateTimeKind.Local).AddTicks(1956),
-                            Email = "elisha@block.co.uk",
-                            FirstName = "Flavie",
-                            LastName = "Hirthe",
-                            Password = "$2a$11$3XTeu.1XaJyZiudlcVJJ.uw2brkzLlpb26IlHq5wqxGF4SDFfF6m2",
+                            CreationDate = new DateTime(2022, 12, 30, 21, 44, 44, 705, DateTimeKind.Local).AddTicks(9619),
+                            DateOfBirth = new DateTime(2022, 12, 30, 21, 44, 44, 705, DateTimeKind.Local).AddTicks(9638),
+                            Email = "linnea@sengerhayes.ca",
+                            FirstName = "Kaitlin",
+                            LastName = "Zieme",
+                            Password = "$2a$11$unM.th9y16A/TLJWC2SnAe2V1i43EYZU9XJCHqE/PxAyqI8QEcbDq",
                             RoleId = 2,
-                            Username = "rusty.yundt"
+                            Username = "clotilde_swaniawski"
                         });
                 });
 
@@ -382,13 +377,13 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Metalabel")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("metaLabel")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -400,15 +395,9 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Model.Entity.Action", b =>
                 {
-                    b.HasOne("api.Model.Entity.Giustification", "Giustification")
-                        .WithMany("Activitis")
-                        .HasForeignKey("GiustificationId");
-
                     b.HasOne("api.Model.Entity.User", "User")
                         .WithMany("Activities")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Giustification");
 
                     b.Navigation("User");
                 });
@@ -443,11 +432,6 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("api.Model.Entity.Giustification", b =>
-                {
-                    b.Navigation("Activitis");
                 });
 
             modelBuilder.Entity("api.Model.Entity.Role", b =>

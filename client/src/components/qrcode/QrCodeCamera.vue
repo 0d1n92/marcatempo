@@ -1,4 +1,5 @@
 <template>
+  <!-- se la webcam non funziona mettere props camera='auto' funziona solo in ssl -->
   <qrcode-stream v-if="alertData.reloaded" :track="paintOutline" :camera="camera" @decode="onDecode" @init="onInit">
     <v-btn absolute color="blue-grey" fab @click="switchCamera">
       <v-icon dark>mdi-camera-switch</v-icon>

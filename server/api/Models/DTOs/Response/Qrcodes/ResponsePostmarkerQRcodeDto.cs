@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace api.DTOs
 {
-    public class PostmarkerQRcodeResponseDto
+    public class ResponsePostmarkerQRcodeDto
     {
-        public DateTime? Entry { get; set; } 
-        public DateTime? Exit { get; set; }
+        public string Entry { get; set; } 
+        public string Exit { get; set; }
     }
 }
    

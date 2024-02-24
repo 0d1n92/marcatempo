@@ -56,11 +56,11 @@ public class QRController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("postmark")]
-    public async Task<ActionResult> FindPostmark(PostmarkerQRcodeRequestDto request)
+    public async Task<ActionResult> FindPostmark(RequestPostmarkerQRcodeDto request)
     {
         var response = await _qrService.Postmark(request);
         if (!response.Success) return BadRequest(new { Message = response.Message });
-        var data = _mapper.Map<Model.Entity.Action, PostmarkerQRcodeResponseDto>(response.data);
+         var data = _mapper.Map<Model.Entity.Action, ResponsePostmarkerQRcodeDto>(response.data);
         return Ok(new { message = response.Message, data = data });
     }
 
@@ -73,9 +73,9 @@ public class QRController : ControllerBase
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpPost("update")]
-    public async Task<ActionResult> UpdateQrcode( QrcCodeDtoRequest qrcode )
+    public async Task<ActionResult> UpdateQrcode( RequestQrcCodeDto qrcode )
     {
-        var data = await _qrService.UpdateQrcode(new Guid(qrcode.token));
+        var data = await _qrService.UpdateQrcode(new Guid(qrcode.Token));
         if (!data.Success) return BadRequest(new { Message = data.Message });
         return Ok(data.data);
     }

@@ -12,21 +12,24 @@ namespace api.Helpers
         public AutoMapperProfile()
         {
             CreateMap<EnumRoles, Role>().ConstructUsing((src, dest) => new Role { Id = (int)src }); 
-            CreateMap<User, CreateRequestUserDto>()
+            CreateMap<User, RequestCreateUserDto>()
                .ForMember(cr => cr.Role, opt => opt.MapFrom(usr => usr.Role.Name))
                .ForMember(cr => cr.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap(); 
-            CreateMap<User, AuthenticateResponseDto>()
+            CreateMap<User, ResponseAuthenticateDto>()
                 .ForMember(ar => ar.RoleName, opt => opt.MapFrom(usr => usr.Role.Name))
-                .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault())).ReverseMap();
-            CreateMap<User, ResponsUsersDto>().ForMember(x => x.QrCode, opt => opt.MapFrom(usr => usr.QRCode.token))
+                .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault()))
+                .ForMember(ar => ar.QrCode, opt => opt.MapFrom(usr => usr.QRCode.Token)).ReverseMap();
+            CreateMap<User, ResponsUsersDto>().ForMember(x => x.QrCode, opt => opt.MapFrom(usr => usr.QRCode.Token))
                 .ForMember(ar => ar.Avatar, opt => opt.MapFrom(opt => opt.UserMetas.Select(x => x.Value).FirstOrDefault()))
                 .ForMember(x => x.RoleName, opt => opt.MapFrom(usr => usr.Role.Name)).ReverseMap(); 
-            CreateMap<User, ResponseListofActionUsersDto>()
-                .ForMember(rla => rla.Actions, opt => opt.MapFrom(usr => usr.Activities.Select(act => new ActionDto { Name = usr.FirstName, Surname = usr.LastName, IsPresent = act.IsPresent, Entry = act.Entry, Exit = act.Exit })
-                .ToList())).ReverseMap();
-            CreateMap<Model.Entity.Action, PostmarkerQRcodeResponseDto>().ConstructUsing(act => new PostmarkerQRcodeResponseDto { Entry = act.Entry, Exit = act.Exit}).ReverseMap();
-            CreateMap<RegisterRequestDto, User>();
-            CreateMap<UpdateRequestUserDto, User>()
+            CreateMap<UserActions, ResponseListofActionUsersDto>()
+                 .ForMember(rla => rla.UserName, opt => opt.MapFrom(usr => usr.UserName))
+                .ForMember(rla => rla.Total , opt => opt.MapFrom( usr => String.Format("{0:0.00}", usr.Total)))
+                .ForMember(rla => rla.Actions, opt => opt.MapFrom(usr => usr.Actions.Select(act => new ActionDto { Id = act.Id, Entry = (act.Entry.HasValue) ? act.Entry.Value.ToString("dd/MM/yyyy HH:mm") : null,  Exit = (act.Exit.HasValue) ? act.Exit.Value.ToString("dd/MM/yyyy HH:mm") : null })
+                .ToList())).ForMember(x => x.Date, opt => opt.MapFrom( usr =>  usr.Date.ToString("dd/MM/yyyy"))  ).ReverseMap();
+            CreateMap<Model.Entity.Action, ResponsePostmarkerQRcodeDto>().ConstructUsing(act => new ResponsePostmarkerQRcodeDto { Entry = (act.Entry.HasValue)? act.Entry.Value.ToString("dd/MM/yyyy HH:mm") : null, Exit = (act.Exit.HasValue) ? act.Exit.Value.ToString("MM/dd/yyyy HH:mm"): null }).ReverseMap();
+            CreateMap<RequestRegisterDto, User>();
+            CreateMap<RequestUpdateUserDto, User>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {

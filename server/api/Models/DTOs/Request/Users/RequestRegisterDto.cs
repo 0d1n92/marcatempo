@@ -2,7 +2,7 @@
 
 namespace api.DTOs
 {
-    public class RegisterRequestDto
+    public class RequestRegisterDto
     {
         [Required]
         public string FirstName { get; set; }
@@ -15,6 +15,8 @@ namespace api.DTOs
         [Required]
         public int RoleId  { get; set; }
         [Required]
+        [MinLength(6, ErrorMessage = "The password must contain at least 6 characters")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d).{6,}$", ErrorMessage = "The password must contain at least 2 numbers and 4 characters")]
         public string Password { get; set; }
     }
 }

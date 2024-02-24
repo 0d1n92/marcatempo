@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation style="position: relative">
+  <v-form ref="formUser" v-model="valid" lazy-validation style="position: relative">
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" md="6">
@@ -7,7 +7,6 @@
             <user-avatar-hover
               :base64="avatar"
               :hover="hover"
-              :initials="userInitials"
               size="200"
               iconSize="40"
               @uploadAvatar="uploadAvatar"
@@ -16,28 +15,61 @@
           </v-hover>
         </v-col>
         <v-col cols="12" sm="6" md="6">
-          <QrcodeCard :disabled="disableQrcode" :user="user" />
+          <QrcodeCard @updateQrCode="updateQrCode" :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.firstName" label="Name"></v-text-field>
+          <v-text-field
+            :disabled="disableField.name"
+            :rules="rules"
+            v-model="user.firstName"
+            :label="$t('Name')"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.lastName" label="Surname"></v-text-field>
+          <v-text-field
+            :disabled="disableField.surname"
+            :rules="rules"
+            v-model="user.lastName"
+            :label="$t('Lastname')"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="rules" v-model="user.username" label="Username"></v-text-field>
+          <v-text-field
+            :rules="[...rules, resetValidation]"
+            v-model="user.username"
+            :error-messages="validation.username"
+            label="Username"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field :rules="emailRules" v-model="user.email" label="Email"></v-text-field>
+          <v-text-field
+            :rules="[...emailRules, resetValidation]"
+            :error-messages="validation.email"
+            v-model="user.email"
+            label="Email"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-select :items="roles" v-model="user.roleName" label="Role"></v-select>
+          <v-select
+            :items="roles"
+            :rules="[(v) => !!v || this.$i18n.t('Is required')]"
+            :disabled="disableField.role"
+            v-model="user.roleName"
+            item-value="value"
+            item-text="text"
+            :label="$t('Role')"
+          ></v-select>
         </v-col>
       </v-row>
       <v-row>
         <v-col sm="3" offset-sm="9" class="text-right">
-          <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-          <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+          <v-btn class="mr-3" color="error" @click="close"
+            ><v-icon small> mdi-close-thick </v-icon> {{ $t('Disagree') }}
+          </v-btn>
+          <v-btn :disabled="disableSave" color="success" :title="$t('Save')" @click="save">
+            <v-icon small> mdi-content-save </v-icon>
+            {{ $t('Save') }}
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -47,10 +79,12 @@
 import QrcodeCard from '../qrcode/QrcodeCard.vue';
 import enumRoles from '../../enums/enumRoles';
 import UserAvatarHover from './UserAvatarHover.vue';
+import Utils from '../../mixins/utils';
 
 export default {
-  name: 'UsersAdminForm',
+  name: 'UsersProfileForm',
   components: { QrcodeCard, UserAvatarHover },
+  mixins: [Utils],
   props: {
     user: {
       type: Object,
@@ -60,42 +94,88 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  mounted() {
-    this.rules = [(v) => !!v || 'Is required', (v) => (v && v.length <= 10) || 'Must be less than 3 characters'];
-    this.userInitials = `${this.user.firstName[0]}${this.user.lastName[0]}`;
+    disableSave: {
+      type: Boolean,
+      default: false,
+    },
+    disableField: {
+      type: Object,
+      default: () => ({
+        name: false,
+        surname: false,
+        role: false,
+      }),
+    },
+    validation: {
+      type: Object,
+      default: () => ({
+        username: null,
+        email: null,
+      }),
+    },
   },
   data() {
     return {
-      roles: Object.keys(enumRoles).filter((item) => item !== 'Guest'),
       rules: [],
       cancelAvatar: false,
-      emailRules: [(v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'],
+      emailRules: [
+        (v) => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || this.$i18n.t('E-mail must be valid'),
+      ],
       error: true,
-      avatar: this.user.avatar == null ? null : `data:image/png;base64,${this.user.avatar}`,
+      avatar: this.user.avatar == null ? null : this.user.avatar,
       file: null,
-      userInitials:
-        this.user.firstName && this.user.firstName.lenght > 0
-          ? `${this.user.firstName[0]}${this.user.lastName[0]}`
-          : '',
       valid: true,
+      validationUsr: [],
     };
+  },
+  mounted() {
+    this.rules = [
+      (v) => !!v || this.$i18n.t('Is required'),
+      (v) => (v && v.length >= 3) || this.$i18n.t('Dialog.Must be less than 3 characters'),
+    ];
+  },
+  computed: {
+    roles() {
+      const roles = [];
+      Object.keys(enumRoles).forEach((item) => {
+        if (item !== 'Guest') {
+          roles.push({ text: this.$i18n.t(item), value: item });
+        }
+      });
+      return roles;
+    },
+    saveDisable() {
+      return this.disableSave;
+    },
   },
   watch: {
     user(newVal) {
-      this.$refs.form.resetValidation();
-      if (newVal && newVal.lastName && newVal.firstName && newVal.firstName[0] && newVal.firstName[0]) {
-        this.userInitials = `${newVal.firstName[0]}${newVal.lastName[0]}`;
+      this.$refs.formUser.resetValidation();
+      this.avatar = newVal.avatar == null ? null : newVal.avatar;
+    },
+    validation(newVal) {
+      if (newVal.username) {
+        this.validationUsername = this.validation.username ? [newVal.username] : [];
+      } else if (newVal.email) {
+        this.validationEmail = this.validation.email ? [newVal.email] : [];
       }
-      this.avatar = newVal.avatar == null ? null : `data:image/png;base64,${newVal.avatar}`;
     },
   },
 
   methods: {
-    uploadAvatar(file) {
-      this.file = file;
+    updateQrCode(user) {
+      this.$emit('updateQrCode', user);
+    },
+    resetValidation() {
+      this.validation.username = null;
+      this.validation.email = null;
+      return true;
+    },
+    uploadAvatar(payload) {
+      this.file = payload.file;
+      this.$emit('saveDisableAvatar');
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(payload.file);
       const self = this;
       reader.onload = () => {
         self.avatar = reader.result;
@@ -103,13 +183,14 @@ export default {
     },
     deleteAvatar() {
       this.avatar = null;
+      this.$emit('saveDisableAvatar');
       this.cancelAvatar = true;
     },
     close() {
       this.$emit('close');
     },
     save() {
-      if (!this.error || !this.$refs.form.validate()) {
+      if (!this.error || !this.$refs.formUser.validate()) {
         return;
       }
       this.$emit('save', { file: this.file, base64: this.avatar, deleteAvatar: this.cancelAvatar });

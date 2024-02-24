@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace api
 {
@@ -40,7 +41,7 @@ namespace api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marcatempo", Version = "v1" });
-                
+
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header enter Bearer [space] {token}",
@@ -65,7 +66,7 @@ namespace api
                     },
                     Enumerable.Empty<string>().ToList()
                 }
-              
+
             });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -74,11 +75,18 @@ namespace api
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
-            services.AddControllers().AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
+            services.AddControllers().AddNewtonsoftJson(opts => {
+                opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            }
+            );
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJwtUtils, JwtUtils>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IQrcodesService, QrcodesService>();
+            services.AddScoped<IActionsService, ActionsService>();
+            services.AddScoped<IEmailHelper, EmailHelper>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -91,20 +99,16 @@ namespace api
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-           
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            /*app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());*/
-            app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
             app.UseEndpoints(x => x.MapControllers());
         }
-       
+
     }
 }

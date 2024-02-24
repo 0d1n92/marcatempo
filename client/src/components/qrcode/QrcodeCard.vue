@@ -1,13 +1,15 @@
 <template>
   <div>
     <v-card elevation="3" class="pa-2" width="200">
-      <QrcodeVue level="M" :value="tokenQr" size="180" />
+      <div :class="disabled ? 'overflow-qr' : ''">
+        <QrcodeVue level="M" :value="tokenQr" size="180" />
+      </div>
       <div class="d-flex">
         <v-btn
           :href="url"
-          class="mx-2"
-          title="download qrcode"
-          dark
+          @click="getLinkQrcode()"
+          class="mx-2 white--text"
+          title="Download qrcode"
           :disabled="disabled"
           large
           color="red"
@@ -18,9 +20,8 @@
         <v-btn
           :disabled="disabled"
           @click="showDialog = true"
-          class="mx-2"
-          title="update qrcode"
-          dark
+          class="mx-2 white--text"
+          :title="$t('Update qrcode')"
           large
           color="blue"
         >
@@ -30,16 +31,15 @@
     </v-card>
     <confirm-dialog
       :show="showDialog"
-      :title="`Update Qrcode`"
-      :description="`Are you sure you want to update ${user.username}'s qrcode?\n Irreversible operation`"
-      @agree="UpdateQrcode"
+      :title="$t('Update qrcode')"
+      :description="`${$t('Dialog.Update qrcode')}\n ${$t('Inreversible operation')}`"
+      @agree="updateQrcode"
       @disagree="closeDialog"
     ></confirm-dialog>
   </div>
 </template>
 <script>
 import QrcodeVue from 'qrcode.vue';
-import Axios from 'axios';
 import ConfirmDialog from '../layout/Message/ConfirmDialog.vue';
 
 export default {
@@ -59,45 +59,38 @@ export default {
     return {
       url: '',
       showDialog: false,
-      tokenQr: this.user.qrCode,
     };
   },
-  watch: {
-    tokenQr(newVal) {
-      this.tokenQr = newVal;
-    },
-    user(newVal) {
-      this.tokenQr = newVal.qrCode;
+  computed: {
+    tokenQr() {
+      return this.user.qrCode;
     },
   },
   mounted() {
-    this.GetLinkQrcode();
+    this.getLinkQrcode();
+  },
+  update() {
+    this.getLinkQrcode();
   },
   methods: {
-    GetLinkQrcode() {
+    getLinkQrcode() {
       const img = this.$el.querySelector('canvas').toDataURL();
       this.url = img;
     },
-    UpdateQrcode() {
-      Axios.post(
-        `${process.env.VUE_APP_ROOT_API}/qrcodes/update`,
-        { token: this.tokenQr },
-        {
-          headers: { Authorization: this.$store.state.token },
-          // eslint-disable-next-line prettier/prettier
-        },
-      )
-        .then((response) => {
-          this.tokenQr = response.data.token;
-        })
-        .catch((error) => {
-          this.$store.commit('SetError', `${error}, impossible to update qrcode`);
-        });
+    updateQrcode() {
+      this.$emit('updateQrCode', this.user);
+      this.showDialog = false;
     },
     closeDialog() {
       this.showDialog = false;
-      console.log('close');
     },
   },
 };
 </script>
+<style scoped>
+.overflow-qr {
+  background: white;
+  opacity: 0.1;
+  z-index: 1;
+}
+</style>

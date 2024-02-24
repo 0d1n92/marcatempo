@@ -10,7 +10,7 @@ Questo applicativo aiuta la gestione del personale formato da pochi elementi. <b
 Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.<br/>
 
 ### Realizzato con
-* Asp.net
+* Asp.net Core
 * Vue
 
 

@@ -3,16 +3,16 @@
     <v-flex xs12 sm8 md4>
       <v-card class="elevation-12">
         <v-toolbar dark color="primary">
-          <v-toolbar-title>Login form</v-toolbar-title>
+          <v-toolbar-title>Login</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form ref="form">
             <v-text-field
               v-model="payloadLogin.username"
-              :rules="[rules.required]"
+              :rules="rules"
               prepend-icon="fa-user"
               name="login"
-              label="Login"
+              label="Username or Email"
               @keyup.enter="Login"
               type="text"
               required
@@ -21,7 +21,7 @@
               id="password"
               @keyup.enter="Login"
               v-model="payloadLogin.password"
-              :rules="[rules.required]"
+              :rules="rules"
               prepend-icon="fa-lock"
               name="password"
               label="Password"
@@ -36,6 +36,7 @@
               {{ error.message }}
             </v-alert>
           </v-form>
+          <router-link :to="{ name: 'password-forgot' }">{{ $t('Forgot password') }}</router-link>
         </v-card-text>
       </v-card>
     </v-flex>
@@ -50,19 +51,19 @@ export default {
   props: {
     source: String,
   },
-  data: () => ({
-    payloadLogin: {
-      username: '',
-      password: '',
-    },
-    rules: {
-      required: (value) => !!value || 'Required.',
-    },
-    error: {
-      isError: false,
-      message: '',
-    },
-  }),
+  data() {
+    return {
+      payloadLogin: {
+        username: '',
+        password: '',
+      },
+      rules: [(value) => !!value || this.$i18n.t('Is required')],
+      error: {
+        isError: false,
+        message: '',
+      },
+    };
+  },
   methods: {
     Login() {
       const self = this;
@@ -71,11 +72,20 @@ export default {
       Axios.post(`${process.env.VUE_APP_ROOT_API}/users/authenticate`, this.payloadLogin)
         .then((response) => {
           this.$store.commit('SetJwtToken', response.data.token);
-          console.log(response.data.username);
-          this.$router.push({
-            name: 'dash-board',
-            params: { user: response.data.userName },
-          });
+          if (response.data.userName !== self.$store.state.loggedUser.username) {
+            self.$store.dispatch('GetUser').then((usr) => {
+              if (usr.roleId === 1) {
+                self.$router.push({
+                  name: 'actions',
+                });
+              } else {
+                self.$router.push({
+                  name: 'dash-board',
+                  params: { user: response.data.userName },
+                });
+              }
+            });
+          }
         })
         .catch((error) => {
           self.error = {
@@ -83,7 +93,7 @@ export default {
             message: error,
           };
           if (error.response.status === 404) {
-            self.error = { isError: true, message: 'Wrong user or password' };
+            self.error = { isError: true, message: self.$i18n.t('Error.Wrong user or password') };
           }
           console.log(`errore + ${error}`);
         });
