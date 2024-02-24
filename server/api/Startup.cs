@@ -15,14 +15,17 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+    private readonly IWebHostEnvironment _env;
+    public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
         public IConfiguration Configuration { get; }
 
@@ -30,7 +33,12 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
            string connectionString = Configuration.GetConnectionString("DefaultConnection");
-           services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+              services.Configure<ForwardedHeadersOptions>(options =>
+        {
+        options.ForwardedHeaders =
+                  ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        });
+      services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
             /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
              {
                  build.WithOrigins("http://localhost:8080")
@@ -102,7 +110,8 @@ namespace api
 
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseHttpsRedirection();
+            app.UseForwardedHeaders();
+
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
