@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name:  marcatempo-vue
-          image: 0d1n92/marcatempo-vue:latest
+          image: 0d1n92/marcatempo-vue:k8s
           env:
           # Definire la variabile d'ambiente
           - name: NODE_ENV

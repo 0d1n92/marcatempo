@@ -19,7 +19,7 @@ spec:
         # nome del container docker che voglio che crea
         - name: marcatempo-asp-api
         #immagine a cui deve puntare nel mio docker hub
-          image: 0d1n92/marcatempo-asp:latest
+          image: 0d1n92/marcatempo-asp:k8s
           env:
           # Definire la variabile d'ambiente
           - name: ASPNETCORE_ENVIRONMENT
