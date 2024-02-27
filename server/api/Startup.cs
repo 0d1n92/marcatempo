@@ -32,12 +32,15 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
            string connectionString = Configuration.GetConnectionString("DefaultConnection");
               services.Configure<ForwardedHeadersOptions>(options =>
         {
         options.ForwardedHeaders =
                   ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
         });
+
+
       services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
             /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
              {
@@ -104,14 +107,21 @@ namespace api
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+              using (var scope = app.ApplicationServices.CreateScope())
+              {
+                var services = scope.ServiceProvider;
+
+                var context = services.GetRequiredService<DataContext>();
+                context.Database.Migrate();
+              }
+        app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseForwardedHeaders();
-
+            app.UsePathBase("/api");
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

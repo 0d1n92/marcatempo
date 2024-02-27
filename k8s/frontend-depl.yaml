@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marcatempo-vue
+  template:
+    metadata:
+      labels:
+        app:  marcatempo-vue
+    spec:
+      containers:
+        - name:  marcatempo-vue
+          image: 0d1n92/marcatempo-vue:latest
+          env:
+          # Definire la variabile d'ambiente
+          - name: NODE_ENV
+            value: Production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: marcatempo-vue
+  ports:
+  - name: marcatempo-vue
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

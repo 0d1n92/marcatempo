@@ -1,0 +1,44 @@
+
+apiVersion: apps/v1
+# creo un Delployment ovvero un servizio che viene ristartato quando va down
+kind: Deployment
+metadata:
+  name: api-depl
+spec:
+#gli dico che deve avere solo una replica
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marcatempo-asp-api
+  template:
+    metadata:
+      labels:
+        app: marcatempo-asp-api
+    spec:
+      containers:
+        # nome del container docker che voglio che crea
+        - name: marcatempo-asp-api
+        #immagine a cui deve puntare nel mio docker hub
+          image: 0d1n92/marcatempo-asp:latest
+          env:
+          # Definire la variabile d'ambiente
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+---
+# creo un cluster ip, ovvero un metodo di comunicazione con cui posso fare comunicare i servizi platforms-clusterip-srv questo sarà il dns
+apiVersion: v1
+# dico che sarà un servizio ovvero qualcosa che avrà acesso in entrata in uscita al pod
+kind: Service
+metadata:
+  name: api-clusterip-srv
+spec:
+# di tipo clusterip che ha la caratteristica di restare sempre attivo
+  type: ClusterIP
+  selector:
+    #gli dico che si riferisce al deploy sopra
+    app: marcatempo-asp-api
+  ports:
+  - name: marcatempo-asp-api
+    protocol: TCP
+    port: 80
+    targetPort: 80
