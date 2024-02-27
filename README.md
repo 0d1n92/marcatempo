@@ -15,7 +15,7 @@ Il progetto permette tramite la generazione e la lettura di un Qrcode di memoriz
 ### Versioni:
 Sono presenti due versioni:<br>
 1 - versione docker con l'integrazione del tool compose sul ramo main
-2 - versione kubernetes sul ramo k8s
+2 - versione kubernetes sul ramo main-k8s
 
 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
