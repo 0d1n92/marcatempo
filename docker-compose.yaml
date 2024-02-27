@@ -12,7 +12,7 @@ services:
     ports:
         - "33061:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Isidoro06
+      MYSQL_ROOT_PASSWORD: Password123
       MYSQL_DATABASE: db_marcatempo
     networks:
     - marcatempo

@@ -16,7 +16,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-   app.UseCors(options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader());
+   app.UseCors(options => options.WithOrigins(builder.Configuration["Client:url"]).AllowAnyMethod().AllowAnyHeader());
 }
 startup.Configure(app, app.Environment);
 

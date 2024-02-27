@@ -7,12 +7,15 @@
 ## MARCATEMPO
 Webapp che si propone di aiutare e digitalizzare le piccole aziende artigiane italiane, con un marcatempo a prezzi ridotti o quasi nulli.<br/>
 Questo applicativo aiuta la gestione del personale formato da pochi elementi. <br/>
-Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti, i permessi e le assenze.<br/>
+Il progetto permette tramite la generazione e la lettura di un Qrcode di memorizzare entrata l'uscita dei dipendenti<br/>
 
 ### Realizzato con
 * Asp.net Core
 * Vue
-
+### Versioni:
+Sono presenti due versioni:<br>
+1 - versione docker con l'integrazione del tool compose sul ramo main
+2 - versione kubernetes sul ramo main-k8s
 
 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
