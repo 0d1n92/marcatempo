@@ -14,8 +14,8 @@ Il progetto permette tramite la generazione e la lettura di un Qrcode di memoriz
 * Vue
 ### Versioni:
 Sono presenti due versioni:<br>
-1 - versione docker con l'integrazione del tool compose sul ramo main
-2 - versione kubernetes sul ramo k8s
+1. [Nel ramo main](https://github.com/0d1n92/marcatempo/tree/main) la versione docker con l'integrazione del tool compose
+2. [Nel ramo main-k8s](https://github.com/0d1n92/marcatempo/tree/main-k8s) la versione kubernetes
 
 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
