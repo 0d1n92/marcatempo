@@ -13,7 +13,7 @@ namespace api.Helpers;
         private readonly IWebHostEnvironment _env;
          private readonly IConfiguration _config;
         public DataContext(DbContextOptions<DataContext> options, IWebHostEnvironment env, IConfiguration config) : base(options)
-    { 
+    {
           _env = env;
         _config = config;
         }
@@ -32,7 +32,7 @@ namespace api.Helpers;
                    entity.HasIndex(x => x.Email).IsUnique();
                    entity.HasIndex(x => x.Username).IsUnique();
                    entity.HasOne(d => d.Role).WithMany(d => d.Users).HasForeignKey("RoleId");
-                   entity.HasOne(d => d.QRCode).WithOne(ad => ad.User).HasForeignKey<QRcode>(d => d.UserId).OnDelete(DeleteBehavior.Cascade); 
+                   entity.HasOne(d => d.QRCode).WithOne(ad => ad.User).HasForeignKey<QRcode>(d => d.UserId).OnDelete(DeleteBehavior.Cascade);
                    entity.HasMany(usr => usr.UserMetas).WithOne(meta => meta.User).HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade);
                }
            );
@@ -46,7 +46,7 @@ namespace api.Helpers;
                 );
         #endregion
 
-        #region UserSeed 
+        #region UserSeed
         modelBuilder.Entity<User>().HasData(
             new
             {
@@ -74,7 +74,7 @@ namespace api.Helpers;
              new { Id = 9, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email = Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now },
              new { Id = 10, RoleId = (int)EnumRoles.Operator, Username = Faker.Internet.UserName(), FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = BCryptNet.HashPassword("qwerty"), Email = Faker.Internet.Email(), CreationDate = DateTime.Now, DateOfBirth = DateTime.Now }
              );
-        } 
+
             #endregion
             #region Qrcode
 
@@ -92,9 +92,10 @@ namespace api.Helpers;
             );
 
 
-            #endregion
+      #endregion
+    }
 
-        }
+  }
 
 
 

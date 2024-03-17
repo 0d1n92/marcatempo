@@ -30,21 +30,24 @@ namespace api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment)
         {
-           string connectionString = Configuration.GetConnectionString("DefaultConnection");
-              services.Configure<ForwardedHeadersOptions>(options =>
+      string connectionString = Configuration.GetConnectionString("DefaultConnection");
+      services.Configure<ForwardedHeadersOptions>(options =>
         {
-        options.ForwardedHeaders =
-                  ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-        });
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        }
+      );
+
+      if (environment.IsProduction()) {
+        string  dbName = Environment.GetEnvironmentVariable("MYSQL_DATABASE");
+        string  dbPassword = Environment.GetEnvironmentVariable("MYSQL_ROOT_PASSWORD");
+        connectionString = connectionString.Replace("{DB_NAME}", dbName)
+        .Replace("{DB_PSWD}", dbPassword);
+        Console.WriteLine("Connection string" + connectionString);
+      }
+
       services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-            /*services.AddCors(options => options.AddPolicy("ApiCorsPolicy", build =>
-             {
-                 build.WithOrigins("http://localhost:8080")
-                      .AllowAnyMethod()
-                      .AllowAnyHeader();
-             }));*/
 
             services.AddSwaggerGen(c =>
             {
@@ -107,11 +110,19 @@ namespace api
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            if (bool.Parse(Environment.GetEnvironmentVariable("MIGRATION")))
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    Console.WriteLine("Eseguo le migrazioni");
+                    var context = serviceScope.ServiceProvider.GetService<DataContext>();
+                    context.Database.Migrate();
+                }
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseForwardedHeaders();
-
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

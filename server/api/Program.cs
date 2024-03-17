@@ -1,4 +1,5 @@
 
+using System;
 using api;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var startup = new Startup(builder.Configuration, builder.Environment);
 
-startup.ConfigureServices(builder.Services);
+startup.ConfigureServices(builder.Services, builder.Environment);
 
 var app = builder.Build();
 if (builder.Environment.IsDevelopment())
@@ -16,7 +17,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-   app.UseCors(options => options.WithOrigins(builder.Configuration["Client:url"]).AllowAnyMethod().AllowAnyHeader());
+   app.UseCors(options => options.WithOrigins(Environment.GetEnvironmentVariable("CLIENT_URL")).AllowAnyMethod().AllowAnyHeader());
 }
 startup.Configure(app, app.Environment);
 

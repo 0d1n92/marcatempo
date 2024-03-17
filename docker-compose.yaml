@@ -12,12 +12,17 @@ services:
     ports:
         - "33061:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Password123
-      MYSQL_DATABASE: db_marcatempo
+      MYSQL_ROOT_PASSWORD: ${DB_PSWD}
+      MYSQL_DATABASE: ${DB_NAME}
     networks:
     - marcatempo
   backend:
     image: 0d1n92/marcatempo-asp:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PSWD}
+      MYSQL_DATABASE: ${DB_NAME}
+      CLIENT_URL: ${CLIENT_URL}
+      MIGRATION: ${MIGRATION}
     ports:
       - "5200:80"
     networks:
