@@ -22,3 +22,13 @@ Sono presenti due versioni:<br>
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/enrico-rombaldoni-695189208/
 [license-url]: https://github.com/0d1n92/marcatempo/blob/main/LICENSE
+
+
+## Primo avvio
+
+1. Rinominare file .env.example in file .env
+2. Se si nessita di lanciare la migrations nel file .env passare MIGRATION a true, verrà creato solo l'utente administator con pswd qwerty, si prega di cambiarla in un secondo momento
+
+## configurazione stmp
+
+la configurazione stmp si trova nella appsettings.*.json
