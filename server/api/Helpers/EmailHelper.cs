@@ -38,7 +38,15 @@ namespace api.Helpers
 
         }
 
-
+        public async Task <bool>SendEmailBlockedUser(string username, string email, string name)
+        {
+            var MailData = new MailData();
+            MailData.EmailSubject = "Blocked user, please reset your password Email Marcatempo";
+            MailData.EmailBody = $"We have blocked user accounts for maximum number of attempts, please reset your password :<a href=\"{_config["Client:url"]}/en/password-forgot\">reset password page</a>";
+            MailData.EmailToName = name;
+            MailData.EmailToId = email;
+            return await SendMail(MailData);
+        }
         private  async Task<bool> SendMail(MailData mailData)
         {
             try

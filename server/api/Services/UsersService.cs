@@ -43,10 +43,28 @@ namespace api.Services
             try
             {
                 var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Username == model.Username || x.Email == model.Username);
-                if (user != null || user != null ? BCryptNet.Verify(model.Password, user.Password) : false)
+             
+                if (user is not null && user.LoginAttempts < 5 ? BCryptNet.Verify(model.Password, user.Password) : false)
                 {
+                    user.LoginAttempts = 0;
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
                     return (true, _jwtUtils.GenerateToken(user), user.Username);
+                } else if(user is not null && !BCryptNet.Verify(model.Password, user.Password))
+                {
+                    user.LoginAttempts += 1;
+                    if (user.LoginAttempts <= 5)
+                    {
+                        _context.Users.Update(user);
+                        await _context.SaveChangesAsync();
+                        return (false, "Incorrect password", user.Username);
+                    } ;
+
+                    await _emailHelper.SendEmailBlockedUser(user.Username, user.Email, user.FirstName);
+                    return (false, "Blocked user", user.Username);
+                   
                 }
+                   
                  return (false, "User not found", model.Username);
             } catch(Exception ex)
             {
@@ -399,6 +417,7 @@ namespace api.Services
                     if( model.Password == model.ConfirmPassword)
                     {
                     
+                        usr.LoginAttempts = 0;
                         usr.Password = BCryptNet.HashPassword(model.Password);
                         await _context.SaveChangesAsync();
                         return (true, "Passwords sucessful change");
