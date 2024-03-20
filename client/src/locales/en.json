@@ -69,7 +69,8 @@
     "Date Entry": "The entry date must be less than the exit date",
     "Impossibile update pswd": "impossible to update password",
     "Export Falied":"export failed, unable to download csv",
-    "User not found": "User not found"
+    "User not found": "User not found",
+    "Blocked user": "Blocked user, follow the instructions in the email"
   },
   "Dialog": {
     "Update qrcode": "Are you sure you want to update qrcode?",
