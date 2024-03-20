@@ -81,7 +81,20 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.Authenticate(request);
 
-        if (!result.Success) return NotFound(new { Message = result.Token });
+        if (!result.Success)
+        {
+            if (result.Token == "Blocked user")
+            {
+                return StatusCode(403, new { message = "Blocked user" });
+            }
+
+            if (result.Token == "Incorrect password")
+            {
+                return StatusCode(401, new { message = "Incorrect password" });
+            }
+            return NotFound(new { Message = result.Token });
+        }
+
         return Ok(new { token = result.Token, userName = result.UserName });
     }
 
