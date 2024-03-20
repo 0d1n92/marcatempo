@@ -92,9 +92,17 @@ export default {
             message: error,
           };
           if (error.response.status === 404) {
-            self.error = { isError: true, message: self.$i18n.t('Error.Wrong user or password') };
+            self.error = { isError: true, message: self.$i18n.t('Error.User not found') };
           }
-          console.log(`errore + ${error}`);
+
+          if (error.response.status === 401) {
+            self.error = { isError: true, message: self.$i18n.t('Error.Wrong password') };
+          }
+
+          if (error.response.status === 403) {
+            self.error = { isError: true, message: self.$i18n.t('Error.Blocked user') };
+          }
+          console.error(`errore + ${error}`);
         });
     },
   },

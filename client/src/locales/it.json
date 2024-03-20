@@ -58,7 +58,7 @@
     "Date must be valid": "La Data deve rispettare il formato DD/MM/YYYY HH:mm",
     "Save avatar": "impossibile salvare avatar",
     "Delete avatar": "impossibile to cancellare avatar",
-    "Wrong user or password": "Password o utente errato",
+    "Wrong password": "Password errata",
     "Impossible to get users": "Impossibile ottenere utente",
     "DeleteUser": "Impossibile cancellare utente",
     "CreateUser": "Impossibile creare l'utente",
@@ -69,7 +69,8 @@
     "Update failed": "Aggiornamento non riuscito",
     "Date Entry": "La data di entrata deve essere minore della data di uscita",
     "Export Falied":"esportazione fallita, impossibile scaricare csv",
-    "User not found": "Utente non trovato"
+    "User not found": "Utente non trovato",
+    "Blocked user": "Utente bloccatto, segui le istruzioni nella email"
   },
   "Dialog": {
     "Update qrcode": "Sei sicuro di volere aggiornare il qrcode?",

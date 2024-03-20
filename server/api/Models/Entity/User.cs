@@ -18,6 +18,7 @@ namespace api.Model.Entity
         public DateTime DateOfBirth { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        public int LoginAttempts { get; set; } = 0;
         public DateTime CreationDate { get; set; }
         public DateTime? ModifyDate { get; set; }
         public int RoleId { get; set; }

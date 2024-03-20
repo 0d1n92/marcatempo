@@ -10,7 +10,7 @@ namespace api.Helpers
 {
     public class EmailHelper: IEmailHelper
     {
-        private readonly IConfiguration _config; 
+        private readonly IConfiguration _config;
 
         public EmailHelper(IConfiguration config)
         {
@@ -21,7 +21,7 @@ namespace api.Helpers
         {
             var MailData = new MailData();
             MailData.EmailSubject = "Reset Password Email Marcatempo";
-            MailData.EmailBody = $"User has been created with username: {username}. <br> Please reset your password :<a href=\"{_config["Client:url"]}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
+            MailData.EmailBody = $"User has been created with username: {username}. <br> Please reset your password :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
@@ -31,14 +31,22 @@ namespace api.Helpers
         {
             var MailData = new MailData();
             MailData.EmailSubject = "Reset Password Email Marcatempo";
-            MailData.EmailBody = $"For reset password go to link :<a href=\"{_config["Client:url"]}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
+            MailData.EmailBody = $"For reset password go to link :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
 
         }
 
-
+        public async Task <bool>SendEmailBlockedUser(string username, string email, string name)
+        {
+            var MailData = new MailData();
+            MailData.EmailSubject = "Blocked user, please reset your password Email Marcatempo";
+            MailData.EmailBody = $"We have blocked user accounts for maximum number of attempts, please reset your password :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/password-forgot\">reset password page</a>";
+            MailData.EmailToName = name;
+            MailData.EmailToId = email;
+            return await SendMail(MailData);
+        }
         private  async Task<bool> SendMail(MailData mailData)
         {
             try
