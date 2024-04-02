@@ -24,8 +24,9 @@ namespace api.Helpers;
         public DbSet<Model.Entity.Action> Actions { get; set; }
         public DbSet<UserMeta> UserMetas { get; set; }
         public DbSet<Giustification> Giustifications { get; set; }
+        public DbSet<Configuration> Configuration { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            modelBuilder.Entity<User>(
                 entity =>

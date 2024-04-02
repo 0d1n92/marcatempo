@@ -99,6 +99,7 @@ namespace api
             services.AddScoped<IActionsService, ActionsService>();
             services.AddScoped<IEmailHelper, EmailHelper>();
             services.AddScoped<ISeeder, Seeder>();
+            services.AddScoped<IConfigurationService, ConfigurationService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
