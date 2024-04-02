@@ -32,11 +32,11 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment)
         {
-      string connectionString = Configuration.GetConnectionString("DefaultConnection");
-      services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-        }
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            }
       );
 
       if (environment.IsProduction()) {
@@ -98,6 +98,8 @@ namespace api
             services.AddScoped<IQrcodesService, QrcodesService>();
             services.AddScoped<IActionsService, ActionsService>();
             services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<ISeeder, Seeder>();
+            services.AddScoped<IConfigurationService, ConfigurationService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

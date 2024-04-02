@@ -4,6 +4,8 @@ using api.Model.Entity;
 using System.Linq;
 using api.Utilitis.Enum;
 using System;
+using Newtonsoft.Json.Linq;
+using api.Models.Data;
 
 namespace api.Helpers
 {
@@ -38,6 +40,14 @@ namespace api.Helpers
                         return true;
                     }
                 ));
+            CreateMap<JObject, StmpConfig>()
+            .ForMember(dest => dest.Server, opt => opt.MapFrom(src => src["Server"].ToString()))
+            .ForMember(dest => dest.Port, opt => opt.MapFrom(src => src["Port"]))
+            .ForMember(dest => dest.SenderEmail, opt => opt.MapFrom(src => src["SenderEmail"].ToString()))
+            .ForMember(dest => dest.SenderName, opt => opt.MapFrom(src => src["SenderName"].ToString()))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src["UserName"].ToString()))
+            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src["Password"].ToString()));
+
         }
     }
 }
