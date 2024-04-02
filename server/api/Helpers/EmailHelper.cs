@@ -1,9 +1,13 @@
 ﻿using api.Interface;
+using api.Models.Data;
 using api.Models.DTOs;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace api.Helpers
@@ -12,9 +16,17 @@ namespace api.Helpers
     {
         private readonly IConfiguration _config;
 
-        public EmailHelper(IConfiguration config)
+        private readonly StmpConfig _stmp;
+
+        private readonly DataContext _context;
+
+        public EmailHelper(IConfiguration config, DataContext context)
         {
             _config = config;
+            _context = context;
+            var jsonString = context.Configuration.First(conf => conf.Category == "mail").Value;
+
+            _stmp = JsonConvert.DeserializeObject<StmpConfig>(jsonString.ToString());
         }
 
         public async Task<bool> SendEmailAddedUser(string username, string email, string name, string jwt)
@@ -53,7 +65,7 @@ namespace api.Helpers
             {
                 using (MimeMessage emailMessage = new MimeMessage())
                 {
-                    MailboxAddress emailFrom = new MailboxAddress(_config["MailSettings:SenderName"], _config["MailSettings:SenderEmail"]);
+                    MailboxAddress emailFrom = new MailboxAddress(_stmp.SenderName, _stmp.SenderEmail);
                     emailMessage.From.Add(emailFrom);
                     MailboxAddress emailTo = new MailboxAddress(mailData.EmailToName, mailData.EmailToId);
                     emailMessage.To.Add(emailTo);
@@ -68,8 +80,8 @@ namespace api.Helpers
                     //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        await mailClient.ConnectAsync(_config["MailSettings:Server"], int.Parse(_config["MailSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
-                        await mailClient.AuthenticateAsync(_config["MailSettings:Username"], _config["MailSettings:Password"]);
+                        await mailClient.ConnectAsync(_stmp.Server, _stmp.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        await mailClient.AuthenticateAsync(_stmp.UserName, _stmp.Password);
                         await mailClient.SendAsync(emailMessage);
                         await mailClient.DisconnectAsync(true);
                     }
