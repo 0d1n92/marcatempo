@@ -80,7 +80,7 @@ namespace api.Helpers
                     //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        await mailClient.ConnectAsync(_stmp.Server, _stmp.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        await mailClient.ConnectAsync(_stmp.Server, _stmp.Port, MailKit.Security.SecureSocketOptions.Auto);
                         await mailClient.AuthenticateAsync(_stmp.UserName, _stmp.Password);
                         await mailClient.SendAsync(emailMessage);
                         await mailClient.DisconnectAsync(true);
