@@ -16,6 +16,8 @@ using System.Reflection;
 using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace api
 {
@@ -121,7 +123,17 @@ namespace api
                     context.Database.Migrate();
                 }
             }
+            var supportedCultures = new[]
+            {
+                     new CultureInfo("it-IT"), 
+            };
 
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("it-IT"), 
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseForwardedHeaders();
