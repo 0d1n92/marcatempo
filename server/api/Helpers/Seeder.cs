@@ -52,7 +52,7 @@ namespace api.Helpers
             );
 
 
-            var stmpConfig = new StmpConfig
+            var stmpConfig = new SmtpConfig
             {
                 Server = _config["MailSettings:Server"],
                 UserName = _config["MailSettings:UserName"],
@@ -68,8 +68,8 @@ namespace api.Helpers
                 new Configuration
                 {
                     Id = 1,
-                    MetaName = "mail_stmp_server",
-                    Description = "server stmp",
+                    MetaName = "mail_smtp_server",
+                    Description = "server smtp",
                     Category = "mail",
                     Value = JObject.FromObject(stmpConfig)
                 }
@@ -83,10 +83,10 @@ namespace api.Helpers
             new Configuration
             {
                 Id = 1,
-                MetaName = "mail_stmp_server",
-                Description = "server stmp",
+                MetaName = "mail_smtp_server",
+                Description = "server smtp",
                 Category = "mail",
-                Value = JObject.FromObject(new StmpConfig())
+                Value = JObject.FromObject(new SmtpConfig())
             }
             );
         }

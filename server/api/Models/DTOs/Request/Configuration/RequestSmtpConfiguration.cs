@@ -1,6 +1,6 @@
 ﻿namespace api.Models.DTOs.Request.Configuration
 {
-    public class RequestStmpConfiguration
+    public class RequestSmtpConfiguration
     {
  
 
