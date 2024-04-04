@@ -1,7 +1,7 @@
 ﻿
 namespace api.Models.Data
 {
-    public class StmpConfig
+    public class SmtpConfig
     {
         
 

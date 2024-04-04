@@ -36,6 +36,7 @@ namespace api.Helpers;
                     entity.HasOne(d => d.Role).WithMany(d => d.Users).HasForeignKey("RoleId");
                     entity.HasOne(d => d.QRCode).WithOne(ad => ad.User).HasForeignKey<QRcode>(d => d.UserId).OnDelete(DeleteBehavior.Cascade);
                     entity.HasMany(usr => usr.UserMetas).WithOne(meta => meta.User).HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(usr => usr.Activities).WithOne(act => act.User).HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade);
                 }
             );
 

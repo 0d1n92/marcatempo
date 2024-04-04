@@ -118,6 +118,8 @@ namespace api.Services
 
                 var role = _context.Roles.Single(x => x.Id == user.Role.Id);
                 user.Role = role;
+
+
                 _context.Users.Add(user);
                await _context.SaveChangesAsync();
 

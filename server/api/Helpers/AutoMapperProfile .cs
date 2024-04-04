@@ -40,7 +40,7 @@ namespace api.Helpers
                         return true;
                     }
                 ));
-            CreateMap<JObject, StmpConfig>()
+            CreateMap<JObject, SmtpConfig>()
             .ForMember(dest => dest.Server, opt => opt.MapFrom(src => src["Server"].ToString()))
             .ForMember(dest => dest.Port, opt => opt.MapFrom(src => src["Port"]))
             .ForMember(dest => dest.SenderEmail, opt => opt.MapFrom(src => src["SenderEmail"].ToString()))

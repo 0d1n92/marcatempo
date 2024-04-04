@@ -9,8 +9,10 @@ namespace api.DTOs
         [Required]
         public string LastName { get; set; }
         [Required]
+        [RegularExpression(@"^\S+$", ErrorMessage = "lo usaraname non deve contenere spazi.")]
         public string Username { get; set; }
         [Required]
+        [RegularExpression(@"^\S+$", ErrorMessage = "l'email non deve contenere spazi.")]
         public string Email { get; set; }
         [Required]
         public int RoleId  { get; set; }

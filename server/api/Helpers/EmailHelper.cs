@@ -16,7 +16,7 @@ namespace api.Helpers
     {
         private readonly IConfiguration _config;
 
-        private readonly StmpConfig _stmp;
+        private readonly SmtpConfig _smtp;
 
         private readonly DataContext _context;
 
@@ -26,7 +26,7 @@ namespace api.Helpers
             _context = context;
             var jsonString = context.Configuration.First(conf => conf.Category == "mail").Value;
 
-            _stmp = JsonConvert.DeserializeObject<StmpConfig>(jsonString.ToString());
+            _smtp = JsonConvert.DeserializeObject<SmtpConfig>(jsonString.ToString());
         }
 
         public async Task<bool> SendEmailAddedUser(string username, string email, string name, string jwt)
@@ -65,7 +65,7 @@ namespace api.Helpers
             {
                 using (MimeMessage emailMessage = new MimeMessage())
                 {
-                    MailboxAddress emailFrom = new MailboxAddress(_stmp.SenderName, _stmp.SenderEmail);
+                    MailboxAddress emailFrom = new MailboxAddress(_smtp.SenderName, _smtp.SenderEmail);
                     emailMessage.From.Add(emailFrom);
                     MailboxAddress emailTo = new MailboxAddress(mailData.EmailToName, mailData.EmailToId);
                     emailMessage.To.Add(emailTo);
@@ -80,8 +80,8 @@ namespace api.Helpers
                     //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        await mailClient.ConnectAsync(_stmp.Server, _stmp.Port, MailKit.Security.SecureSocketOptions.Auto);
-                        await mailClient.AuthenticateAsync(_stmp.UserName, _stmp.Password);
+                        await mailClient.ConnectAsync(_smtp.Server, _smtp.Port, MailKit.Security.SecureSocketOptions.Auto);
+                        await mailClient.AuthenticateAsync(_smtp.UserName, _smtp.Password);
                         await mailClient.SendAsync(emailMessage);
                         await mailClient.DisconnectAsync(true);
                     }

@@ -14,6 +14,7 @@ namespace api.Models.DTOs.Request.Users
         public string ConfirmPassword { get; set; }
 
         [Required]
+        [RegularExpression(@"^\S+$", ErrorMessage = "l'email non deve contenere spazi.")]
         public string Email { get; set; }
 
         [Required]

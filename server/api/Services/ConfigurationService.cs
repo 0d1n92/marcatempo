@@ -15,16 +15,16 @@ namespace api.Services
             _context = context;
         }
 
-        public async Task<(bool Success, string Message)> UpdateStmpConfiguration(RequestStmpConfiguration request)
+        public async Task<(bool Success, string Message)> UpdateSmtpConfiguration(RequestSmtpConfiguration request)
         {
-            var stmpConfig = await _context.Configuration.FirstOrDefaultAsync(conf => conf.Category == "mail");
+            var smtpConfig = await _context.Configuration.FirstOrDefaultAsync(conf => conf.Category == "mail");
 
-            if(stmpConfig is not null)
+            if(smtpConfig is not null)
             {
-                stmpConfig.Value = JObject.FromObject(request);
-                _context.Update(stmpConfig);
+                smtpConfig.Value = JObject.FromObject(request);
+                _context.Update(smtpConfig);
                 _context.SaveChanges();
-                return (true, "stmp configuration update");
+                return (true, "smtp configuration update");
             }
 
             return (false, "update configuration stmp fallied");

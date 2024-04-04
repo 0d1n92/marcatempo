@@ -19,17 +19,17 @@ namespace api.Controllers
 
 
         /// <summary>
-        ///  update stmp configuration
+        ///  update smtp configuration
         /// </summary>
         /// <param name="request" ></param>
  
 
         [AuthorizeAdmin]
-        [HttpPut("ConfigurationStmp")]
+        [HttpPut("ConfigurationSmtp")]
 
-        public async Task<IActionResult> UpdateStmpConfiguration(RequestStmpConfiguration request)
+        public async Task<IActionResult> UpdateStmpConfiguration(RequestSmtpConfiguration request)
         {
-            var result = await  _configurationService.UpdateStmpConfiguration(request);
+            var result = await  _configurationService.UpdateSmtpConfiguration(request);
             if (result.Success)
             {
                 return Ok(result);
