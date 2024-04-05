@@ -32,8 +32,42 @@ namespace api.Helpers
         public async Task<bool> SendEmailAddedUser(string username, string email, string name, string jwt)
         {
             var MailData = new MailData();
-            MailData.EmailSubject = "Reset Password Email Marcatempo";
-            MailData.EmailBody = $"User has been created with username: {username}. <br> Please reset your password :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
+            MailData.EmailSubject = $"Benvenuto {username} crea la tua password";
+            MailData.EmailBody = MailData.EmailBody =$@"
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }}
+            .button {{
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>Benvenuto in marcatempo {username}</h1><br>
+            <p>Clicca il pulsante <b>Imposta password</b> per impostare la tua chiave di accesso:</p><br>
+             <a class='button' href=""{Environment.GetEnvironmentVariable("CLIENT_URL")}/it/reset-password?email={email}&token={jwt}"">Imposta password</a>
+        </div>
+    </body>
+    </html>";
+
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
@@ -43,7 +77,41 @@ namespace api.Helpers
         {
             var MailData = new MailData();
             MailData.EmailSubject = "Reset Password Email Marcatempo";
-            MailData.EmailBody = $"For reset password go to link :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/reset-password?email={email}&token={jwt}\">reset password page</a>";
+            MailData.EmailBody = $@"
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }}
+            .button {{
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>Ciao {name}</h1><br>
+            <p>E' stata richiesta la procedura di cambio password nel tuo marcatempo.<br> Se sei stato tu clicca <b>Reimposta password<b></p><br>
+            <a class='button' href=""{Environment.GetEnvironmentVariable("CLIENT_URL")}/it/reset-password?email={email}&token={jwt}"">Reimposta password</a>
+        </div>
+    </body>
+    </html>";
+
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
@@ -54,7 +122,42 @@ namespace api.Helpers
         {
             var MailData = new MailData();
             MailData.EmailSubject = "Blocked user, please reset your password Email Marcatempo";
-            MailData.EmailBody = $"We have blocked user accounts for maximum number of attempts, please reset your password :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/en/password-forgot\">reset password page</a>";
+            MailData.EmailBody = $@"
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }}
+            .button {{
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>Ciao {name}</h1><br>
+            <p>Ti informiamo che il tuo account marcatempo è stato bloccato a causa di numerosi tentativi di accesso errati. Per motivi di sicurezza, l'accesso è stato temporaneamente disabilitato.</p><br>
+            <p>Per sbloccare il tuo account clicca su <b>Reimposta password<b></P>
+            <a class='button' href=""{Environment.GetEnvironmentVariable("CLIENT_URL")}/it/password-forgot"">Reimposta password</a>
+        </div>
+    </body>
+    </html>";
+            //MailData.EmailBody = $"We have blocked user accounts for maximum number of attempts, please reset your password :<a href=\"{Environment.GetEnvironmentVariable("CLIENT_URL")}/it/password-forgot\">reset password page</a>";
             MailData.EmailToName = name;
             MailData.EmailToId = email;
             return await SendMail(MailData);
