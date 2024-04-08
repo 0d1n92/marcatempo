@@ -32,6 +32,48 @@ export default {
           this.$store.commit('SetError', `${error}, ${this.$i18n.t('Error.Impossible to get users')}`);
         });
     },
+    compressImage(input, maxWidth, maxHeight, quality) {
+      const file = input;
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            let { width } = img;
+            let { height } = img;
+
+            // Calcola le nuove dimensioni mantenendo l'aspect ratio
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+
+            // Crea un canvas per disegnare l'immagine compressa
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = width;
+            canvas.height = height;
+            context.drawImage(img, 0, 0, width, height);
+
+            // Converti l'immagine compressa in Blob
+            canvas.toBlob(
+              (blob) => {
+                resolve(blob);
+              },
+              'image/jpeg',
+              // eslint-disable-next-line comma-dangle
+              quality
+            );
+          };
+        };
+      });
+    },
   },
   filters: {
     getHour(date) {
