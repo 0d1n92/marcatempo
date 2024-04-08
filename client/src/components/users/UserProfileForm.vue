@@ -171,8 +171,9 @@ export default {
       this.validation.email = null;
       return true;
     },
-    uploadAvatar(payload) {
-      this.file = payload.file;
+    async uploadAvatar(payload) {
+      debugger;
+      this.file = await this.compressImage(payload.file, 800, 600, 0.8);
       this.$emit('saveDisableAvatar');
       const reader = new FileReader();
       reader.readAsDataURL(payload.file);

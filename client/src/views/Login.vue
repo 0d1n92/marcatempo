@@ -12,7 +12,7 @@
               :rules="rules"
               prepend-icon="fa-user"
               name="login"
-              label="Username or Email"
+              :label="$t('Username or Email')"
               @keyup.enter="Login"
               type="text"
               required
