@@ -25,7 +25,9 @@
               prepend-icon="fa-lock"
               name="password"
               label="Password"
-              type="password"
+              :type="showPswd ? 'text' : 'password'"
+              :append-icon="showPswd ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append="showPswd = !showPswd"
               required
             ></v-text-field>
             <v-spacer></v-spacer>
@@ -53,6 +55,7 @@ export default {
   },
   data() {
     return {
+      showPswd: false,
       payloadLogin: {
         username: '',
         password: '',

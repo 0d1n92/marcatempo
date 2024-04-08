@@ -18,17 +18,17 @@
                 <user-avatar size="35" :base64="avatar" />
               </v-avatar>
             </v-list-item-avatar>
-            <v-hover v-slot="{ hover }">
+            <div>
               <v-list-item-avatar v-if="!mini" size="90">
                 <user-avatar-hover
                   size="90"
-                  :hover="hover"
+                  :hover="false"
                   :base64="avatar"
                   @uploadAvatar="uploadAvatar"
                   @deleteAvatar="deleteAvatar"
                 ></user-avatar-hover>
               </v-list-item-avatar>
-            </v-hover>
+            </div>
             <v-spacer></v-spacer>
             <v-list>
               <v-list-item>
