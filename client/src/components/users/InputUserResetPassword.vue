@@ -6,7 +6,9 @@
       prepend-icon="fa-lock"
       name="password"
       label="Password"
-      type="password"
+      :type="showPswd ? 'text' : 'password'"
+      :append-icon="showPswd ? 'mdi-eye' : 'mdi-eye-off'"
+      @click:append="showPswd = !showPswd"
       required
     ></v-text-field>
     <v-text-field
@@ -16,7 +18,9 @@
       prepend-icon="mdi-lock-question"
       name="confirmPassword"
       :label="$t('Repeat password')"
-      type="password"
+      :type="showPswdReap ? 'text' : 'password'"
+      :append-icon="showPswdReap ? 'mdi-eye' : 'mdi-eye-off'"
+      @click:append="showPswdReap = !showPswdReap"
       required
     ></v-text-field>
     <v-spacer></v-spacer>
@@ -47,6 +51,8 @@ export default {
         email: this.$props.email,
         token: this.$props.token,
       },
+      showPswd: false,
+      showPswdReap: false,
       // eslint-disable-next-line prettier/prettier, max-len
       rulesConfirm: () => this.payload.password === this.payload.confirmPassword || this.$i18n.t('Error.Password match'),
       rules: [
