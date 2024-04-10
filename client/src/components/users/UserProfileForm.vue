@@ -2,7 +2,7 @@
   <v-form ref="formUser" v-model="valid" lazy-validation style="position: relative">
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="6">
+        <v-col class="d-flex justify-center" cols="12" sm="6" md="6">
           <v-hover v-slot="{ hover }">
             <user-avatar-hover
               :base64="avatar"
@@ -18,7 +18,7 @@
             <v-icon color="primary">mdi-account-lock</v-icon>{{ $t('Modify password') }}
           </router-link>
         </v-col>
-        <v-col cols="12" sm="6" md="6" class="mb-6">
+        <v-col class="d-flex justify-center mb-6" cols="12" sm="6" md="6">
           <QrcodeCard @updateQrCode="updateQrCode" :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">

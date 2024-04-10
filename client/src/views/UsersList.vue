@@ -43,6 +43,8 @@
                 <v-toolbar dark color="primary">
                   <v-icon>mdi-account</v-icon>
                   <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                   <v-icon  @click="close" color="white" small> mdi-close-thick </v-icon>
                 </v-toolbar>
               </v-card-title>
               <user-profile-form
