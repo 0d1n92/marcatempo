@@ -1,5 +1,5 @@
 {
-  "Dashboard": "Panello di controllo",
+  "Dashboard": "Pannello di controllo",
   "Users account": "Account Utenti",
   "Users actions": "Storico azioni utenti",
   "Scan qrcode": "Scansione QR",
@@ -13,6 +13,7 @@
   "Modify Profile": "Modifica Profilo",
   "Administrator": "Amministratore",
   "Dates Interval": "Intervallo Date",
+  "Modify password": "Modifica password",
   "Actions":"Azioni",
   "Forgot password": "Password Dimenticata",
   "Export to csv": "Esporta csv",

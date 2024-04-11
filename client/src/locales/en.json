@@ -44,6 +44,7 @@
   "Adds up the total users": "Adds up the total users",
   "Filter by presents": " Filter by presents",
   "Present": "Present",
+  "Modify password":"Modify password",
   "Success" : {
    "Update successful": "Update successful",
    "Update password": "updated password please login"

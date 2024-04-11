@@ -45,19 +45,28 @@ export default {
   methods: {
     onInit(promise) {
       promise.catch((error) => {
+        const triedFrontCamera = this.camera === 'user';
+        const triedRearCamera = this.camera === 'rear';
         const cameraMissingError = error.name === 'OverconstrainedError';
-        const triedFrontCamera = this.camera === 'front';
 
         if (triedFrontCamera && cameraMissingError) {
           this.camera = 'rear';
         }
+
+        if (triedRearCamera && cameraMissingError) {
+          this.camera = 'user';
+        }
       });
     },
     switchCamera() {
-      if (this.camera === 'front') {
-        this.camera = 'rear';
-      } else {
-        this.camera = 'front';
+      // eslint-disable-next-line default-case
+      switch (this.camera) {
+        case 'rear':
+          this.camera = 'user';
+          break;
+        case 'user':
+          this.camera = 'rear';
+          break;
       }
     },
     onDecode(data) {

@@ -21,8 +21,19 @@
         @blur="onBlur"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="dates" range no-title scrollable>
-      <v-btn text color="primary" @click="isOpen = false"> Cancel </v-btn>
+    <v-date-picker :min="minDate" @input="updateMinDate" v-model="dates" range no-title scrollable>
+      <v-btn
+        text
+        color="primary"
+        @click="
+          () => {
+            isOpen = false;
+            this.minDate = null;
+          }
+        "
+      >
+        Cancel
+      </v-btn>
       <v-btn text color="primary" @click="onClick"> OK </v-btn>
     </v-date-picker>
   </v-menu>
@@ -46,13 +57,23 @@ export default {
       moment,
       datesFormat: [this.$options.filters.getDate(this.dates[0]), this.$options.filters.getDate(this.dates[1])],
       isOpen: false,
+      minDate: null,
     };
   },
   methods: {
     onClick() {
+      this.minDate = null;
       this.datesFormat = [this.$options.filters.getDate(this.dates[0]), this.$options.filters.getDate(this.dates[1])];
       this.$refs.datemenu.save(this.dates);
       this.$emit('onSetDates', this.dates);
+    },
+    updateMinDate(val) {
+      const [min, max] = val;
+      this.minDate = null;
+      this.minDate = min;
+      if (max === min) {
+        this.minDate = null;
+      }
     },
 
     onBlur() {

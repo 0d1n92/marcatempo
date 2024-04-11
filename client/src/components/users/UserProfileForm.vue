@@ -2,10 +2,11 @@
   <v-form ref="formUser" v-model="valid" lazy-validation style="position: relative">
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="6">
+        <v-col class="d-flex justify-center" cols="12" sm="6" md="6">
           <v-hover v-slot="{ hover }">
             <user-avatar-hover
               :base64="avatar"
+              class="mb-6"
               :hover="hover"
               size="200"
               iconSize="40"
@@ -13,8 +14,11 @@
               @deleteAvatar="deleteAvatar"
             ></user-avatar-hover>
           </v-hover>
+          <router-link v-if="linkModifyPswd" style="text-decoration: none" :to="{ name: 'update-password' }">
+            <v-icon color="primary">mdi-account-lock</v-icon>{{ $t('Modify password') }}
+          </router-link>
         </v-col>
-        <v-col cols="12" sm="6" md="6">
+        <v-col class="d-flex justify-center mb-6" cols="12" sm="6" md="6">
           <QrcodeCard @updateQrCode="updateQrCode" :disabled="disableQrcode" :user="user" />
         </v-col>
         <v-col cols="12" sm="6" md="4">
@@ -62,7 +66,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col sm="3" offset-sm="9" class="text-right">
+        <v-col md="6" sm="4" offset-sm="7" offset-md="6" class="text-right">
           <v-btn class="mr-3" color="error" @click="close"
             ><v-icon small> mdi-close-thick </v-icon> {{ $t('Disagree') }}
           </v-btn>
@@ -112,6 +116,10 @@ export default {
         username: null,
         email: null,
       }),
+    },
+    linkModifyPswd: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

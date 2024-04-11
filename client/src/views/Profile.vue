@@ -1,16 +1,5 @@
 <template>
   <WireFrameVue>
-    <v-row>
-      <v-spacer />
-      <v-spacer />
-      <v-spacer />
-      <v-spacer />
-      <v-col>
-        <router-link style="display: inline-block; text-decoration: none" :to="{ name: 'update-password' }">
-          <v-icon color="primary">mdi-account-lock</v-icon>{{ $t('Modify password') }}
-        </router-link>
-      </v-col>
-    </v-row>
     <user-profile-form
       ref="userProfileForm"
       :disableSave="disableSave"
@@ -22,6 +11,7 @@
       @close="onClose"
       :validation="validation"
       :user="user"
+      linkModifyPswd
     ></user-profile-form>
   </WireFrameVue>
 </template>

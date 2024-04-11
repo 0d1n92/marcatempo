@@ -4,6 +4,10 @@
       <v-card class="elevation-12">
         <v-toolbar dark color="primary">
           <v-toolbar-title>Login</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon>
+            <v-icon @click="$router.push({ name: 'scan' })">mdi-qrcode-scan</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <v-form ref="form">
